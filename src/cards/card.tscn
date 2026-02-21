@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://dnfpvr67addqu"]
+
+[ext_resource type="Script" uid="uid://dsfhjalkm3ufx" path="res://src/cards/card.gd" id="1_02hr8"]
+[ext_resource type="Script" uid="uid://bhw8uklbi6blf" path="res://src/cards/card_visuals.gd" id="2_dt0l0"]
+[ext_resource type="Script" uid="uid://w5vdji4jtw4y" path="res://src/cards/card_area.gd" id="2_qbpe7"]
+[ext_resource type="Script" uid="uid://bw8pgn0lnw35c" path="res://src/cards/card_shadow.gd" id="3_bulfq"]
+[ext_resource type="Texture2D" uid="uid://djxseklo7je4s" path="res://assets/images/cards/cardback.png" id="3_qmabv"]
+[ext_resource type="Texture2D" uid="uid://bvlskyl8vjok4" path="res://assets/images/cards/Rally.png" id="4_qmabv"]
+[ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="6_jhkr3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_02hr8"]
+size = Vector2(1096, 1350)
+
+[node name="Card" type="Node2D" unique_id=1485784677]
+light_mask = 2
+visibility_layer = 2
+script = ExtResource("1_02hr8")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=2130409608]
+script = ExtResource("2_qbpe7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=280649145]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1, -4)
+shape = SubResource("RectangleShape2D_02hr8")
+debug_color = Color(0.99579424, 0, 0.20708433, 0.41960785)
+
+[node name="CardVisuals" type="Node2D" parent="." unique_id=1710396752]
+light_mask = 2
+visibility_layer = 2
+script = ExtResource("2_dt0l0")
+
+[node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=1331450989]
+visible = false
+texture = ExtResource("3_qmabv")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=932462354]
+texture = ExtResource("4_qmabv")
+expand_mode = 2
+stretch_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="CardName" type="RichTextLabel" parent="CardVisuals" unique_id=634477502]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(200, 200)
+offset_left = -508.0
+offset_top = -630.0
+offset_right = 508.0
+offset_bottom = -430.0
+mouse_filter = 2
+theme = ExtResource("6_jhkr3")
+text = "Name"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CardHealth" type="RichTextLabel" parent="CardVisuals" unique_id=669243181]
+modulate = Color(0, 0, 0, 1)
+offset_left = 210.0
+offset_top = 344.0
+offset_right = 509.0
+offset_bottom = 643.0
+mouse_filter = 2
+theme = ExtResource("6_jhkr3")
+text = "health"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CardAttack" type="RichTextLabel" parent="CardVisuals" unique_id=1011024961]
+modulate = Color(0, 0, 0, 1)
+offset_left = -511.0
+offset_top = 342.0
+offset_right = -212.0
+offset_bottom = 641.0
+mouse_filter = 2
+theme = ExtResource("6_jhkr3")
+text = "attack"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CardShadow" type="Node2D" parent="." unique_id=1667688857]
+z_index = -1
+script = ExtResource("3_bulfq")
+
+[node name="Shadow" type="TextureRect" parent="CardShadow" unique_id=854732759]
+visible = false
+texture = ExtResource("3_qmabv")

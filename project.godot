@@ -11,8 +11,14 @@ config_version=5
 [application]
 
 config/name="Pilgrimage-2"
+run/main_scene="uid://dnfpvr67addqu"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameConstants="*uid://v2yjufoyeopr"
+GlobalSignalBus="*uid://dgtpharvagkvd"
 
 [physics]
 
