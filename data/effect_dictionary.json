@@ -1,0 +1,32 @@
+{
+	"solitary_beast": {
+		"name": "Solitary Beast", 
+		"trigger": "card_played",
+		"timing": "immediate",
+		"frequency": "repeatable",
+		"effect_type": "solitary_beast",
+		"parameters": {
+			"target": "self",
+			"attack_per_match": 1,
+			"health_per_match": 1,
+			"count_condition": {
+				"type": "card_played", 
+				"target": "Woods"
+				}
+		}
+	},
+	"heal_on_kill": {
+		"name": "Heal", 
+		"trigger": "destroy_card",
+		"timing": "immediate",
+		"frequency": "once",
+		"effect_type": "heal_on_kill"
+	},
+	"buff_attack_on_kill": {
+		"name": "Attack Buff", 
+		"trigger": "destroy_card",
+		"timing": "immediate",
+		"frequency": "once",
+		"effect_type": "buff_attack_on_kill"
+	}
+}
