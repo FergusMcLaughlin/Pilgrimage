@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://dnfpvr67addqu"]
+
+[ext_resource type="Script" uid="uid://dsfhjalkm3ufx" path="res://src/cards/card.gd" id="1_nj6sh"]
+[ext_resource type="Script" uid="uid://w5vdji4jtw4y" path="res://src/cards/card_input.gd" id="2_fxyy3"]
+[ext_resource type="Script" uid="uid://bhw8uklbi6blf" path="res://src/cards/card_visuals.gd" id="3_43gae"]
+[ext_resource type="Texture2D" uid="uid://8suo2808r3bs" path="res://assets/images/cards/card_back.png" id="4_xayup"]
+[ext_resource type="Texture2D" uid="uid://dp08j8ldqsa6j" path="res://assets/images/cards/default_image.png" id="5_nr31i"]
+[ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="6_hua3s"]
+[ext_resource type="Script" uid="uid://bw8pgn0lnw35c" path="res://src/cards/card_shadow.gd" id="7_ugxup"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_02hr8"]
+size = Vector2(256, 384)
+
+[node name="Card" type="Control" unique_id=1948960643]
+light_mask = 2
+visibility_layer = 2
+layout_mode = 3
+anchors_preset = 0
+offset_right = 256.0
+offset_bottom = 384.0
+pivot_offset = Vector2(128, 192)
+mouse_filter = 2
+script = ExtResource("1_nj6sh")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=2130409608]
+script = ExtResource("2_fxyy3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=280649145]
+light_mask = 2
+visibility_layer = 2
+shape = SubResource("RectangleShape2D_02hr8")
+debug_color = Color(0.99579424, 0, 0.20708433, 0.41960785)
+
+[node name="CardVisuals" type="Control" parent="." unique_id=1142199266]
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_43gae")
+metadata/_edit_use_anchors_ = true
+
+[node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=1331450989]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 256.0
+offset_bottom = 384.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 192)
+mouse_filter = 2
+texture = ExtResource("4_xayup")
+stretch_mode = 6
+metadata/_edit_use_anchors_ = true
+
+[node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=932462354]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_nr31i")
+stretch_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="CardName" type="RichTextLabel" parent="CardVisuals" unique_id=634477502]
+visible = false
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 10.0
+offset_bottom = 60.0
+mouse_filter = 2
+theme = ExtResource("6_hua3s")
+text = "Name"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CardHealth" type="RichTextLabel" parent="CardVisuals" unique_id=669243181]
+visible = false
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -10.0
+offset_bottom = -10.0
+mouse_filter = 2
+theme = ExtResource("6_hua3s")
+text = "60"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CardAttack" type="RichTextLabel" parent="CardVisuals" unique_id=1011024961]
+visible = false
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_bottom = -10.0
+mouse_filter = 2
+theme = ExtResource("6_hua3s")
+text = "60"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Shadow" type="TextureRect" parent="." unique_id=18957772]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 256.0
+offset_bottom = 384.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_xayup")
+script = ExtResource("7_ugxup")

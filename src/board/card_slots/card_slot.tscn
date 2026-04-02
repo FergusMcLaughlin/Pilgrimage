@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cw2h2qhfbdv4a"]
+
+[ext_resource type="Script" uid="uid://der615gvw374v" path="res://src/board/card_slots/card_slot.gd" id="1_wj31u"]
+[ext_resource type="Texture2D" uid="uid://bw3n800i372uo" path="res://assets/images/cards/card_slot.png" id="2_cke2m"]
+
+[node name="CardSlot" type="Control" unique_id=93795803]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1420.0
+offset_bottom = -630.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wj31u")
+
+[node name="SlotBackground" type="TextureRect" parent="." unique_id=200141210]
+layout_mode = 0
+offset_right = 180.0
+offset_bottom = 270.0
+texture = ExtResource("2_cke2m")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="CardAnchor" type="Control" parent="." unique_id=657938976]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 180.0
+offset_bottom = 270.0

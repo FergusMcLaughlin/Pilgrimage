@@ -1,98 +1,175 @@
-[gd_scene format=3 uid="uid://dnfpvr67addqu"]
+[gd_scene format=3 uid="uid://dpnxj0r0114in"]
 
 [ext_resource type="Script" uid="uid://dsfhjalkm3ufx" path="res://src/cards/card.gd" id="1_02hr8"]
+[ext_resource type="Script" uid="uid://w5vdji4jtw4y" path="res://src/cards/card_input.gd" id="2_6dq3b"]
 [ext_resource type="Script" uid="uid://bhw8uklbi6blf" path="res://src/cards/card_visuals.gd" id="2_dt0l0"]
-[ext_resource type="Script" uid="uid://w5vdji4jtw4y" path="res://src/cards/card_area.gd" id="2_qbpe7"]
 [ext_resource type="Script" uid="uid://bw8pgn0lnw35c" path="res://src/cards/card_shadow.gd" id="3_bulfq"]
-[ext_resource type="Texture2D" uid="uid://djxseklo7je4s" path="res://assets/images/cards/cardback.png" id="3_qmabv"]
-[ext_resource type="Texture2D" uid="uid://bvlskyl8vjok4" path="res://assets/images/cards/Rally.png" id="4_qmabv"]
+[ext_resource type="Texture2D" uid="uid://8suo2808r3bs" path="res://assets/images/cards/card_back.png" id="4_6dq3b"]
+[ext_resource type="Texture2D" uid="uid://dfwgji5v34uom" path="res://assets/images/cards/card_shadow.png" id="5_6dq3b"]
+[ext_resource type="Texture2D" uid="uid://dp08j8ldqsa6j" path="res://assets/images/cards/default_image.png" id="5_jhkr3"]
 [ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="6_jhkr3"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_02hr8"]
-size = Vector2(1096, 1350)
-
-[node name="Card" type="Node2D" unique_id=1485784677]
+[node name="Card" type="Control" unique_id=944151678]
 light_mask = 2
 visibility_layer = 2
+z_index = 2
+custom_minimum_size = Vector2(180, 270)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 180.0
+offset_bottom = 270.0
+pivot_offset = Vector2(90, 135)
+mouse_filter = 2
 script = ExtResource("1_02hr8")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=2130409608]
-script = ExtResource("2_qbpe7")
+[node name="InputLayer" type="Control" parent="." unique_id=376268894]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 270)
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(90, 135)
+script = ExtResource("2_6dq3b")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=280649145]
-light_mask = 2
-visibility_layer = 2
-position = Vector2(1, -4)
-shape = SubResource("RectangleShape2D_02hr8")
-debug_color = Color(0.99579424, 0, 0.20708433, 0.41960785)
-
-[node name="CardVisuals" type="Node2D" parent="." unique_id=1710396752]
-light_mask = 2
-visibility_layer = 2
+[node name="CardVisuals" type="Control" parent="." unique_id=792028838]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 270)
+anchors_preset = 0
+offset_right = 180.0
+offset_bottom = 270.0
+pivot_offset = Vector2(90, 135)
+mouse_filter = 2
 script = ExtResource("2_dt0l0")
 
-[node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=1331450989]
+[node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=54753642]
+unique_name_in_owner = true
 visible = false
-texture = ExtResource("3_qmabv")
-expand_mode = 2
-stretch_mode = 3
-
-[node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=932462354]
-texture = ExtResource("4_qmabv")
-expand_mode = 2
-stretch_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(90, 135)
+mouse_filter = 2
+texture = ExtResource("5_jhkr3")
+expand_mode = 1
+stretch_mode = 6
 metadata/_edit_use_anchors_ = true
 
-[node name="CardName" type="RichTextLabel" parent="CardVisuals" unique_id=634477502]
-modulate = Color(0, 0, 0, 1)
-custom_minimum_size = Vector2(200, 200)
-offset_left = -508.0
-offset_top = -630.0
-offset_right = 508.0
-offset_bottom = -430.0
+[node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=803838010]
+unique_name_in_owner = true
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(90, 135)
+mouse_filter = 2
+texture = ExtResource("4_6dq3b")
+expand_mode = 1
+stretch_mode = 6
+metadata/_edit_use_anchors_ = true
+
+[node name="CardShadow" type="TextureRect" parent="CardVisuals" unique_id=1102568832]
+unique_name_in_owner = true
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(90, 135)
+mouse_filter = 2
+texture = ExtResource("5_6dq3b")
+expand_mode = 1
+stretch_mode = 6
+script = ExtResource("3_bulfq")
+metadata/_edit_use_anchors_ = true
+
+[node name="StatsContainer" type="MarginContainer" parent="CardVisuals" unique_id=12516657]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = -49.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="StatsHContainer" type="HBoxContainer" parent="CardVisuals/StatsContainer" unique_id=1685982695]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="CardAttack" type="RichTextLabel" parent="CardVisuals/StatsContainer/StatsHContainer" unique_id=2005481332]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 theme = ExtResource("6_jhkr3")
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 35
+theme_override_font_sizes/bold_italics_font_size = 35
+theme_override_font_sizes/italics_font_size = 35
+theme_override_font_sizes/mono_font_size = 35
+text = "100"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="CardHealth" type="RichTextLabel" parent="CardVisuals/StatsContainer/StatsHContainer" unique_id=1659590539]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme = ExtResource("6_jhkr3")
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 35
+theme_override_font_sizes/bold_italics_font_size = 35
+theme_override_font_sizes/italics_font_size = 35
+theme_override_font_sizes/mono_font_size = 35
+text = "100"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="NameContainer" type="MarginContainer" parent="CardVisuals" unique_id=253425889]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 49.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="CardName" type="RichTextLabel" parent="CardVisuals/NameContainer" unique_id=459514312]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("6_jhkr3")
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 35
+theme_override_font_sizes/bold_italics_font_size = 35
+theme_override_font_sizes/italics_font_size = 35
+theme_override_font_sizes/mono_font_size = 35
 text = "Name"
 scroll_active = false
-autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="CardHealth" type="RichTextLabel" parent="CardVisuals" unique_id=669243181]
-modulate = Color(0, 0, 0, 1)
-offset_left = 210.0
-offset_top = 344.0
-offset_right = 509.0
-offset_bottom = 643.0
-mouse_filter = 2
-theme = ExtResource("6_jhkr3")
-text = "health"
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="CardAttack" type="RichTextLabel" parent="CardVisuals" unique_id=1011024961]
-modulate = Color(0, 0, 0, 1)
-offset_left = -511.0
-offset_top = 342.0
-offset_right = -212.0
-offset_bottom = 641.0
-mouse_filter = 2
-theme = ExtResource("6_jhkr3")
-text = "attack"
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="CardShadow" type="Node2D" parent="." unique_id=1667688857]
-z_index = -1
-script = ExtResource("3_bulfq")
-
-[node name="Shadow" type="TextureRect" parent="CardShadow" unique_id=854732759]
-visible = false
-texture = ExtResource("3_qmabv")

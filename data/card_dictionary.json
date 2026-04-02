@@ -1,128 +1,157 @@
-
 {
-  "C_0000": {
-	"id": "C_0000",
-	"name": "Player",
-	"type": "player",
-	"health": 100,
-	"attack": 5,
-	"isPlayer": true,
-	"isUnlocked":true,
-	"effect": [],
-	"image_path": "res://assets/images/cards/player.png"
-  },
-  "C_0001": {
-	"id": "C_0001",
-	"name": "Player1",
-	"type": "player",
-	"health": 20,
-	"attack": 1,
-	"isPlayer": true,
-	"isUnlocked":true,
-	"effect": [],
-	"image_path": "res://assets/images/cards/player.png"
-  },
-  "C_0002": {
-	"id": "C_0002",
-	"name": "Player2",
-	"type": "player",
-	"health": 10,
-	"attack": 10,
-	"isPlayer": true,
-	"isUnlocked":true,
-	"effect": [],
-	"image_path": "res://assets/images/cards/player.png"
-  },
-  "C_0003": {
-	"id": "C_0003",
-	"name": "Player3",
-	"type": "player",
-	"health": 10,
-	"attack": 5,
-	"isPlayer": true,
-	"isUnlocked":false,
-	"effect": [],
-	"image_path": "res://assets/images/cards/player.png"
-  },
-  "M_0001": {
-	"id": "M_0001",
-	"name": "Knight",
-	"type": "unit",
-	"health": 5,
-	"attack": 5,
-	"effect": [],
-	"image_path": "res://assets/images/cards/knight.png"
-  },
-  "M_0002": {
-	"id": "M_0002",
-	"name": "Goatman",
-	"type": "unit",
-	"health": 3,
-	"attack": 6,
-	"effect": ["solitary_beast"],
-	"image_path": "res://assets/images/cards/Goatman.png"
-  },
-  "M_0003": {
-	"id": "M_0003",
-	"name": "Goblins",
-	"type": "unit",
-	"health": 1,
-	"attack": 2,
-	"effect": ["effect_woods"],
-	"image_path": "res://assets/images/cards/Goblins.png"
-  },
-  "M_0004": {
-	"id": "M_0004",
-	"name": "Oddity",
-	"type": "unit",
-	"health": 2,
-	"attack": 3,
-	"effect": ["effect_woods"],
-	"image_path": "res://assets/images/cards/Oddity.png"
-  },
-  "M_0005": {
-	"id": "M_0005",
-	"name": "SnailTown",
-	"type": "location",
-	"health": 0,
-	"attack": 0,
-	"effect": [],
-	"image_path": "res://assets/images/cards/SnailTown.png"
-  },
-  "M_0006": {
-	"id": "M_0006",
-	"name": "Woods",
-	"type": "location",
-	"health": 0,
-	"attack": 0,
-	"effect": [],
-	"image_path": "res://assets/images/cards/Woods.png"
-  },
-  "M_0007": {
-	"id": "M_0007",
-	"name": "Stew",
-	"type": "buff",
-	"health": 2,
-	"attack": 0,
-	"effect": ["heal_on_kill"],
-	"image_path": "res://assets/images/cards/Stew.png"
-  },
-  "M_0008": {
-	"id": "M_0008",
-	"name": "Ale",
-	"type": "buff",
-	"health": 20,
-	"attack": 0,
-	"effect": ["heal_on_kill"],
-	"image_path": "res://assets/images/cards/Ale.png"
-  },
-  "M_0009": {
-	"id": "M_0009",
-	"name": "Rally",
-	"type": "buff",
-	"health": 0,
-	"attack": 3,
-	"effect": ["buff_attack_on_kill"],
-	"image_path": "res://assets/images/cards/Rally.png"
-  }
+	"C_0000": {
+		"id": "C_0000",
+		"name": "Player",
+		"type": "player",
+		"health": 100.0,
+		"attack": 5.0,
+		"isPlayer": true,
+		"isUnlocked": true,
+		"effects": [],
+		"image_path": "res://assets/images/cards/player.png"
+	},
+	"C_0001": {
+		"id": "C_0001",
+		"name": "Player1",
+		"type": "player",
+		"health": 20.0,
+		"attack": 1.0,
+		"isPlayer": true,
+		"isUnlocked": true,
+		"effects": [],
+		"image_path": "res://assets/images/cards/player.png"
+	},
+	"C_0002": {
+		"id": "C_0002",
+		"name": "Player2",
+		"type": "player",
+		"health": 10.0,
+		"attack": 10.0,
+		"isPlayer": true,
+		"isUnlocked": true,
+		"effects": [],
+		"image_path": "res://assets/images/cards/player.png"
+	},
+	"C_0003": {
+		"id": "C_0003",
+		"name": "Player3",
+		"type": "player",
+		"health": 10.0,
+		"attack": 5.0,
+		"isPlayer": true,
+		"isUnlocked": false,
+		"effects": [],
+		"image_path": "res://assets/images/cards/player.png"
+	},
+	"M_0001": {
+		"id": "M_0001",
+		"name": "Knight",
+		"type": "unit",
+		"health": 5.0,
+		"attack": 5.0,
+		"effects": [],
+		"image_path": "res://assets/images/cards/knight.png"
+	},
+	"M_0002": {
+		"id": "M_0002",
+		"name": "Goatman",
+		"type": "unit",
+		"health": 3.0,
+		"attack": 6.0,
+		"effects": [
+			"solitary_beast"
+		],
+		"image_path": "res://assets/images/cards/Goatman.png"
+	},
+	"M_0003": {
+		"id": "M_0003",
+		"name": "Goblins",
+		"type": "unit",
+		"health": 1.0,
+		"attack": 2.0,
+		"effects": [
+			"effect_woods"
+		],
+		"image_path": "res://assets/images/cards/Goblins.png"
+	},
+	"M_0004": {
+		"id": "M_0004",
+		"name": "Oddity",
+		"type": "unit",
+		"health": 2.0,
+		"attack": 3.0,
+		"effects": [
+			"effect_woods"
+		],
+		"image_path": "res://assets/images/cards/Oddity.png"
+	},
+	"M_0005": {
+		"id": "M_0005",
+		"name": "SnailTown",
+		"type": "location",
+		"health": 0.0,
+		"attack": 0.0,
+		"effects": [],
+		"image_path": "res://assets/images/cards/SnailTown.png"
+	},
+	"M_0006": {
+		"id": "M_0006",
+		"name": "Woods",
+		"type": "location",
+		"health": 0.0,
+		"attack": 0.0,
+		"effects": [],
+		"image_path": "res://assets/images/cards/Woods.png"
+	},
+	"M_0007": {
+		"id": "M_0007",
+		"name": "Stew",
+		"type": "buff",
+		"health": 2.0,
+		"attack": 0.0,
+		"effects": [
+			"heal_on_kill"
+		],
+		"image_path": "res://assets/images/cards/Stew.png"
+	},
+	"M_0008": {
+		"id": "M_0008",
+		"name": "Ale",
+		"type": "buff",
+		"health": 20.0,
+		"attack": 0.0,
+		"effects": [
+			"heal_on_kill"
+		],
+		"image_path": "res://assets/images/cards/Ale.png"
+	},
+	"M_0009": {
+		"id": "M_0009",
+		"name": "Rally",
+		"type": "buff",
+		"health": 0.0,
+		"attack": 3.0,
+		"effects": [
+			"buff_attack_on_kill"
+		],
+		"image_path": "res://assets/images/cards/Rally.png"
+	},
+	"M_0010": {
+		"id": "M_0010",
+		"name": "Dobhar-chú",
+		"type": "unit",
+		"health": 2.0,
+		"attack": 6.0,
+		"effects": [],
+		"image_path": "res://assets/images/new_cards_512_768/dobhar_chu.png"
+	},
+	"M_0011": {
+		"id": "M_0011",
+		"name": "Fairy Ring",
+		"type": "location",
+		"health": 0.0,
+		"attack": 0.0,
+		"effects": [],
+		"image_path": "res://assets/images/new_cards_512_768/dobhar_chu.png"
+	}
 }

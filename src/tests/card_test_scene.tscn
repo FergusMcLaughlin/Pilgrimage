@@ -1,10 +1,56 @@
 [gd_scene format=3 uid="uid://clyul5x8wv3wp"]
 
-[ext_resource type="PackedScene" uid="uid://dnfpvr67addqu" path="res://src/cards/card.tscn" id="1_c8bxo"]
 [ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
+[ext_resource type="PackedScene" uid="uid://cw2h2qhfbdv4a" path="res://src/board/card_slots/card_slot.tscn" id="2_ir41h"]
 
 [node name="CardTestScene" type="Node2D" unique_id=1397211008]
 script = ExtResource("1_ir41h")
 
-[node name="Card" parent="." unique_id=1485784677 instance=ExtResource("1_c8bxo")]
-position = Vector2(569, 306)
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=924718054]
+
+[node name="Controls" type="VBoxContainer" parent="CanvasLayer" unique_id=747231198]
+offset_left = 68.0
+offset_top = 46.0
+offset_right = 184.0
+offset_bottom = 110.0
+
+[node name="AddPlayerButton" type="Button" parent="CanvasLayer/Controls" unique_id=1875019492]
+layout_mode = 2
+text = "Add Player"
+
+[node name="AddKnightButton" type="Button" parent="CanvasLayer/Controls" unique_id=258061816]
+layout_mode = 2
+text = "Add Knight"
+
+[node name="AddGoatmanButton" type="Button" parent="CanvasLayer/Controls" unique_id=2046717164]
+layout_mode = 2
+text = "Add Goatman"
+
+[node name="AddStewButton" type="Button" parent="CanvasLayer/Controls" unique_id=1594565098]
+layout_mode = 2
+text = "Add Stew"
+
+[node name="ClearCardsButton" type="Button" parent="CanvasLayer/Controls" unique_id=1837472300]
+layout_mode = 2
+text = "Clear Cards"
+
+[node name="CardsRoot" type="Node2D" parent="." unique_id=199134270]
+position = Vector2(787, 396)
+
+[node name="CardSlot" parent="." unique_id=93795803 instance=ExtResource("2_ir41h")]
+offset_left = 1293.0
+offset_top = 67.0
+offset_right = 1293.0
+offset_bottom = 67.0
+
+[node name="CardSlot2" parent="." unique_id=532935223 instance=ExtResource("2_ir41h")]
+offset_left = 1293.0
+offset_top = 370.0
+offset_right = 1293.0
+offset_bottom = 370.0
+
+[node name="CardSlot3" parent="." unique_id=1032677911 instance=ExtResource("2_ir41h")]
+offset_left = 64.0
+offset_top = 353.0
+offset_right = 64.0
+offset_bottom = 353.0

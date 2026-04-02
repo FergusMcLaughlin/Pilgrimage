@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Pilgrimage-2"
-run/main_scene="uid://dnfpvr67addqu"
+run/main_scene="uid://clyul5x8wv3wp"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,12 @@ config/icon="res://icon.svg"
 
 GameConstants="*uid://v2yjufoyeopr"
 GlobalSignalBus="*uid://dgtpharvagkvd"
+CardLibrary="*uid://cklubm7vhtjhb"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
 
 [physics]
 
@@ -26,4 +32,5 @@ GlobalSignalBus="*uid://dgtpharvagkvd"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
