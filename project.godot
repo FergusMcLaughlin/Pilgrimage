@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 GameConstants="*uid://v2yjufoyeopr"
 GlobalSignalBus="*uid://dgtpharvagkvd"
 CardLibrary="*uid://cklubm7vhtjhb"
+InputManager="*uid://cjiam2j6ggy51"
 
 [display]
 

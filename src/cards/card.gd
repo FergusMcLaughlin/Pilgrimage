@@ -59,3 +59,21 @@ func onCardPressed() -> void:
 func onCardReasled() -> void:
 	visuals.handleDragging(false)
 	GlobalSignalBus.emitCardReleased(self)
+
+func canBeDragged() -> bool:
+	return self.currentState != CardState.State.IN_SLOT and self.currentState != CardState.State.BEING_DRAGGED
+
+func beingDragged() -> void:
+	setCardState(CardState.State.BEING_DRAGGED)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func updateDragPosition(newPosition: Vector2) -> void:
+	global_position = newPosition
+
+func cancelDrag() -> void:
+	setCardState(CardState.State.ON_BOARD)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
+func placeInSlot() -> void:
+	setCardState(CardState.State.IN_SLOT)
+	mouse_filter = Control.MOUSE_FILTER_STOP

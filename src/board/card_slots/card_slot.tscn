@@ -5,11 +5,10 @@
 
 [node name="CardSlot" type="Control" unique_id=93795803]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1420.0
-offset_bottom = -630.0
+anchor_right = 0.112
+anchor_bottom = 0.30100003
+offset_right = -0.2000122
+offset_bottom = 0.099975586
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wj31u")
@@ -18,6 +17,7 @@ script = ExtResource("1_wj31u")
 layout_mode = 0
 offset_right = 180.0
 offset_bottom = 270.0
+mouse_filter = 2
 texture = ExtResource("2_cke2m")
 expand_mode = 1
 stretch_mode = 4
@@ -27,3 +27,4 @@ unique_name_in_owner = true
 anchors_preset = 0
 offset_right = 180.0
 offset_bottom = 270.0
+mouse_filter = 2
