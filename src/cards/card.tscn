@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dfwgji5v34uom" path="res://assets/images/cards/card_shadow.png" id="5_6dq3b"]
 [ext_resource type="Texture2D" uid="uid://dp08j8ldqsa6j" path="res://assets/images/cards/default_image.png" id="5_jhkr3"]
 [ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="6_jhkr3"]
+[ext_resource type="Script" uid="uid://mq8neguao2yu" path="res://src/cards/card_outline.gd" id="9_eyjew"]
 
 [node name="Card" type="Control" unique_id=944151678]
 light_mask = 2
@@ -173,3 +174,11 @@ text = "Name"
 scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CardOutline" type="Control" parent="." unique_id=1679958535]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 180.0
+offset_bottom = 270.0
+mouse_filter = 2
+script = ExtResource("9_eyjew")

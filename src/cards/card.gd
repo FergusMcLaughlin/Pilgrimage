@@ -12,6 +12,7 @@ var currentState: int = CardState.State.IN_DECK
 @onready var visuals: CardVisuals = %CardVisuals
 @onready var shadow: CardShadow = %CardShadow
 @onready var input: CardInput = %InputLayer
+@onready var cardOutline: CardOutline = %CardOutline
 
 func _ready() -> void:
 	assert(visuals != null, "Card: issue finding CardVisuals")
@@ -45,15 +46,21 @@ func flipCard() -> void:
 	visuals.flip()
 
 func onCardHovered() -> void:
-	visuals.handleHovered(true)
+	#visuals.handleHovered(true)
+	cardOutline.show_hover()
 	GlobalSignalBus.emitCardHovered(self)
 
 func onCardUnhovered() -> void:
-	visuals.handleHovered(false)
+	#visuals.handleHovered(false)
+	cardOutline.hide_hover()
 	GlobalSignalBus.emitCardUnhovered(self)
 
 func onCardPressed() -> void:
-	visuals.handleDragging(true)
+	if canBeDragged():
+		visuals.handleDragging(true)
+	if !canBeDragged():
+		print("card cannot be dragged.")
+		print( self.currentState)
 	GlobalSignalBus.emitCardPressed(self)
 
 func onCardReasled() -> void:
