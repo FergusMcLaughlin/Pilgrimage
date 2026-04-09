@@ -175,7 +175,7 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CardOutline" type="Control" parent="." unique_id=1679958535]
+[node name="CardOutline" type="Control" parent="CardVisuals" unique_id=1679958535]
 unique_name_in_owner = true
 anchors_preset = 0
 offset_right = 180.0

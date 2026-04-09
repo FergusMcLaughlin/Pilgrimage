@@ -49,37 +49,9 @@ func _draw() -> void:
 	glow_col.a = glow_a
 	border_col.a = border_a
 
-	_draw_round_rect_outline(outer_rect.grow(6), glow_col, 1.0, corner_radius + 6.0)
-	_draw_round_rect_outline(outer_rect.grow(3), glow_col, 2.0, corner_radius + 3.0)
-	_draw_round_rect_outline(outer_rect, border_col, border_width, corner_radius)
+	_draw_rect_outline(outer_rect.grow(6), glow_col, 1.0)
+	_draw_rect_outline(outer_rect.grow(3), glow_col, 2.0)
+	_draw_rect_outline(outer_rect, border_col, border_width)
 
-func _draw_round_rect_outline(rect: Rect2, color: Color, width: float, radius: float) -> void:
-	draw_arc(rect.position + Vector2(radius, radius), radius, PI, PI * 1.5, 8, color, width)
-	draw_arc(rect.position + Vector2(rect.size.x - radius, radius), radius, PI * 1.5, PI * 2.0, 8, color, width)
-	draw_arc(rect.position + Vector2(rect.size.x - radius, rect.size.y - radius), radius, 0.0, PI * 0.5, 8, color, width)
-	draw_arc(rect.position + Vector2(radius, rect.size.y - radius), radius, PI * 0.5, PI, 8, color, width)
-
-	draw_line(
-		rect.position + Vector2(radius, 0),
-		rect.position + Vector2(rect.size.x - radius, 0),
-		color,
-		width
-	)
-	draw_line(
-		rect.position + Vector2(rect.size.x, radius),
-		rect.position + Vector2(rect.size.x, rect.size.y - radius),
-		color,
-		width
-	)
-	draw_line(
-		rect.position + Vector2(radius, rect.size.y),
-		rect.position + Vector2(rect.size.x - radius, rect.size.y),
-		color,
-		width
-	)
-	draw_line(
-		rect.position + Vector2(0, radius),
-		rect.position + Vector2(0, rect.size.y - radius),
-		color,
-		width
-	)
+func _draw_rect_outline(rect: Rect2, color: Color, width: float) -> void:
+	draw_rect(rect, color, false, width)
