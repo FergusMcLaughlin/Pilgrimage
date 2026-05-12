@@ -5,7 +5,7 @@ var data: CardData
 var health: int
 var attack: int
 var imagePath: String
-var effectName: String # placeholder
+var effectName: String # placeholde
 
 var currentState: int = CardState.State.IN_DECK
 
@@ -46,12 +46,11 @@ func flipCard() -> void:
 	visuals.flip()
 
 func onCardHovered() -> void:
-	#visuals.handleHovered(true)
-	cardOutline.show_hover()
+	if InputManager.cardBeingDragged == null:
+		cardOutline.show_hover()
 	GlobalSignalBus.emitCardHovered(self)
 
 func onCardUnhovered() -> void:
-	#visuals.handleHovered(false)
 	cardOutline.hide_hover()
 	GlobalSignalBus.emitCardUnhovered(self)
 

@@ -14,33 +14,41 @@
 light_mask = 2
 visibility_layer = 2
 z_index = 2
-custom_minimum_size = Vector2(180, 270)
+custom_minimum_size = Vector2(136, 190)
 layout_mode = 3
-anchors_preset = 0
-offset_right = 180.0
-offset_bottom = 270.0
+anchor_right = 0.085
+anchor_bottom = 0.21111111
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset = Vector2(90, 135)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_02hr8")
+metadata/_edit_use_anchors_ = true
 
 [node name="InputLayer" type="Control" parent="." unique_id=376268894]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 270)
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+custom_minimum_size = Vector2(136, 190)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset = Vector2(90, 135)
 script = ExtResource("2_6dq3b")
 
 [node name="CardVisuals" type="Control" parent="." unique_id=792028838]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 270)
+custom_minimum_size = Vector2(136, 190)
 anchors_preset = 0
-offset_right = 180.0
-offset_bottom = 270.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 pivot_offset = Vector2(90, 135)
 mouse_filter = 2
 script = ExtResource("2_dt0l0")
+metadata/_edit_use_anchors_ = true
 
 [node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=54753642]
 unique_name_in_owner = true
@@ -55,7 +63,6 @@ pivot_offset = Vector2(90, 135)
 mouse_filter = 2
 texture = ExtResource("5_jhkr3")
 expand_mode = 1
-stretch_mode = 6
 metadata/_edit_use_anchors_ = true
 
 [node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=803838010]
@@ -72,7 +79,6 @@ pivot_offset = Vector2(90, 135)
 mouse_filter = 2
 texture = ExtResource("4_6dq3b")
 expand_mode = 1
-stretch_mode = 6
 metadata/_edit_use_anchors_ = true
 
 [node name="CardShadow" type="TextureRect" parent="CardVisuals" unique_id=1102568832]
@@ -89,7 +95,6 @@ pivot_offset = Vector2(90, 135)
 mouse_filter = 2
 texture = ExtResource("5_6dq3b")
 expand_mode = 1
-stretch_mode = 6
 script = ExtResource("3_bulfq")
 metadata/_edit_use_anchors_ = true
 
@@ -177,8 +182,11 @@ vertical_alignment = 1
 
 [node name="CardOutline" type="Control" parent="CardVisuals" unique_id=1679958535]
 unique_name_in_owner = true
-anchors_preset = 0
-offset_right = 180.0
-offset_bottom = 270.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("9_eyjew")

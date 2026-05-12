@@ -3,10 +3,15 @@
 [ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
 [ext_resource type="PackedScene" uid="uid://cw2h2qhfbdv4a" path="res://src/board/card_slots/card_slot.tscn" id="2_ir41h"]
 [ext_resource type="PackedScene" uid="uid://bcgm6jvroshhv" path="res://src/board/board_input_controler.tscn" id="3_1djoe"]
+[ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_ir41h")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=924718054]
@@ -45,22 +50,14 @@ offset_top = 396.0
 offset_right = 787.0
 offset_bottom = 396.0
 
-[node name="CardSlot" parent="CanvasLayer" unique_id=93795803 instance=ExtResource("2_ir41h")]
-offset_left = 1293.0
-offset_top = 67.0
-offset_right = 1293.0
-offset_bottom = 67.0
-
-[node name="CardSlot2" parent="CanvasLayer" unique_id=532935223 instance=ExtResource("2_ir41h")]
-offset_left = 1293.0
-offset_top = 370.0
-offset_right = 1293.0
-offset_bottom = 370.0
-
-[node name="CardSlot3" parent="CanvasLayer" unique_id=1032677911 instance=ExtResource("2_ir41h")]
-offset_left = 64.0
-offset_top = 353.0
-offset_right = 64.0
-offset_bottom = 353.0
+[node name="CardSlot4" parent="CanvasLayer" unique_id=358080248 instance=ExtResource("2_ir41h")]
+custom_minimum_size = Vector2(180, 220)
+offset_left = 21.0
+offset_top = 352.0
+offset_right = 21.799988
+offset_bottom = 301.09998
 
 [node name="BoardInputControler" parent="." unique_id=1444808009 instance=ExtResource("3_1djoe")]
+
+[node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
+layout_mode = 1
