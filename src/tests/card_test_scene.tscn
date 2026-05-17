@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://clyul5x8wv3wp"]
 
 [ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
-[ext_resource type="PackedScene" uid="uid://cw2h2qhfbdv4a" path="res://src/board/card_slots/card_slot.tscn" id="2_ir41h"]
-[ext_resource type="PackedScene" uid="uid://bcgm6jvroshhv" path="res://src/board/board_input_controler.tscn" id="3_1djoe"]
 [ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
@@ -49,15 +47,6 @@ offset_left = 787.0
 offset_top = 396.0
 offset_right = 787.0
 offset_bottom = 396.0
-
-[node name="CardSlot4" parent="CanvasLayer" unique_id=358080248 instance=ExtResource("2_ir41h")]
-custom_minimum_size = Vector2(180, 220)
-offset_left = 21.0
-offset_top = 352.0
-offset_right = 21.799988
-offset_bottom = 301.09998
-
-[node name="BoardInputControler" parent="." unique_id=1444808009 instance=ExtResource("3_1djoe")]
 
 [node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
 layout_mode = 1

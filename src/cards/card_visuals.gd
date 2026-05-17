@@ -55,6 +55,25 @@ func _getStatColour(current: int, base: int) -> Color:
 		return STAT_COLOUR_DEBUFFED
 	return STAT_COLOUR_NORMAL
 
+func applyInteractionVisuals(hovered: bool, dragging: bool) -> void:
+	isHovered = hovered
+	isDragging = dragging
+
+	if scaleTween:
+		scaleTween.kill()
+		scaleTween = null
+
+	var targetScale := Vector2.ONE
+
+	if isDragging:
+		targetScale = Vector2(1.10, 1.10)
+	elif isHovered:
+		targetScale = Vector2(1.05, 1.05)
+
+	scale = targetScale
+	z_as_relative = !isDragging
+	z_index = dragZIndex if isDragging else defaultZIndex
+
 func flip() -> void: # shadow functionality is gone currently
 	var flipTween = card.create_tween()
 
@@ -72,31 +91,11 @@ func _toggleCardVisibility() -> void:
 func handleHovered(hovered: bool) -> void:
 	if isHovered == hovered:
 		return
-	isHovered = hovered
-	_updateScale()
+	
+	applyInteractionVisuals(hovered, isDragging)
 
 func handleDragging(dragging: bool) -> void:
 	if isDragging == dragging:
 		return
-	isDragging = dragging
-	if isDragging:
-		z_as_relative = false
-		z_index = dragZIndex
-	else:
-		z_index = defaultZIndex
-	_updateScale()
-
-func _updateScale() -> void:
-	if scaleTween:
-		scaleTween.kill()
 	
-	var targetScale := Vector2.ONE
-	
-	if isDragging:
-		targetScale = Vector2(1.10, 1.10)
-	elif isHovered:
-		targetScale = Vector2(1.05, 1.05)
-	
-	scaleTween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	scaleTween.tween_property(self, "scale", targetScale, 0.12)
-	
+	applyInteractionVisuals(isHovered, dragging)

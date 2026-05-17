@@ -9,7 +9,6 @@ class_name CardSlot
 var currentCard: Card = null
 
 func _ready() -> void:
-	modulate = Color(1, 0, 0, 0.3)
 	add_to_group("cardSlot")
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	$SlotBackground.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -22,7 +21,6 @@ func _gui_input(event: InputEvent) -> void:
 		GlobalSignalBus.emitSlotClicked(self)
 
 func _on_mouse_entered() -> void:
-	print("SLOT HOVERED")
 	GlobalSignalBus.emitSlotHovered(self)
 
 func _on_mouse_exited() -> void:
@@ -35,13 +33,16 @@ func canAcceptCard(card: Card) -> bool:
 	if card == null:
 		return false
 
+	if card.data == null:
+		return false
+
 	if isOccupied():
 		return false
 
 	if allowedCardTypes.is_empty():
 		return true
 
-	return card.cardData.type in allowedCardTypes
+	return card.data.type in allowedCardTypes
 
 func tryPlaceCard(card: Card) -> bool:
 	if not canAcceptCard(card):
@@ -60,9 +61,12 @@ func setCard(card: Card) -> bool:
 
 	currentCard = card
 
+	card.reparent(cardAnchor, false)
+	card.position = Vector2.ZERO
+	card.rotation = 0.0
+	card.scale = Vector2.ONE
+
 	card.placeInSlot()
-	card.reparent(cardAnchor, true)
-	card.position = Vector2.ZERO #look here
 
 	GlobalSignalBus.emitSlotFilled(self, card)
 	return true

@@ -42,5 +42,6 @@ static func setCardState(card: Card, newCardState: int) -> void:
 	
 	input.mouse_filter = Control.MOUSE_FILTER_STOP if interactable else Control.MOUSE_FILTER_IGNORE
 	shadow.setVisible(shadowVisible, shadowStrong)
+	card.visuals.handleDragging(newCardState == CardState.State.BEING_DRAGGED)
 
 	GlobalSignalBus.emitCardStateChanged(card, oldCardState, newCardState)

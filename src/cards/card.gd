@@ -55,15 +55,12 @@ func onCardUnhovered() -> void:
 	GlobalSignalBus.emitCardUnhovered(self)
 
 func onCardPressed() -> void:
-	if canBeDragged():
-		visuals.handleDragging(true)
 	if !canBeDragged():
 		print("card cannot be dragged.")
 		print( self.currentState)
 	GlobalSignalBus.emitCardPressed(self)
 
 func onCardReasled() -> void:
-	visuals.handleDragging(false)
 	GlobalSignalBus.emitCardReleased(self)
 
 func canBeDragged() -> bool:
@@ -75,6 +72,9 @@ func beingDragged() -> void:
 
 func updateDragPosition(newPosition: Vector2) -> void:
 	global_position = newPosition
+
+func endDragVisuals() -> void:
+	visuals.handleDragging(false)
 
 func cancelDrag() -> void:
 	setCardState(CardState.State.ON_BOARD)
