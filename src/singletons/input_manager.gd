@@ -7,6 +7,7 @@ var draggingOffset: Vector2 = Vector2.ZERO
 var originalCardRotation: float = 0.0
 var inputLocked: bool = false
 var originalCardMouseFilter: int = Control.MOUSE_FILTER_STOP
+var nextCardZIndex: int = 10
 
 func _ready() -> void:
 	GlobalSignalBus.cardPressed.connect(_onCardPressed)
@@ -62,6 +63,8 @@ func _startDragging(card: Card) -> void:
 	originalCardRotation = card.rotation
 	originalCardMouseFilter = card.mouse_filter
 
+	_bringCardToFront(card)
+
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.setCardState(CardState.State.BEING_DRAGGED)
 
@@ -99,6 +102,8 @@ func _finishDragging(globalMousePosition: Vector2) -> void:
 	else:
 		_dropCard(draggedCard)
 
+	_bringCardToFront(draggedCard)
+
 	draggedCard.mouse_filter = originalCardMouseFilter
 
 	GlobalSignalBus.emitCardDragEnded(draggedCard, globalMousePosition)
@@ -133,8 +138,16 @@ func _placeCardInSlot(card: Card, slot: CardSlot) -> void:
 		_dropCard(card)
 
 func _dropCard(card: Card) -> void:
-	card.setCardState(CardState.State.ON_BOARD)
+	card.cancelDrag()
 	card.rotation = originalCardRotation
+
+func _bringCardToFront(card: Card) -> void:
+	if card == null or not is_instance_valid(card):
+		return
+
+	card.z_as_relative = false
+	card.z_index = nextCardZIndex
+	nextCardZIndex += 1
 
 func lockInput() -> void:
 	inputLocked = true

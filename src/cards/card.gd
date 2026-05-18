@@ -55,9 +55,6 @@ func onCardUnhovered() -> void:
 	GlobalSignalBus.emitCardUnhovered(self)
 
 func onCardPressed() -> void:
-	if !canBeDragged():
-		print("card cannot be dragged.")
-		print( self.currentState)
 	GlobalSignalBus.emitCardPressed(self)
 
 func onCardReasled() -> void:
