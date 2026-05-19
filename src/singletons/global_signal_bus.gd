@@ -33,7 +33,7 @@ signal slotHovered(cardSlot)
 signal slotUnhovered(cardSlot)
 signal slotClicked(cardSlot)
 signal slotFilled(cardSlot, card)
-signal slotEmptied(cardSlot, card)
+signal slotEmptied(cardSlot)
 
 # ==================================================
 # CARD INPUT EMIT WRAPPERS
