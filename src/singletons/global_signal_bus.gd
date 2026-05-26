@@ -36,6 +36,12 @@ signal slotFilled(cardSlot, card)
 signal slotEmptied(cardSlot)
 
 # ==================================================
+# BOARDSIGNALS
+# ==================================================
+
+signal boardStateChanged()
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -92,3 +98,10 @@ func emitSlotFilled(cardSlot, card) -> void:
 
 func emitSlotEmptied(cardSlot) -> void:
 	emit_signal("slotEmptied", cardSlot)
+
+# ==================================================
+# BOARD EMIT WRAPPERS
+# ==================================================
+
+func emitBoardStateChanged() -> void:
+	emit_signal("boardStateChanged")

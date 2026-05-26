@@ -1,5 +1,5 @@
 extends Control
-class_name slot_grid
+class_name SlotGrid
 
 @export var gridSize: Vector2i
 @export var slotScene: PackedScene
@@ -55,6 +55,14 @@ func getEmptySlots() -> Array[CardSlot]:
 			if not slot.isOccupied():
 				emptySlots.append(slot)
 	return emptySlots
+
+func getOccupiedSlots() -> Array[CardSlot]:
+	var occupiedSlots: Array[CardSlot] = []
+	for row in slots:
+		for slot in row:
+			if slot.isOccupied():
+				occupiedSlots.append(slot)
+	return occupiedSlots
 
 func getCenterSlot() -> CardSlot:
 	return getSlotAt(Vector2i(gridSize.y / 2, gridSize.x / 2))
