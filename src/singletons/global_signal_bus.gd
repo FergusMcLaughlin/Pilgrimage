@@ -36,10 +36,19 @@ signal slotFilled(cardSlot, card)
 signal slotEmptied(cardSlot)
 
 # ==================================================
-# BOARDSIGNALS
+# BOARD SIGNALS
 # ==================================================
 
 signal boardStateChanged()
+
+# ==================================================
+# DECK SIGNALS
+# ==================================================
+
+signal deckShuffled(deck)
+signal deckEmptied(deck)
+signal cardAddedToDeck(card)
+signal cardDrawnFromDeck(card)
 
 # ==================================================
 # CARD INPUT EMIT WRAPPERS
@@ -105,3 +114,18 @@ func emitSlotEmptied(cardSlot) -> void:
 
 func emitBoardStateChanged() -> void:
 	emit_signal("boardStateChanged")
+
+# ==================================================
+# Deck EMIT WRAPPERS
+# ==================================================
+func emitDeckShuffled(deck) -> void:
+	emit_signal("deckShuffled", deck)
+
+func emitDeckEmptied(deck) -> void:
+	emit_signal("deckEmptied", deck)
+
+func emitCardAddedToDeck(card) -> void:
+	emit_signal("cardAddedToDeck", card)
+
+func emitCardDrawnFromDeck(card) -> void:
+	emit_signal("cardDrawnFromDeck", card)
