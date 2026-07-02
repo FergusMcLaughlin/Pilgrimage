@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://clyul5x8wv3wp"]
 
 [ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
+[ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/decks/deck_types/journey_deck.tscn" id="3_1djoe"]
 [ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
+[ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/board/board_controller/board_controller.tscn" id="4_board"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -50,3 +52,13 @@ offset_bottom = 396.0
 
 [node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
 layout_mode = 1
+
+[node name="BoardController" parent="." instance=ExtResource("4_board")]
+SlotGridPath = NodePath("../SlotGrid")
+
+[node name="JourneyDeck" parent="." unique_id=694193839 instance=ExtResource("3_1djoe")]
+layout_mode = 1
+offset_left = 1272.0
+offset_top = 39.0
+offset_right = -53.0
+offset_bottom = -668.0

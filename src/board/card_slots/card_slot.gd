@@ -61,7 +61,10 @@ func setCard(card: Card) -> bool:
 
 	currentCard = card
 
-	card.reparent(cardAnchor, false)
+	if card.get_parent() == null:
+		cardAnchor.add_child(card)
+	else:
+		card.reparent(cardAnchor, false)
 	card.position = Vector2.ZERO
 	card.rotation = 0.0
 	card.scale = Vector2.ONE

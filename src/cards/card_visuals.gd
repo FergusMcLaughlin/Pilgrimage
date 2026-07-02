@@ -1,4 +1,4 @@
-extends Control # possible mistake
+extends Control
 class_name CardVisuals
 
 const STAT_COLOUR_NORMAL = Color.BLACK
@@ -33,13 +33,12 @@ func refresh() -> void:
 	_updateStatColours()
 
 func _loadCardImage() -> void:
-	var imagePath := "res://assets/images/cards/%s.png" % card.data.name
-	var texture := load(imagePath)
+	var imagePath := card.data.imagePath
+	if imagePath.is_empty() or not ResourceLoader.exists(imagePath):
+		push_warning("Card Visuals: Cannot load picture: " + imagePath)
+		imagePath = "res://assets/images/cards/default_image.png"
 
-	if texture:
-		face.texture = texture
-	else:
-		push_error("Card Visuals: Cant load picture: " + imagePath)
+	face.texture = load(imagePath)
 
 func _updateStatColours() -> void:
 	if card.data.type == "player":
@@ -74,14 +73,19 @@ func applyInteractionVisuals(hovered: bool, dragging: bool) -> void:
 	z_as_relative = !isDragging
 	z_index = dragZIndex if isDragging else defaultZIndex
 
-func flip() -> void: # shadow functionality is gone currently
-	var flipTween = card.create_tween()
+func beginFlip() -> Tween:
+	var flipTween := card.create_tween()
 
 	flipTween.tween_property(self, "scale:x", 0.0, 0.15)
 	flipTween.tween_callback(func(): _toggleCardVisibility())
 	flipTween.tween_property(self, "scale:x", 1.0, 0.15)
 
 	GlobalSignalBus.emitCardFlipped(card)
+	return flipTween
+
+func flip() -> void:
+	var flipTween := beginFlip()
+	await flipTween.finished
 
 func _toggleCardVisibility() -> void:
 	var componenets = [face, back, nameLable, healthLable, attackLable]

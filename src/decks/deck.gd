@@ -1,91 +1,49 @@
 extends Control
 class_name Deck
 
-var cardsInDeck: Array[String] = []
-var _createCard := CreateCard.new()
+var deckCardBag := DeckCardBag.new()
 
 func _ready() -> void:
 	#deckVisuals.init(self)
 	_refreshDeck()
-	
+
 func _refreshDeck() -> void:
 	#deckVisuals.refresh()
 	pass
 
 func initialiseDeck(Ids: Array[String], shuffleAfter: bool = true) -> void:
-	if Ids.is_empty():
-		push_error("Deck: Cannot initialise with an empty id list.")
-		return
-	
-	cardsInDeck = Ids.duplicate()
-	if shuffleAfter:
-		shuffleDeck()
-	
+	deckCardBag.initialiseDeck(Ids, shuffleAfter)
 	_refreshDeck()
 
 func shuffleDeck() -> void:
-	cardsInDeck.shuffle()
-	GlobalSignalBus.emitDeckShuffled(self)
+	deckCardBag.shuffleDeck()
+	_refreshDeck()
 
 func getDeckSize() -> int:
-	if cardsInDeck.is_empty():
-		return 0
-	
-	return cardsInDeck.size()
+	return deckCardBag.getDeckSize()
 
-func isEmpty() -> bool: 
-	return cardsInDeck.is_empty()
+func isEmpty() -> bool:
+	return deckCardBag.isEmpty()
 
 func addCardToTop(cardId: String) -> void:
-	if cardId.is_empty():
-		push_warning("Deck: Tried to add a null card Id to a deck.")
-		return
-	
-	cardsInDeck.push_front(cardId)
+	deckCardBag.addCardToTop(cardId)
 	_refreshDeck()
 
 func addCardToBottom(cardId: String) -> void:
-	if cardId.is_empty():
-		push_warning("Deck: Tried to add a null card Id to a deck.")
-		return
-	
-	cardsInDeck.push_back(cardId)
+	deckCardBag.addCardToBottom(cardId)
 	_refreshDeck()
 
-func drawCard() -> Card:
-	if cardsInDeck.is_empty():
-		push_warning("Deck : Cannot draw card from an empty deck.")
-		return 
-	
-	var drawnCardId = cardsInDeck[0]
-	cardsInDeck.pop_front()
+func drawCardId() -> String:
+	var drawnCardId := deckCardBag.drawCardId()
 	_refreshDeck()
-	
-	var drawnCard = _createCard.createCard(drawnCardId)
-	
-	if drawnCard == null:
-		push_error("Deck : Cannot draw card.")
-		return 
-		
-	GlobalSignalBus.emitCardDrawnFromDeck(drawnCard)
+	return drawnCardId
+
+func drawCard() -> Card:
+	var drawnCard := deckCardBag.drawCard()
 	_refreshDeck()
 	return drawnCard
 
 func drawCardById(Id: String) -> Card:
-	if cardsInDeck.is_empty():
-		push_warning("Deck : Cannot draw card from an empty deck.")
-		GlobalSignalBus.emitDeckEmptied(self)
-		_refreshDeck()
-		return
-	
-	if Id.is_empty():
-		push_warning("Deck: Cannot draw card from an empty deck. Deck id: %s" % Id)
-		return
-	
-	var drawnCardId = Id
-	cardsInDeck.erase(drawnCardId)
+	var drawnCard := deckCardBag.drawCardById(Id)
 	_refreshDeck()
-	
-	var drawnCard = _createCard.createCard(drawnCardId)
-	GlobalSignalBus.emitCardDrawnFromDeck(drawnCard)
 	return drawnCard

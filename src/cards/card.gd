@@ -43,7 +43,7 @@ func setCardState(newCardState: int) -> void:
 	CardStateMachine.setCardState(self, newCardState)
 
 func flipCard() -> void:
-	visuals.flip()
+	await visuals.flip()
 
 func onCardHovered() -> void:
 	if InputManager.cardBeingDragged == null:

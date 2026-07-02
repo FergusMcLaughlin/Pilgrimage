@@ -1,6 +1,9 @@
 extends Control
 
 @onready var cardsRoot: Control = $CanvasLayer/CardsRoot
+@onready var journeyDeck: JourneyDeck = $JourneyDeck
+@onready var slotGrid: SlotGrid = $SlotGrid
+@onready var boardController: BoardController = $BoardController
 
 @onready var addPlayerButton: Button = $CanvasLayer/Controls/AddPlayerButton
 @onready var addKnightButton: Button = $CanvasLayer/Controls/AddKnightButton
@@ -35,6 +38,9 @@ func _ready() -> void:
 	GlobalSignalBus.cardFlipped.connect(_onCardFlipped)
 	GlobalSignalBus.cardStateChanged.connect(_onCardStateChanged)
 
+	journeyDeck.boardController = boardController
+	journeyDeck.slotGrid = slotGrid
+	journeyDeck.initialiseJourneyDeck()
 	_connectButtons()
 
 	if debug_stat_cycle:

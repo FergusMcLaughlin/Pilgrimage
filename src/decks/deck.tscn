@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dc4lmv7h26h5m"]
+[gd_scene format=3 uid="uid://bmcbd3gx7o68d"]
 
 [ext_resource type="Script" uid="uid://ds7c0cqif1taq" path="res://src/decks/deck.gd" id="1_d64lv"]
 [ext_resource type="Texture2D" uid="uid://8suo2808r3bs" path="res://assets/images/cards/card_back.png" id="5_g25wj"]
