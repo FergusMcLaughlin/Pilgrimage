@@ -5,7 +5,7 @@ class_name SlotGrid
 @export var slotScene: PackedScene
 @export var cellSize: Vector2 = Vector2(184, 248)
 
-@onready var grid: GridContainer = %CardSlot
+@onready var grid: GridContainer = %CardSlotGrid
 
 var slots = []
 
@@ -16,14 +16,18 @@ func _clearGrid() -> void:
 	for child in grid.get_children():
 		if child.is_in_group("cardSlots"):
 			child.queue_free()
-	
+
 	slots.clear()
 
 func _createGrid() -> void:
+	if slotScene == null:
+		push_error("SlotGrid: slotScene is not assigned.")
+		return
+
 	_clearGrid()
-	
+
 	grid.columns = gridSize.y
-	
+
 	for row in range(gridSize.x):
 		var rowSlots = []
 		for col in range(gridSize.y):
@@ -40,8 +44,6 @@ func getSlotAt(coordinates: Vector2i) -> CardSlot:
 	if coordinates.x < 0 || coordinates.y < 0:
 		return null
 	if coordinates.y >= slots.size():
-		return null
-	if coordinates.y < 0 or coordinates.y >= slots.size():
 		return null
 	var rowSlots = slots[coordinates.y]
 	if coordinates.x >= rowSlots.size():
@@ -69,10 +71,10 @@ func getCenterSlot() -> CardSlot:
 
 func getCardinalNeighbours(slot: CardSlot) -> Array[CardSlot]:
 	var cardinalNeighbours: Array[CardSlot] = []
-	
+
 	if slot == null:
 		return cardinalNeighbours
-	
+
 	var candidateCoordinates = slot.coordinates
 	var possibleNeighbours = [
 		Vector2i(candidateCoordinates.x - 1, candidateCoordinates.y),
@@ -80,10 +82,10 @@ func getCardinalNeighbours(slot: CardSlot) -> Array[CardSlot]:
 		Vector2i(candidateCoordinates.x, candidateCoordinates.y - 1),
 		Vector2i(candidateCoordinates.x, candidateCoordinates.y + 1)
 	]
-	
+
 	for coordinate in possibleNeighbours:
 		var neighbour  = getSlotAt(coordinate)
 		if neighbour != null:
 			cardinalNeighbours.append(neighbour)
-	
+
 	return cardinalNeighbours

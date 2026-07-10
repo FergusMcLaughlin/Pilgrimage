@@ -1,8 +1,8 @@
 extends Node
 class_name BoardController
 
-@export var SlotGridPath: NodePath
-@onready var grid: SlotGrid = get_node(SlotGridPath)
+@export var slotGridPath: NodePath
+@onready var grid: SlotGrid = get_node(slotGridPath)
 
 func placeCard(card: Card, slot: CardSlot) -> bool:
 	if card == null:
@@ -42,6 +42,8 @@ func moveCard(card: Card, destinationSlot: CardSlot) -> bool:
 	
 	if cardPlaced:
 		GlobalSignalBus.emitBoardStateChanged()
+	else:
+		startSlot.setCard(card)
 	
 	return cardPlaced
 
