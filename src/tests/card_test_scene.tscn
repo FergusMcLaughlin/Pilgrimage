@@ -53,7 +53,8 @@ offset_bottom = 396.0
 [node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
 layout_mode = 1
 
-[node name="BoardController" parent="." instance=ExtResource("4_board")]
+[node name="BoardController" parent="." unique_id=1044313469 instance=ExtResource("4_board")]
+layout_mode = 0
 slotGridPath = NodePath("../SlotGrid")
 
 [node name="JourneyDeck" parent="." unique_id=694193839 instance=ExtResource("3_1djoe")]
