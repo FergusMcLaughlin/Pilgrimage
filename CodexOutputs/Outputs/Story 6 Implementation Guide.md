@@ -216,3 +216,16 @@ git diff --check
 ## Handoff to Story 7
 
 Story 7's `ActionQueue.enqueueAction()` should call `ActionTypes.isValid(action)` before appending. The queue should store the accepted dictionary unchanged, preserve FIFO order, and remain unaware of the action-specific payload rules that Story 8 will own.
+
+## Blockers Before Story 7
+
+Story 7 may be planned, but it should not be implemented until the current Story 6 code matches the shared action contract:
+
+- Rename `src/actions/action_type.gd` to `src/actions/action_types.gd`.
+- Rename `class_name ActionType` to `class_name ActionTypes` so it matches this guide and future callers.
+- Add the required `DESTROY_CARD = "destroy_card"` constant.
+- Resolve the extra action constants currently outside Story 6's agreed vocabulary: `HEAL`, `REMOVE_CARD`, `DELETE_CARD`, `REVIVE_CARD`, `HIDE_CARD`, and `MUTATE_CARD`. Add them deliberately with documented meanings, or remove them until a later story needs them.
+- Use non-fatal validation warnings rather than reporting malformed external input as engine errors.
+- Run the verification assertions in this guide and confirm that Godot imports the renamed script without parser errors.
+
+Until these are resolved, Story 7 cannot reliably call `ActionTypes.isValid()` and would be built against an unstable action vocabulary.

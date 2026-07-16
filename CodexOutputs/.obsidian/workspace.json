@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Outputs/Story 6 Implementation Guide.md",
+                "file": "Outputs/Story 7 Implementation Guide.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Story 6 Implementation Guide"
+              "title": "Story 7 Implementation Guide"
             }
           }
         ]
@@ -185,9 +185,10 @@
   },
   "active": "7c70e9d8c84dcd5e",
   "lastOpenFiles": [
+    "Outputs/Story 8 Implementation Guide.md",
+    "Outputs/Story 6 Implementation Guide.md",
     "Outputs/Pre-Action Cleanup Todo.md",
     "Outputs/Action System Explained Simply.md",
-    "Outputs/Action Processor Delegation Principle.md",
-    "Outputs/Story 6 Implementation Guide.md"
+    "Outputs/Action Processor Delegation Principle.md"
   ]
 }

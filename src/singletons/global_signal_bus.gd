@@ -51,6 +51,14 @@ signal cardAddedToDeck(card)
 signal cardDrawnFromDeck(card)
 
 # ==================================================
+# ACTION QUEUE SIGNALS
+# ==================================================
+
+signal actionEnqueued(action)
+signal actionPopped(action)
+signal queueCleared()
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -129,3 +137,16 @@ func emitCardAddedToDeck(card) -> void:
 
 func emitCardDrawnFromDeck(card) -> void:
 	emit_signal("cardDrawnFromDeck", card)
+
+# ==================================================
+# ACTION QUEUE EMIT WRAPPERS
+# ==================================================
+
+func emitActionEnqueued(action) -> void:
+	emit_signal("actionEnqueued", action)
+
+func emitActionPopped(action) -> void:
+	emit_signal("actionPopped", action)
+
+func emitQueueCleared() -> void:
+	emit_signal("queueCleared")
