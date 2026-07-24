@@ -30,10 +30,21 @@ func setCardData(cardData: CardData) -> void:
 	data = cardData
 	health = data.baseHealth
 	attack = data.baseAttack
-	#add effects
 	
 	if is_node_ready():
 		_refreshCard()
+
+func modifyStat(statName: String, amount: int) -> bool:
+	match statName:
+		"health":
+			health = maxi(health + amount, 0)
+		"attack":
+			attack = maxi(attack + amount, 0)
+		_:
+			return false
+
+	_refreshCard()
+	return true
 
 func _refreshCard() -> void:
 	visuals.refresh()

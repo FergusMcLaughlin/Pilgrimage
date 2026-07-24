@@ -12,7 +12,7 @@ func enqueueAction(action: Dictionary) -> bool:
 	return true
 
 func popNextAction() -> Dictionary:
-	if(_queue.is_empty()):
+	if _queue.is_empty():
 		return {}
 	
 	var action = _queue.pop_front()
@@ -20,7 +20,7 @@ func popNextAction() -> Dictionary:
 	return action
 
 func peekNextAction() -> Dictionary:
-	if(_queue.is_empty()):
+	if _queue.is_empty():
 		return {}
 	else:
 		return _queue.front()

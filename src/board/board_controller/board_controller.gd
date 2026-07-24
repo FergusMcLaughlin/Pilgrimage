@@ -4,6 +4,9 @@ class_name BoardController
 @export var slotGridPath: NodePath
 @onready var grid: SlotGrid = get_node(slotGridPath)
 
+func _ready() -> void:
+	add_to_group("boardController")
+
 func placeCard(card: Card, slot: CardSlot) -> bool:
 	if card == null:
 		return false
@@ -55,6 +58,18 @@ func clearBoard() -> void:
 		slot.clearSlot()
 	
 	GlobalSignalBus.emitBoardStateChanged()
+
+func removeCard(card: Card) -> bool:
+	if card == null:
+		return false
+	
+	var slot := getSlotCardIsIn(card)
+	if slot == null:
+		return false
+	
+	slot.clearSlot()
+	GlobalSignalBus.emitBoardStateChanged()
+	return true
 
 func getSlotCardIsIn(card: Card) -> CardSlot:
 	if card == null || grid == null:

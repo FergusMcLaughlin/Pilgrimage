@@ -2,8 +2,6 @@ class_name ActionType
 extends RefCounted
 
 const MOVE_CARD = "move_card"
-const DEAL_DAMAGE = "deal_damage"
-const HEAL = "heal" # unique to modify stats as im thinking of possible effects implactaions i want ot handle buffs different to say lifesteal
 const MODIFY_STATS = "modify_stats"
 const REMOVE_CARD = "remove_card"
 const DELETE_CARD = "delete_card"
@@ -16,8 +14,6 @@ const GAME_OVER = "game_over"
 
 const VALID_TYPES: Array[String] = [
 	MOVE_CARD,
-	DEAL_DAMAGE,
-	HEAL,
 	MODIFY_STATS,
 	REMOVE_CARD,
 	DELETE_CARD,
@@ -42,7 +38,7 @@ static func isValid(action: Dictionary) -> bool:
 		push_error("ActionType: Malformed action. Action is empty.")
 		return false
 	
-	if(!action.has("type") || !action.has("source") || !action.has("target") || !action.has("data")):
+	if !action.has("type") || !action.has("source") || !action.has("target") || !action.has("data"):
 		push_error("ActionType: Malformed action. Missing required action parts.")
 		return false
 	

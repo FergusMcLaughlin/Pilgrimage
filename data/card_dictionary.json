@@ -59,7 +59,7 @@
 		"health": 3.0,
 		"attack": 6.0,
 		"effects": [
-			"solitary_beast"
+			"heal_self_on_play"
 		],
 		"image_path": "res://assets/images/cards/Goatman.png"
 	},
@@ -69,9 +69,7 @@
 		"type": "unit",
 		"health": 1.0,
 		"attack": 2.0,
-		"effects": [
-			"effect_woods"
-		],
+		"effects": [],
 		"image_path": "res://assets/images/cards/Goblins.png"
 	},
 	"M_0004": {
@@ -80,9 +78,7 @@
 		"type": "unit",
 		"health": 2.0,
 		"attack": 3.0,
-		"effects": [
-			"effect_woods"
-		],
+		"effects": [],
 		"image_path": "res://assets/images/cards/Oddity.png"
 	},
 	"M_0005": {
@@ -109,9 +105,7 @@
 		"type": "buff",
 		"health": 2.0,
 		"attack": 0.0,
-		"effects": [
-			"heal_on_kill"
-		],
+		"effects": [],
 		"image_path": "res://assets/images/cards/Stew.png"
 	},
 	"M_0008": {
@@ -120,9 +114,7 @@
 		"type": "buff",
 		"health": 20.0,
 		"attack": 0.0,
-		"effects": [
-			"heal_on_kill"
-		],
+		"effects": [],
 		"image_path": "res://assets/images/cards/Ale.png"
 	},
 	"M_0009": {
@@ -131,9 +123,7 @@
 		"type": "buff",
 		"health": 0.0,
 		"attack": 3.0,
-		"effects": [
-			"buff_attack_on_kill"
-		],
+		"effects": [],
 		"image_path": "res://assets/images/cards/Rally.png"
 	},
 	"M_0010": {

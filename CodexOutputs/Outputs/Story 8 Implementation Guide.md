@@ -2,7 +2,7 @@
 
 Date: 2026-07-16
 
-Related: [[Story 7 Implementation Guide]] · [[Action Processor Delegation Principle]] · [[Action System Explained Simply]]
+Related: [[Story 7 Implementation Guide]] · [[Action Processor Delegation Principle]] · [[Action System Explained Simply]] · [[Story 8.5 Action Processor Completion]]
 
 ## Task
 
@@ -14,7 +14,7 @@ The processor controls **when** an action resolves. Existing specialist classes 
 
 - Story 7 is complete and runtime verified.
 - Keep the existing `ActionType` class name, camelCase methods, and expanded action vocabulary.
-- Add `const DESTROY_CARD = "destroy_card"` to `ActionType` and include it in `VALID_TYPES`.
+- Keep the existing `REMOVE_CARD` and `DELETE_CARD` action types in `VALID_TYPES`.
 - Add `BoardController` to a `boardController` group in `_ready()` so the autoload can find the active scene's controller without holding an exported scene reference.
 - Do not add effect pre/post hooks yet. `EffectMediator` does not exist and belongs to a later story.
 
@@ -64,8 +64,8 @@ Only one action may be resolving at a time. This matters because `REVEAL_CARD` c
 | `REVEAL_CARD` | `JourneyDeck` | `CardSlot` | `{}` | `JourneyDeck.revealTopCard()` |
 | `MOVE_CARD` | `Card` | destination `CardSlot` | `{}` | `BoardController.moveCard()` |
 | `MODIFY_STATS` | effect/request source or `null` | `Card` | `{"stat": String, "amount": int}` | a public method on `Card` |
-| `DEAL_DAMAGE` | attacking `Card` or request source | target `Card` | `{"amount": int}` | a public method on `Card` |
-| `DESTROY_CARD` | destroyer/request source or `null` | target `Card` | `{}` | `BoardController` plus card lifecycle |
+| `REMOVE_CARD` | effect/request source or `null` | target `Card` | `{}` | `BoardController.removeCard()` |
+| `DELETE_CARD` | effect/request source or `null` | target `Card` | `{}` | card lifecycle, after clearing any board reference |
 
 These payload rules belong to Story 8. A malformed action-specific payload should warn and do nothing; it must not leave the processor busy.
 
@@ -103,10 +103,10 @@ func _resolveAction(action: Dictionary) -> void:
 			_handleMoveCard(action)
 		ActionType.MODIFY_STATS:
 			_handleModifyStats(action)
-		ActionType.DEAL_DAMAGE:
-			_handleDealDamage(action)
-		ActionType.DESTROY_CARD:
-			_handleDestroyCard(action)
+		ActionType.REMOVE_CARD:
+			_handleRemoveCard(action)
+		ActionType.DELETE_CARD:
+			_handleDeleteCard(action)
 		_:
 			push_warning("ActionProcessor: Unsupported action type: %s" % action["type"])
 ```
@@ -133,15 +133,17 @@ func _getBoardController() -> BoardController:
 
 If no controller exists in the active scene, board-related handlers should warn and return safely.
 
-### Stats and damage
+### Stat changes, healing, and damage
 
-Do not make the processor responsible for refreshing card visuals. Add focused public methods to `Card`, such as `modifyStat(statName, amount) -> bool` and `takeDamage(amount) -> bool`. Those methods should own the mutation, prevent invalid stat names or negative damage, clamp values where appropriate, and call `_refreshCard()` internally.
+Do not make the processor responsible for refreshing card visuals. `Card.modifyStat(statName, amount) -> bool` owns the mutation, rejects unsupported stat names, clamps values where appropriate, and calls `_refreshCard()` internally.
 
-For this story, support `health` and `attack` in `MODIFY_STATS`. Treat `amount` as a delta. `DEAL_DAMAGE` subtracts a non-negative amount from health. Do not automatically destroy a zero-health card unless a separate `DESTROY_CARD` action is queued; keeping those actions separate will matter to later effects.
+For this story, support `health` and `attack` in `MODIFY_STATS` and treat `amount` as a signed delta. A positive health amount heals and a negative health amount deals damage. Reaching zero health does not implicitly remove or delete the card.
 
-### Destruction
+### Removal and deletion
 
-Destruction must locate and clear the card's current slot before calling `queue_free()`. Prefer adding a focused public `removeCard(card) -> bool` operation to `BoardController` and calling it from the processor rather than duplicating slot-search and clearing logic in the handler.
+`REMOVE_CARD` means removing a card from active play without deleting the card node. It delegates to `BoardController.removeCard(card)`, which clears the occupied slot and board reference.
+
+`DELETE_CARD` means completely deleting the card node. If the card is still on the active board, the processor first asks `BoardController` to clear that reference, then calls `queue_free()`. Deletion also works for a card that is already outside active play.
 
 ### Reveal
 
@@ -165,8 +167,9 @@ Create a temporary test script or scene that verifies:
 - `isProcessingAction` prevents a second action from starting during an awaited reveal;
 - `MOVE_CARD` delegates to `BoardController` and clears the starting slot;
 - `MODIFY_STATS` changes the requested stat and refreshes its display;
-- `DEAL_DAMAGE` reduces health but does not implicitly free the target;
-- `DESTROY_CARD` clears the occupied slot before freeing the card;
+- a negative health modification deals damage and clamps health at zero without removing the card;
+- `REMOVE_CARD` clears the occupied slot without freeing the card;
+- `DELETE_CARD` clears any occupied slot before freeing the card;
 - malformed action-specific data warns and the processor becomes idle again;
 - a currently unsupported valid type warns and does not stop later actions; and
 - the temporary test code is removed after the run.
@@ -179,15 +182,15 @@ git diff --check
 
 ## Definition Of Done
 
-- [ ] `DESTROY_CARD` exists in `ActionType.VALID_TYPES`.
+- [ ] `REMOVE_CARD` and `DELETE_CARD` exist in `ActionType.VALID_TYPES`.
 - [ ] `ActionProcessor` is registered exactly once as an autoload.
 - [ ] It consumes actions from the existing `ActionQueue` in FIFO order.
 - [ ] It cannot re-enter while an action is resolving.
-- [ ] Reveal, move, stat modification, damage, and destruction are routed by `ActionType` constants.
+- [ ] Reveal, move, stat modification, removal, and deletion are routed by `ActionType` constants.
 - [ ] Asynchronous reveal work is awaited.
 - [ ] Board operations delegate to `BoardController`.
 - [ ] Stat changes and visual refresh delegate to `Card`.
-- [ ] Destruction clears the slot before freeing the card.
+- [ ] Removal clears the slot without freeing the card, and deletion frees the card completely.
 - [ ] Malformed payloads and unsupported types warn without wedging the queue.
 - [ ] No effect system or unrelated gameplay rules are added.
 - [ ] Runtime verification passes, temporary test code is deleted, and `git diff --check` passes.
