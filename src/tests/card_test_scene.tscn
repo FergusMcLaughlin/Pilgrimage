@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://clyul5x8wv3wp"]
+
+[ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
+[ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/decks/deck_types/journey_deck.tscn" id="3_1djoe"]
+[ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
+[ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/board/board_controller/board_controller.tscn" id="4_board"]
+
+[node name="CardTestScene" type="Control" unique_id=484959055]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ir41h")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=924718054]
+
+[node name="Controls" type="VBoxContainer" parent="CanvasLayer" unique_id=747231198]
+offset_left = 68.0
+offset_top = 46.0
+offset_right = 184.0
+offset_bottom = 110.0
+
+[node name="AddPlayerButton" type="Button" parent="CanvasLayer/Controls" unique_id=1875019492]
+layout_mode = 2
+text = "Add Player"
+
+[node name="AddKnightButton" type="Button" parent="CanvasLayer/Controls" unique_id=258061816]
+layout_mode = 2
+text = "Add Knight"
+
+[node name="AddGoatmanButton" type="Button" parent="CanvasLayer/Controls" unique_id=2046717164]
+layout_mode = 2
+text = "Add Goatman"
+
+[node name="AddStewButton" type="Button" parent="CanvasLayer/Controls" unique_id=1594565098]
+layout_mode = 2
+text = "Add Stew"
+
+[node name="ClearCardsButton" type="Button" parent="CanvasLayer/Controls" unique_id=1837472300]
+layout_mode = 2
+text = "Clear Cards"
+
+[node name="CardsRoot" type="Control" parent="CanvasLayer" unique_id=1273091550]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 787.0
+offset_top = 396.0
+offset_right = 787.0
+offset_bottom = 396.0
+
+[node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
+layout_mode = 1
+
+[node name="BoardController" parent="." unique_id=1044313469 instance=ExtResource("4_board")]
+layout_mode = 0
+slotGridPath = NodePath("../SlotGrid")
+
+[node name="JourneyDeck" parent="." unique_id=694193839 instance=ExtResource("3_1djoe")]
+layout_mode = 1
+offset_left = 1272.0
+offset_top = 39.0
+offset_right = -53.0
+offset_bottom = -668.0
