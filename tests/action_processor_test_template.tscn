@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://dkrxo4ftx1541"]
-
-[ext_resource type="Script" uid="uid://ktohbx7pvunl" path="res://tests/action_processor_test_template.gd" id="1_test"]
-
-[node name="ActionProcessorTestTemplate" type="Node" unique_id=400228259]
-script = ExtResource("1_test")

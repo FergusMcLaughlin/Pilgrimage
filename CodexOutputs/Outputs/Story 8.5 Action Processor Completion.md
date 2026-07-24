@@ -1,106 +1,100 @@
-# Story 8.5: Finish and Test the Action Processor
+# Story 8.5: Finish and Verify the Action Processor
 
-Date: 2026-07-19
+Status: Implementation complete — 10/10 tests pass headlessly; final in-editor confirmation remains.
 
 Related: [[Story 8 Implementation Guide]] · [[Action Processor Delegation Principle]] · [[Story 9 Effect Data Draft]]
 
-## Purpose
+## Goal
 
-Finish the basic action processor and protect its public queue-to-handler flow with a small permanent Godot test suite. Effect loading and execution remain later stories.
+Finish Story 8 by protecting the complete `ActionQueue` → `ActionProcessor` → delegate flow with a permanent Godot test suite.
 
-## Chosen Action Semantics
+Do not add effects, combat, or new action types in this story.
 
-Story 8.5 uses the project's existing action vocabulary:
+## Existing Behaviour to Preserve
 
-| Action | Meaning | Delegate | Await? |
+| Action | Required behaviour | Owner | Awaited? |
 | --- | --- | --- | --- |
 | `REVEAL_CARD` | Reveal the top journey card into a slot | `JourneyDeck.revealTopCard()` | Yes |
 | `MOVE_CARD` | Move a card between board slots | `BoardController.moveCard()` | No |
 | `MODIFY_STATS` | Apply a signed delta to health or attack | `Card.modifyStat()` | No |
-| `REMOVE_CARD` | Remove a card from active play without deleting it | `BoardController.removeCard()` | No |
-| `DELETE_CARD` | Completely delete a card node | card lifecycle, after clearing a board reference | No |
+| `REMOVE_CARD` | Clear a card from its board slot without deleting it | `BoardController.removeCard()` | No |
+| `DELETE_CARD` | Clear any board reference, then free the card node | `ActionProcessor` | No |
 
-`MODIFY_STATS` deliberately covers both healing and damage:
+Rules that must remain true:
 
-- a positive health amount heals;
-- a negative health amount deals damage;
-- health and attack clamp at zero;
-- reaching zero health does not automatically remove or delete the card.
+- Positive health changes heal.
+- Negative health changes deal damage.
+- Health and attack clamp at zero.
+- Reaching zero health does not automatically remove or delete a card.
+- Removing a card leaves the card node alive.
+- Deleting a card frees the node and never leaves a stale slot reference.
+- Invalid payloads warn and return safely.
+- An invalid or unsupported action never leaves the processor busy or blocks later actions.
 
-`REMOVE_CARD` and `DELETE_CARD` are different operations. Removing clears the card's occupied slot but leaves the card node alive for later use. Deleting calls `queue_free()`; if the card is still on the active board, its slot is cleared first so the board does not retain a stale reference. A card already outside active play can still be deleted.
+## Work Remaining
 
-## Payload Contract
+### 1. Make the test suite permanent
 
-| Action | Required payload |
-| --- | --- |
-| Reveal | source: `JourneyDeck`; target: `CardSlot` |
-| Move | source: `Card`; target: destination `CardSlot` |
-| Modify stats | target: `Card`; data: `stat` String and signed integer `amount` |
-| Remove | target: `Card` currently on the active board |
-| Delete | target: `Card` |
+- [x] Rename `tests/action_processor_test_template.gd` to `tests/action_processor_test.gd`.
+- [x] Rename `tests/action_processor_test_template.tscn` to `tests/action_processor_test.tscn`.
+- [x] Update the scene's script reference after the rename.
+- [x] Remove wording that describes the suite as a template or example.
 
-Every invalid payload should warn and return safely. An invalid or unsupported action must not leave `ActionProcessor.isProcessingAction` stuck on `true` or prevent the next queued action from resolving.
+### 2. Keep the four existing tests passing
 
-## Delegation Rules
+- [x] Positive health modification works through `ActionQueue`.
+- [x] Negative health modification clamps health at zero without removing the card.
+- [x] Malformed `MODIFY_STATS` data does not wedge the processor.
+- [x] `DELETE_CARD` frees a card that is already outside active play.
 
-The processor validates the request, selects the owner, and coordinates lifecycle work. It does not duplicate specialist behavior.
+### 3. Add the six missing tests
 
-- `Card.modifyStat()` owns supported stat names, clamping, and visual refresh.
-- `BoardController.moveCard()` owns slot-to-slot movement.
-- `BoardController.removeCard()` owns locating and clearing a card's occupied slot and emitting the board-state change.
-- `JourneyDeck.revealTopCard()` owns drawing, animation, and placement.
-- `ActionProcessor` owns the final `queue_free()` for `DELETE_CARD`.
+- [x] **FIFO:** enqueue two immediate stat changes and prove they resolve in insertion order.
+- [x] **Unsupported action recovery:** enqueue a valid but unsupported action followed by a supported action; prove the second action still resolves.
+- [x] **Move:** place a card in a source slot, enqueue `MOVE_CARD`, then prove the source is empty and the destination contains the card.
+- [x] **Remove:** place a card, enqueue `REMOVE_CARD`, then prove the slot is empty and the card node is still valid.
+- [x] **Delete from board:** place a card, enqueue `DELETE_CARD`, then prove the slot is empty and the card node is freed.
+- [x] **Reveal wait:** enqueue `REVEAL_CARD` and prove `ActionProcessor.isProcessingAction` remains true until the reveal animation finishes.
 
-Only reveal is awaited at handler level because it currently contains asynchronous animation. Move, stat modification, removal, and deletion are immediate.
+All tests must exercise the public flow by enqueueing actions. Do not call private processor handlers directly.
 
-## Board Controller Lookup
+### 4. Harden the test runner
 
-`ActionProcessor` is an autoload while the active `BoardController` belongs to the loaded board scene. The controller registers itself in the `boardController` group, and the processor looks it up when a board operation is requested.
+- [x] Clear `ActionQueue` before and after every test.
+- [x] Wait for `ActionProcessor` with a bounded frame timeout so failures cannot hang forever.
+- [x] Clean up every node created by a test.
+- [x] Ensure a failed assertion cannot be counted or printed as a passed test.
+- [x] Ensure one test cannot leak board, queue, or processor state into the next test.
 
-```gdscript
-func _getBoardController() -> BoardController:
-	return get_tree().get_first_node_in_group("boardController") as BoardController
-```
+### 5. Runtime verification
 
-`REMOVE_CARD` requires an active controller. `DELETE_CARD` does not require one, but uses it when available to clear an occupied slot before deletion.
+- [ ] Run the permanent test scene in the Godot editor.
+- [x] Run the permanent test scene headlessly.
+- [x] Confirm all ten tests pass.
+- [x] Confirm there are no assertion failures, script errors, orphan-node warnings, or stuck queued actions.
+- [x] Confirm through the integration test that a revealed card is not processed as complete before its tween finishes.
 
-## Test Suite
+### 6. Final cleanup
 
-The reusable starting files are currently:
-
-```text
-tests/action_processor_test_template.gd
-tests/action_processor_test_template.tscn
-```
-
-Turn them into the permanent `action_processor_test.gd` and `.tscn` suite. Test through `ActionQueue` rather than calling private handlers so the tests cover the real queue → processor → delegate flow.
-
-Required tests:
-
-- positive health modification heals through the queue;
-- negative health modification damages and clamps at zero without removing or freeing the card;
-- two immediate actions resolve FIFO;
-- malformed data warns and does not wedge the processor;
-- an unsupported valid action does not block the next action;
-- move clears the old slot and fills the destination;
-- remove clears the occupied slot without freeing the card;
-- delete clears an occupied slot and frees the card;
-- delete also frees a card that is already outside active play;
-- reveal keeps `isProcessingAction` true until its tween finishes.
-
-Use a bounded frame wait for asynchronous processing and reset the autoload queue between tests. A test runner must not print or count a failed assertion as a pass.
+- [x] Run `git diff --check` and fix any whitespace errors.
+- [x] Confirm no effect or combat code was introduced.
+- [ ] Delete `Story 8.5 Finish Checklist (Throwaway).md` once this checklist is complete.
+- [ ] Change this document's status to `Complete — runtime verified`.
+- [ ] Commit the finished Story 8.5 implementation and tests.
 
 ## Definition of Done
 
-- [ ] All five handlers exist and validate their payloads.
-- [ ] Only reveal is awaited at handler level.
-- [ ] Positive and negative stat deltas work and clamp at zero.
-- [ ] Remove and delete have distinct, tested lifecycle behavior.
-- [ ] Invalid and unsupported actions do not wedge the queue.
-- [ ] The permanent test scene runs headlessly without assertion or script errors.
-- [ ] No effect or combat system is added.
-- [ ] `git diff --check` passes.
+Story 8.5 is complete only when:
 
-## Handoff
+- [x] All five action handlers still satisfy the behaviour table above.
+- [x] The permanent suite contains all ten required tests.
+- [x] All ten tests pass through the real queue-to-handler flow.
+- [x] Reveal is the only handler awaited by `ActionProcessor`.
+- [x] Invalid and unsupported actions cannot wedge the processor.
+- [x] Remove and delete have distinct, verified lifecycle behaviour.
+- [ ] The suite passes both in-editor and headlessly.
+- [x] `git diff --check` passes.
 
-After these checks pass, Story 8 is complete and Story 9 may add validated effect data without changing this action contract.
+## Handoff to Story 9
+
+After every Definition of Done item is checked, Story 8 is closed. Story 9 can then implement validated effect-data loading without changing the action contract.

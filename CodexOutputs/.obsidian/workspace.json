@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Outputs/Story 9 Effect Data Draft.md",
+                "file": "Outputs/Story 8.5 Finish Checklist (Throwaway).md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Story 9 Effect Data Draft"
+              "title": "Story 8.5 Finish Checklist (Throwaway)"
             }
           }
         ]
@@ -183,13 +183,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "3a89356606c6f990",
+  "active": "7c70e9d8c84dcd5e",
   "lastOpenFiles": [
+    "Outputs/Story 8.5 Action Processor Completion.md",
+    "Outputs/Story 9 Effect Data Draft.md",
     "Outputs/Story 8.5 Finish Checklist (Throwaway).md",
     "Notes/Future Story - Removed Card System.md",
     "Notes",
-    "Outputs/Story 8.5 Action Processor Completion.md",
-    "Outputs/Story 9 Effect Data Draft.md",
     "Outputs/Story 8 Implementation Guide.md",
     "Outputs/Story 7 Implementation Guide.md",
     "Outputs/Old Effect System Comparison.md",
