@@ -5,6 +5,8 @@
 		"trigger": "on_play",
 		"operation": "heal",
 		"target": "self",
-		"amount": 2
+		"parameters": {
+			"amount": 2
+			}
 	}
 }

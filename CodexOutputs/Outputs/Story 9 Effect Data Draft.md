@@ -1,48 +1,32 @@
-# Story 9 Draft: Load Valid Effect Data
+# Story 9: Load Effect Data
 
-Date: 2026-07-19
+Status: Complete — runtime verified.
 
-Related: [[Story 8.5 Action Processor Completion]] · [[Old Effect System Comparison]] · [[Scalable Effect System Explained Simply]]
+Related: [[Story 8.5 Action Processor Completion]] · [[Scalable Effect System Explained Simply]]
 
 ## Outcome
 
-Story 9 gives effect IDs a small, validated runtime definition. Cards continue storing reusable IDs such as `heal_self_on_play`; the game can resolve each ID through one effect catalogue and reject malformed or missing definitions safely.
+Load effect definitions from `data/effect_dictionary.json` into `EffectData` resources and make them available through one `EffectLibrary` autoload.
 
-This story does **not** execute effects. Story 10 will add gameplay events and the `EffectSystem` that turns a matching definition into queued actions.
+Cards retain effect IDs as data. Story 9 does not execute effects, subscribe to gameplay events, change card state, or enqueue actions.
 
-## Simple Explanation
+## Current Data Shape
 
-At present a card can say:
+Keep the current fixed fields for this first vertical slice:
 
-```json
-"effects": ["solitary_beast"]
+```gdscript
+class_name EffectData
+extends Resource
+
+@export var id: String
+@export var name: String
+@export var trigger: String
+@export var operation: String
+@export var target: String
+@export var parameters: Dictionary = {}
 ```
 
-but the current game only keeps that text. It does not load the matching entry from `effect_dictionary.json` or know what the entry means.
-
-Story 9 connects the label to validated data:
-
-```text
-Card contains effect ID
-    ↓
-Effect catalogue finds that ID
-    ↓
-EffectData validates trigger, operation, target, and amount
-    ↓
-The valid definition is available for later use
-```
-
-That is preparation, not execution. Nothing should heal merely because its data was loaded.
-
-## Prerequisite
-
-[[Story 8.5 Action Processor Completion]] is complete and runtime verified. The effect layer must be built on working basic actions rather than compensating for missing processor handlers.
-
-## First Vertical Slice
-
-Use one deliberately simple definition: **when this card is played, heal itself by 2**.
-
-Suggested catalogue entry:
+The first production definition is:
 
 ```json
 "heal_self_on_play": {
@@ -51,108 +35,86 @@ Suggested catalogue entry:
 	"trigger": "on_play",
 	"operation": "heal",
 	"target": "self",
-	"amount": 2
+	"parameters": {
+		"amount": 2
+	}
 }
 ```
 
-This proves the data shape without attempting `solitary_beast`. That effect needs board-state counting and safe recalculation, so it belongs after the basic trigger and targeting path works.
+## Validation Decision
 
-## Smallest Effect Shape
+Story 9 does not enforce a universal effect shape beyond the current conversion fields, and it does not hardcode every legal trigger, operation, target, or parameter combination.
 
-| Field | Type | Purpose |
-| --- | --- | --- |
-| `id` | `String` | Stable catalogue key used by cards and logs |
-| `name` | `String` | Human-readable name |
-| `trigger` | `String` | Story 9 supports `on_play` only |
-| `operation` | `String` | Story 9 supports `heal` only |
-| `target` | `String` | Story 9 supports `self` only |
-| `amount` | `int` | Positive healing amount |
+Effects may grow into different shapes. Gameplay-specific validation belongs to the future handler that understands the operation.
 
-Do not carry old fields such as `timing` and `frequency` forward until a runtime story defines and enforces their meaning.
+The catalogue performs only the safety check needed at this stage:
 
-## Files
+- the top-level JSON must be a dictionary; and
+- each catalogue entry must be a dictionary before it is passed to `EffectDataFactory`.
 
-Create:
+A non-dictionary entry warns, is skipped, and does not stop valid definitions loading.
 
-```text
-src/effects/effect_data.gd
-src/effects/effect_data_factory.gd
-src/effects/effect_library.gd
-```
+## Card Data Boundary
 
-Update:
-
-```text
-data/effect_dictionary.json
-src/cards/card_loaders/card_data.gd
-src/cards/card_loaders/card_data_factory.gd
-project.godot
-```
-
-`EffectLibrary` may be an autoload like `CardLibrary`, registered exactly once. It loads the catalogue, builds validated `EffectData` resources, and provides queries such as `hasEffectData(id)` and `getEffectData(id)`.
-
-## Card Data Decision
-
-Keep effect IDs in `CardData` as the source reference:
+Cards keep all referenced effect IDs:
 
 ```gdscript
 @export var effects: Array[String] = []
 ```
 
-Do not replace IDs with effect-specific scripts. IDs let several cards share one definition and preserve the useful data-driven part of the old system.
+`CardDataFactory` preserves the complete array. It does not resolve effects or execute gameplay.
 
-Add a resolved list only when a real caller needs it. Otherwise validate every card's IDs after both catalogues load and leave lookup to the later `EffectSystem`.
+After both catalogues load, `EffectLibrary` should check every ID on every card. Unknown references should warn without rejecting or changing the card.
 
-Support every ID in a card's `effects` array. Do not repeat the old system's mistake of using only the first entry.
+## Implemented Files
 
-## Validation Rules
+- `src/effects/effect_data.gd`
+- `src/effects/effect_data_factory.gd`
+- `src/effects/effect_json_loader.gd`
+- `src/effects/effect_library.gd`
+- `data/effect_dictionary.json`
+- `tests/effect_library_test.gd`
+- `tests/effect_library_test.tscn`
+- `project.godot` autoload registration
 
-Warn and skip an effect when:
+## Current Automated Coverage
 
-- its catalogue entry is not a dictionary;
-- its ID or name is empty;
-- its trigger is not `on_play`;
-- its operation is not `heal`;
-- its target is not `self`;
-- its amount is missing, not an integer, or not positive; or
-- a card refers to an ID absent from the catalogue.
+- [x] `heal_self_on_play` loads with every expected field.
+- [x] `EffectDataFactory` copies the current fixed fields.
+- [x] A non-dictionary catalogue entry warns and is skipped.
+- [x] Reloading clears stale cached definitions.
+- [x] Loading effect data does not enqueue an action.
+- [x] A card retains two effect IDs and both can be checked through `EffectLibrary`.
+- [x] Unknown references warn with their card and effect IDs.
+- [x] An unknown reference does not stop later IDs or cards being checked.
+- [x] Reference validation preserves `CardData.effects` and queues no actions.
 
-One bad effect must not stop valid effects or card data from loading.
+## Work Remaining
+
+No implementation or automated verification work remains in Story 9.
 
 ## Keep Out of Story 9
 
-- `EffectSystem` or `EffectMediator`
-- subscribing to board or card signals
-- firing `on_play`
-- creating or enqueueing a `HEAL` action
-- changing card health
-- processor before/after hooks
-- effect registration based on board zones
-- conditions, target searches, sequences, frequency, or timing rules
-- `solitary_beast` execution
-
-Loading data and reacting to gameplay are separate responsibilities and should be tested separately.
-
-## Verification
-
-- Load `heal_self_on_play` and verify every field.
-- Verify two effect IDs on one card are both preserved and checked.
-- Verify an unknown card effect ID warns without breaking card loading.
-- Verify malformed trigger, operation, target, and amount values are skipped safely.
-- Verify catalogue reload clears old cached definitions.
-- Verify loading effect data does not enqueue an action or change a card.
-- Run `git diff --check`.
+- universal trigger, operation, target, or parameter validation;
+- `EffectSystem` or `EffectMediator`;
+- firing `on_play`;
+- creating or enqueueing a heal action;
+- changing card health;
+- processor pre/post hooks;
+- effect registration based on board zones; and
+- conditions, targeting searches, timing, frequency, or sequences.
 
 ## Definition of Done
 
-- [ ] A minimal `EffectData` model exists.
-- [ ] The effect catalogue loads and validates definitions by ID.
-- [ ] `heal_self_on_play` is available as valid runtime data.
-- [ ] Cards retain all effect IDs, not only the first.
-- [ ] Unknown and malformed definitions warn without stopping loading.
-- [ ] No effect executes and no action is queued in this story.
-- [ ] Runtime loading tests pass and temporary test code is removed.
+- [x] A minimal `EffectData` model exists.
+- [x] The effect catalogue loads definitions by ID.
+- [x] `heal_self_on_play` is available as runtime data.
+- [x] Non-dictionary entries warn and do not stop catalogue loading.
+- [x] Cards retain all effect IDs, not only the first.
+- [x] Unknown card effect references warn without breaking card loading.
+- [x] No effect executes and no action is queued.
+- [x] All Story 9 runtime tests pass, including reference-validation tests.
 
 ## Handoff to Story 10
 
-Story 10 adds a small `EffectSystem`, defines the `on_play` event precisely, finds active effects interested in it, and translates `heal_self_on_play` into a queued `HEAL` action. It must also decide when a card becomes active and inactive so cards in a deck cannot react, fixing a key problem from the old system.
+Story 10 will decide how triggers, operations, targets, and operation-specific parameters are interpreted. It will translate valid runtime effects into queued actions without changing Story 9's catalogue responsibility.
