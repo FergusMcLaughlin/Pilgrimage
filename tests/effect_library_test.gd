@@ -37,10 +37,11 @@ func _testProductionEffectLoads() -> void:
 	var effect := EffectLibrary.getEffectData("heal_self_on_play")
 	assert(effect != null)
 	assert(effect.id == "heal_self_on_play")
-	assert(effect.name == "Heal Self on Play")
+	assert(effect.name == "Gain Health on Play")
 	assert(effect.trigger == "on_play")
-	assert(effect.operation == "heal")
+	assert(effect.operation == "gain_health")
 	assert(effect.target == "self")
+	assert(effect.scriptPath == "res://src/main/effects/handlers/gain_health_on_play.gd")
 	assert(effect.parameters.get("amount") == 2)
 	_passed += 1
 
@@ -52,6 +53,7 @@ func _testFactoryCopiesFixedFields() -> void:
 		"trigger": "test_trigger",
 		"operation": "test_operation",
 		"target": "test_target",
+		"script_path": "res://test_effect.gd",
 		"parameters": {"amount": 7},
 	})
 
@@ -60,6 +62,7 @@ func _testFactoryCopiesFixedFields() -> void:
 	assert(effect.trigger == "test_trigger")
 	assert(effect.operation == "test_operation")
 	assert(effect.target == "test_target")
+	assert(effect.scriptPath == "res://test_effect.gd")
 	assert(effect.parameters.get("amount") == 7)
 	_passed += 1
 

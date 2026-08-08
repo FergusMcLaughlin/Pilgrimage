@@ -2,8 +2,8 @@
 # No addon is required: run the scene with F6 or headlessly.
 extends Node
 
-const SLOT_GRID_SCENE := preload("res://src/board/slot_grid/slot_grid.tscn")
-const JOURNEY_DECK_SCENE := preload("res://src/decks/deck_types/journey_deck.tscn")
+const SLOT_GRID_SCENE := preload("res://src/main/board/slot_grid/slot_grid.tscn")
+const JOURNEY_DECK_SCENE := preload("res://src/main/decks/deck_types/journey_deck.tscn")
 
 var _passed := 0
 var _createdNodes: Array[Node] = []
@@ -210,6 +210,12 @@ func _testRevealBlocksUntilAnimationFinishes() -> void:
 	deck.slotGrid = board.grid
 	deck.initialiseJourneyDeck(false)
 	var slot: CardSlot = board.grid.getSlotAt(Vector2i(0, 0))
+	var resolvedCards: Array[Card] = []
+	var recordResolved := func(action: Dictionary, result: Variant) -> void:
+		if action.get("type") == ActionType.REVEAL_CARD:
+			resolvedCards.append(result as Card)
+
+	GlobalSignalBus.actionResolved.connect(recordResolved)
 
 	assert(ActionQueue.enqueueAction(ActionType.make(ActionType.REVEAL_CARD, deck, slot)))
 	await get_tree().process_frame
@@ -217,8 +223,11 @@ func _testRevealBlocksUntilAnimationFinishes() -> void:
 	assert(ActionProcessor.isProcessingAction, "REVEAL_CARD must stay busy during its tween.")
 	assert(slot.currentCard == null, "The slot must not fill before reveal animation finishes.")
 	await _waitForProcessor(240)
+	GlobalSignalBus.actionResolved.disconnect(recordResolved)
 
 	assert(slot.currentCard != null, "REVEAL_CARD must place a card after its tween.")
+	assert(resolvedCards.size() == 1, "REVEAL_CARD must publish one resolved result.")
+	assert(resolvedCards[0] == slot.currentCard, "The resolved result must be the placed card.")
 	assert(!ActionProcessor.isProcessingAction, "The processor must become idle after reveal.")
 
 

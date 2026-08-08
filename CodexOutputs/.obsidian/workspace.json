@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Outputs/Story 10 Implementation Guide.md",
-                "mode": "preview",
+                "file": "Outputs/Story 10.5 Manual Test Scene Update.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Story 10 Implementation Guide"
+              "title": "Story 10.5 Manual Test Scene Update"
             }
           }
         ]
@@ -41,7 +41,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -185,12 +187,17 @@
   },
   "active": "7c70e9d8c84dcd5e",
   "lastOpenFiles": [
-    "Outputs/Story 9 Effect Data Draft.md",
+    "Outputs/Story 10 Action Integration Review.md",
+    "Outputs/Story 10.5 Manual Test Scene Update.md",
     "Outputs/Story 10 Implementation Guide.md",
-    "Outputs/Story 9 Scalable Validation Changes (Throwaway).md",
     "Outputs/Story 8.5 Finish Checklist (Throwaway).md",
-    "Outputs/Story 8.5 Action Processor Completion.md",
+    "Outputs/2026-08-06.md",
     "Notes/Future Story - Removed Card System.md",
+    "Templates/Codex Output Template.md",
+    "Home.md",
+    "Outputs/Story 9 Effect Data Draft.md",
+    "Outputs/Story 9 Scalable Validation Changes (Throwaway).md",
+    "Outputs/Story 8.5 Action Processor Completion.md",
     "Notes",
     "Outputs/Story 8 Implementation Guide.md",
     "Outputs/Story 7 Implementation Guide.md",

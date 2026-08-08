@@ -24,6 +24,7 @@ EffectLibrary="*uid://byvqs3lf3onk2"
 InputManager="*uid://cjiam2j6ggy51"
 ActionQueue="*uid://dkkpyn2l3ey7e"
 ActionProcessor="*uid://byceawn7gne4r"
+EffectProcessor="*uid://bwgmcsl8kuouu"
 
 [display]
 
@@ -33,6 +34,10 @@ window/size/viewport_height=900
 [dotnet]
 
 project/assembly_name="Pilgrimage-2"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/project_time_tracker/plugin.cfg")
 
 [physics]
 

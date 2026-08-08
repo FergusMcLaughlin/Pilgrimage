@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cw2h2qhfbdv4a"]
+
+[ext_resource type="Script" uid="uid://der615gvw374v" path="res://src/main/board/card_slots/card_slot.gd" id="1_wj31u"]
+[ext_resource type="Texture2D" uid="uid://bw3n800i372uo" path="res://assets/images/cards/card_slot.png" id="2_cke2m"]
+
+[node name="CardSlot" type="Control" unique_id=93795803]
+custom_minimum_size = Vector2(160, 224)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -112.0
+offset_right = 80.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wj31u")
+
+[node name="SlotBackground" type="TextureRect" parent="." unique_id=200141210]
+custom_minimum_size = Vector2(160, 224)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -112.0
+offset_right = 80.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_cke2m")
+expand_mode = 1
+
+[node name="CardAnchor" type="Control" parent="." unique_id=657938976]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -112.0
+offset_right = 80.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

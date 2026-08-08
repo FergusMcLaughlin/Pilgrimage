@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://ct2m7bysjbmkx"]
+
+[ext_resource type="Script" uid="uid://yc7sw7381cdx" path="res://src/main/decks/deck_types/journey_deck.gd" id="1_journey"]
+[ext_resource type="Script" uid="uid://3k00tqd4x72b" path="res://src/main/decks/deck_visuals.gd" id="2_kenmf"]
+[ext_resource type="Texture2D" uid="uid://de1g7r5v6y62l" path="res://assets/images/cards/Deck.png" id="2_otmlu"]
+[ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="3_kenmf"]
+
+[node name="JourneyDeck" type="Control" unique_id=694193839]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_journey")
+
+[node name="DeckVisuals" type="Control" parent="." unique_id=167285480]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_kenmf")
+
+[node name="DeckImage" type="TextureRect" parent="DeckVisuals" unique_id=1683385512]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -137.18513
+offset_top = -105.0
+offset_right = 137.18513
+offset_bottom = 105.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_otmlu")
+expand_mode = 1
+
+[node name="DeckCountContainer" type="MarginContainer" parent="DeckVisuals" unique_id=1313222926]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.05414
+offset_top = -89.75
+offset_right = 136.05414
+offset_bottom = 89.75
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DeckCount" type="RichTextLabel" parent="DeckVisuals/DeckCountContainer" unique_id=954216034]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("3_kenmf")
+theme_override_font_sizes/normal_font_size = 70
+text = "0"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1

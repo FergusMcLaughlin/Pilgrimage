@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://bcdeqjuhbeylp"]
-
-[ext_resource type="Script" uid="uid://doo6nwxe0a42h" path="res://src/board/board_controller/board_controller.gd" id="1_tvp5v"]
-
-[node name="BoardController" type="Control" unique_id=1907180923]
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_tvp5v")

@@ -1,10 +1,11 @@
 {
 	"heal_self_on_play": {
 		"id": "heal_self_on_play",
-		"name": "Heal Self on Play",
+		"name": "Gain Health on Play",
 		"trigger": "on_play",
-		"operation": "heal",
+		"operation": "gain_health",
 		"target": "self",
+		"script_path": "res://src/main/effects/handlers/gain_health_on_play.gd",
 		"parameters": {
 			"amount": 2
 			}

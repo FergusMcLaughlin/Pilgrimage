@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://bmcbd3gx7o68d"]
+
+[ext_resource type="Script" uid="uid://ds7c0cqif1taq" path="res://src/main/decks/deck.gd" id="1_d64lv"]
+[ext_resource type="Texture2D" uid="uid://8suo2808r3bs" path="res://assets/images/cards/card_back.png" id="5_g25wj"]
+[ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="8_uxug1"]
+
+[node name="Deck" type="Control" unique_id=944151678]
+light_mask = 2
+visibility_layer = 2
+z_index = 2
+custom_minimum_size = Vector2(160, 224)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -112.0
+offset_right = 80.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 1.5707964
+pivot_offset = Vector2(80, 112)
+size_flags_horizontal = 0
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.0
+mouse_filter = 2
+script = ExtResource("1_d64lv")
+
+[node name="InputLayer" type="Control" parent="." unique_id=376268894]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 224)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(80, 112)
+
+[node name="DeckVisuals" type="Control" parent="." unique_id=792028838]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 224)
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(80, 112)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DeckFace" type="TextureRect" parent="DeckVisuals" unique_id=803838010]
+unique_name_in_owner = true
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(80, 112)
+mouse_filter = 2
+texture = ExtResource("5_g25wj")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="DeckFace2" type="TextureRect" parent="DeckVisuals" unique_id=354629142]
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0125
+anchor_top = -0.008928567
+anchor_right = 0.9875
+anchor_bottom = 0.9910714
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.008726646
+pivot_offset = Vector2(80, 112)
+mouse_filter = 2
+texture = ExtResource("5_g25wj")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="DeckFace3" type="TextureRect" parent="DeckVisuals" unique_id=1625394142]
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = -0.013392853
+anchor_right = 0.975
+anchor_bottom = 0.98660713
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.0052359877
+pivot_offset = Vector2(80, 112)
+mouse_filter = 2
+texture = ExtResource("5_g25wj")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="DeckFace4" type="TextureRect" parent="DeckVisuals" unique_id=1596373993]
+unique_name_in_owner = true
+light_mask = 2
+visibility_layer = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = -0.013392857
+anchor_right = 0.975
+anchor_bottom = 0.98660713
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(80, 112)
+mouse_filter = 2
+texture = ExtResource("5_g25wj")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CardCountContainer" type="MarginContainer" parent="DeckVisuals" unique_id=253425889]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 55.0
+offset_top = 154.0
+offset_right = -5.0
+offset_bottom = 189.0
+grow_horizontal = 2
+rotation = -1.5707964
+mouse_filter = 2
+
+[node name="CardCount" type="RichTextLabel" parent="DeckVisuals/CardCountContainer" unique_id=459514312]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("8_uxug1")
+theme_override_colors/default_color = Color(18.892157, 18.892157, 18.892157, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 35
+theme_override_font_sizes/bold_italics_font_size = 35
+theme_override_font_sizes/italics_font_size = 35
+theme_override_font_sizes/mono_font_size = 35
+text = "123
+"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
