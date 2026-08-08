@@ -61,6 +61,22 @@ func revealTopCard(slot: CardSlot) -> Card:
 	deckVisuals.refresh()
 	return cardToPlace
 
+func _requestRevealAtSlot(slot: CardSlot) -> Card:
+	if slot == null or slot.isOccupied():
+		return null
+
+	var revealAction = ActionType.make(
+		ActionType.REVEAL_CARD,
+		self,
+		slot
+	)
+
+	if !ActionQueue.enqueueAction(revealAction):
+		return null
+
+	var result = await ActionQueue.waitForActionToResolve(revealAction)
+	return result as Card
+
 func fillEmptySlots(grid: SlotGrid) -> void:
 	if grid == null:
 		push_error("JourneyDeck: Cannot fill slots without a SlotGrid.")
@@ -70,7 +86,9 @@ func fillEmptySlots(grid: SlotGrid) -> void:
 		if isEmpty():
 			return
 		
-		await revealTopCard(slot)
+		var revealedCard = await _requestRevealAtSlot(slot)
+		if revealedCard == null:
+			return
 
 func revealToNextEmptySlot() -> Card:
 	if slotGrid == null:
@@ -81,7 +99,7 @@ func revealToNextEmptySlot() -> Card:
 	if emptySlots.is_empty():
 		return null
 		
-	return await revealTopCard(emptySlots[0])
+	return await _requestRevealAtSlot(emptySlots[0])
 
 func queueRevealToNextEmptySlot() -> void:
 	pendingRevealRequests += 1

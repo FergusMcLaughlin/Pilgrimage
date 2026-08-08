@@ -11,6 +11,18 @@ func enqueueAction(action: Dictionary) -> bool:
 	GlobalSignalBus.emitActionEnqueued(action)
 	return true
 
+func waitForActionToResolve(expectedAction: Dictionary) -> Variant:
+	while true:
+		var resolution: Array = await GlobalSignalBus.actionResolved
+		if resolution.size() < 2:
+			continue
+
+		var resolvedAction = resolution[0]
+		if is_same(resolvedAction, expectedAction):
+			return resolution[1]
+
+	return null
+
 func popNextAction() -> Dictionary:
 	if _queue.is_empty():
 		return {}
