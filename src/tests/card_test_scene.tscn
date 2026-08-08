@@ -42,6 +42,21 @@ text = "Add Stew"
 layout_mode = 2
 text = "Clear Cards"
 
+[node name="RemoveBoardCardButton" type="Button" parent="CanvasLayer/Controls"]
+layout_mode = 2
+tooltip_text = "Moves the first occupied board card into the Graveyard."
+text = "Remove First Board Card"
+
+[node name="DeleteGraveyardCardButton" type="Button" parent="CanvasLayer/Controls"]
+layout_mode = 2
+tooltip_text = "Permanently deletes the first card currently in the Graveyard."
+text = "Delete First Graveyard Card"
+
+[node name="ReviveGraveyardCardButton" type="Button" parent="CanvasLayer/Controls"]
+layout_mode = 2
+tooltip_text = "Revives the first Graveyard card into the first empty board slot."
+text = "Revive First Graveyard Card"
+
 [node name="CardsRoot" type="Control" parent="CanvasLayer" unique_id=1273091550]
 layout_mode = 3
 anchors_preset = 0
@@ -49,6 +64,60 @@ offset_left = 787.0
 offset_top = 396.0
 offset_right = 787.0
 offset_bottom = 396.0
+
+[node name="LifecycleDebugPanel" type="PanelContainer" parent="CanvasLayer"]
+offset_left = 1160.0
+offset_top = 280.0
+offset_right = 1580.0
+offset_bottom = 860.0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/LifecycleDebugPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Lists" type="VBoxContainer" parent="CanvasLayer/LifecycleDebugPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GraveyardHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 22
+text = "GRAVEYARD"
+
+[node name="GraveyardList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(390, 210)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/normal_font_size = 16
+text = "(empty)"
+fit_content = false
+scroll_active = true
+
+[node name="HistoryHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.15, 1)
+theme_override_font_sizes/font_size = 22
+text = "BOARD HISTORY"
+
+[node name="BoardHistoryList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(390, 260)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.85, 0.15, 1)
+theme_override_font_sizes/normal_font_size = 16
+text = "(no events)"
+fit_content = false
+scroll_active = true
 
 [node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
 layout_mode = 1

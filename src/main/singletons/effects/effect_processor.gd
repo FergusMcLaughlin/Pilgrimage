@@ -9,10 +9,7 @@ func _ready() -> void:
 
 func _onActionResolved(action: Dictionary, result: Variant) -> void:
 	var actionType = action.get("type")
-	if actionType in [ActionType.REMOVE_CARD, ActionType.DELETE_CARD]:
-		var removeCard = action.get("target")
-		if removeCard is Card:
-			_deactivateCardEffects(removeCard)
+	var leavingCard = action.get("target")
 
 	_dispatchEvent({
 		"type": "action_resolved",
@@ -20,14 +17,13 @@ func _onActionResolved(action: Dictionary, result: Variant) -> void:
 		"result": result
 	})
 
-	match actionType:
-		ActionType.REVEAL_CARD:
-			if result is Card:
-				_activateCardEffects(result)
-				_dispatchEvent({
-					"type": "on_play",
-					"card": result
-				})
+	if actionType == ActionType.REVEAL_CARD and result is Card:
+		_activateCardEffects(result)
+		_dispatchEvent({"type": "on_play", "card": result})
+
+	if actionType in [ActionType.REMOVE_CARD, ActionType.DELETE_CARD]:
+		if leavingCard is Card:
+			_deactivateCardEffects(leavingCard)
 
 func _activateCardEffects(card: Card) -> void:
 	if card == null || card.data == null:

@@ -6,6 +6,7 @@ var health: int
 var attack: int
 var imagePath: String
 var effectName: String # placeholde
+var instanceId: int = 0
 
 var currentState: int = CardState.State.IN_DECK
 
@@ -23,6 +24,9 @@ func _ready() -> void:
 	shadow.init(self, visuals.back)
 	input.init(self)
 	
+	if instanceId == 0:
+		instanceId = get_instance_id()
+
 	if data != null:
 		_refreshCard()
 

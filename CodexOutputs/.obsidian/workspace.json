@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Outputs/Story 10.5 Manual Test Scene Update.md",
+                "file": "Outputs/Story 11 Implementation Guide.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Story 10.5 Manual Test Scene Update"
+              "title": "Story 11 Implementation Guide"
             }
           }
         ]
@@ -80,7 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 253.60000000000002
   },
   "right": {
     "id": "b881da560281a7c3",
@@ -185,21 +185,27 @@
       "bases:Create new base": false
     }
   },
-  "active": "7c70e9d8c84dcd5e",
+  "active": "3a89356606c6f990",
   "lastOpenFiles": [
-    "Outputs/Story 10 Action Integration Review.md",
+    "Notes/Future Story - Combat Integration Effect Reassessment.md",
+    "Outputs/Story 11 Pre-Chore - Graveyard and Death Contract.md",
+    "Outputs/Story 11 Implementation Guide.md",
+    "Notes/Future Story - Revival Presentation and Placement.md",
     "Outputs/Story 10.5 Manual Test Scene Update.md",
     "Outputs/Story 10 Implementation Guide.md",
+    "Outputs/Story 8.5 Action Processor Completion.md",
+    "Outputs/Story 8 Implementation Guide.md",
+    "Outputs/Story 9 Effect Data Draft.md",
+    "Outputs/Original PDF Progress Audit.md",
+    "Outputs/Story 10 Action Integration Review.md",
+    "Outputs/Codex Help So Far and Working Process.md",
     "Outputs/Story 8.5 Finish Checklist (Throwaway).md",
     "Outputs/2026-08-06.md",
     "Notes/Future Story - Removed Card System.md",
     "Templates/Codex Output Template.md",
     "Home.md",
-    "Outputs/Story 9 Effect Data Draft.md",
     "Outputs/Story 9 Scalable Validation Changes (Throwaway).md",
-    "Outputs/Story 8.5 Action Processor Completion.md",
     "Notes",
-    "Outputs/Story 8 Implementation Guide.md",
     "Outputs/Story 7 Implementation Guide.md",
     "Outputs/Old Effect System Comparison.md",
     "Outputs/Scalable Effect System Explained Simply.md",

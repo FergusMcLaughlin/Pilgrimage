@@ -10,6 +10,11 @@ extends Control
 @onready var addGoatmanButton: Button = $CanvasLayer/Controls/AddGoatmanButton
 @onready var addStewButton: Button = $CanvasLayer/Controls/AddStewButton
 @onready var clearCardsButton: Button = $CanvasLayer/Controls/ClearCardsButton
+@onready var removeBoardCardButton: Button = $CanvasLayer/Controls/RemoveBoardCardButton
+@onready var deleteGraveyardCardButton: Button = $CanvasLayer/Controls/DeleteGraveyardCardButton
+@onready var reviveGraveyardCardButton: Button = $CanvasLayer/Controls/ReviveGraveyardCardButton
+@onready var graveyardList: RichTextLabel = %GraveyardList
+@onready var boardHistoryList: RichTextLabel = %BoardHistoryList
 
 var createCard := CreateCard.new()
 
@@ -37,17 +42,75 @@ func _ready() -> void:
 	GlobalSignalBus.cardPressed.connect(_onCardPressed)
 	GlobalSignalBus.cardFlipped.connect(_onCardFlipped)
 	GlobalSignalBus.cardStateChanged.connect(_onCardStateChanged)
+	GlobalSignalBus.actionResolved.connect(_onLifecycleActionResolved)
 
 	journeyDeck.boardController = boardController
 	journeyDeck.slotGrid = slotGrid
 	journeyDeck.initialiseJourneyDeck()
 	_connectButtons()
+	_refreshLifecycleDebugPanel()
 
 	if debug_stat_cycle:
 		_startDebugStatCycle()
 
 	if debug_state_cycle:
 		_startDebugStateCycle()
+
+
+func _onLifecycleActionResolved(action: Dictionary, _result: Variant) -> void:
+	if action.get("type") not in [
+		ActionType.REMOVE_CARD,
+		ActionType.DELETE_CARD,
+		ActionType.REVIVE_CARD,
+	]:
+		return
+
+	_refreshLifecycleDebugPanel()
+
+
+func _refreshLifecycleDebugPanel() -> void:
+	var graveyardLines: Array[String] = []
+	for entry in Graveyard.getEntries():
+		graveyardLines.append(
+			"- #%s %s [%s] cause=%s" % [
+				entry.entryId,
+				_getCardDisplayName(entry.cardId),
+				entry.cardId,
+				entry.cause,
+			]
+		)
+	graveyardList.text = (
+		"(empty)" if graveyardLines.is_empty() else "\n".join(graveyardLines)
+	)
+
+	var historyLines: Array[String] = []
+	for event in BoardHistory.getEvents():
+		var cardId: String = event.get("card_id", "unknown")
+		var details: Array[String] = []
+		if event.has("cause") and !str(event["cause"]).is_empty():
+			details.append("cause=%s" % event["cause"])
+		if event.has("from"):
+			details.append("from=%s" % event["from"])
+
+		var line := "%s. %s — %s [%s]" % [
+			event.get("sequence", "?"),
+			str(event.get("event", "unknown")).to_upper(),
+			_getCardDisplayName(cardId),
+			cardId,
+		]
+		if !details.is_empty():
+			line += " (%s)" % ", ".join(details)
+		historyLines.append(line)
+
+	boardHistoryList.text = (
+		"(no events)" if historyLines.is_empty() else "\n".join(historyLines)
+	)
+
+
+func _getCardDisplayName(cardId: String) -> String:
+	if !CardLibrary.hasCardData(cardId):
+		return "Unknown card"
+	return CardLibrary.getCardData(cardId).name
 
 
 func debug_card_size(label: String, card: Control) -> void:
@@ -90,6 +153,9 @@ func _connectButtons() -> void:
 	addGoatmanButton.pressed.connect(_onAddGoatmanPressed)
 	addStewButton.pressed.connect(_onAddStewPressed)
 	clearCardsButton.pressed.connect(_onClearCardsPressed)
+	removeBoardCardButton.pressed.connect(_onRemoveBoardCardPressed)
+	deleteGraveyardCardButton.pressed.connect(_onDeleteGraveyardCardPressed)
+	reviveGraveyardCardButton.pressed.connect(_onReviveGraveyardCardPressed)
 
 
 func _onAddPlayerPressed() -> void:
@@ -117,6 +183,60 @@ func _onClearCardsPressed() -> void:
 	activeCardIndex = -1
 
 	print("Cleared all test cards")
+
+
+func _onRemoveBoardCardPressed() -> void:
+	var occupiedSlots := slotGrid.getOccupiedSlots()
+	if occupiedSlots.is_empty():
+		print("Manual graveyard test: no board card to remove.")
+		return
+
+	var card := occupiedSlots[0].currentCard
+	var removeAction := ActionType.make(
+		ActionType.REMOVE_CARD,
+		null,
+		card,
+		{"cause": "manual_test"},
+	)
+	if !ActionQueue.enqueueAction(removeAction):
+		push_warning("Manual graveyard test: REMOVE_CARD was rejected.")
+
+
+func _onDeleteGraveyardCardPressed() -> void:
+	var entries := Graveyard.getEntries()
+	if entries.is_empty():
+		print("Manual graveyard test: the graveyard is empty.")
+		return
+
+	var deleteAction := ActionType.make(
+		ActionType.DELETE_CARD,
+		null,
+		entries[0],
+		{"cause": "manual_test"},
+	)
+	if !ActionQueue.enqueueAction(deleteAction):
+		push_warning("Manual graveyard test: DELETE_CARD was rejected.")
+
+
+func _onReviveGraveyardCardPressed() -> void:
+	var entries := Graveyard.getEntries()
+	if entries.is_empty():
+		print("Manual graveyard test: the graveyard is empty.")
+		return
+
+	var emptySlots := slotGrid.getEmptySlots()
+	if emptySlots.is_empty():
+		print("Manual graveyard test: there is no empty revival slot.")
+		return
+
+	var reviveAction := ActionType.make(
+		ActionType.REVIVE_CARD,
+		entries[0],
+		emptySlots[0],
+		{"cause": "manual_test"},
+	)
+	if !ActionQueue.enqueueAction(reviveAction):
+		push_warning("Manual graveyard test: REVIVE_CARD was rejected.")
 
 
 func _addCardById(cardId: String) -> void:

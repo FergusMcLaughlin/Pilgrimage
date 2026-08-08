@@ -2,6 +2,8 @@
 
 Date noted: 2026-07-22
 
+Status: Promoted to [[Story 11 Pre-Chore - Graveyard and Death Contract]]
+
 Related: [[Story 8 Implementation Guide]] · [[Story 8.5 Action Processor Completion]]
 
 ## Why This Story Is Needed
@@ -26,10 +28,10 @@ A later story must make removed cards work as a persistent gameplay zone:
 - define how restored cards choose their destination slot;
 - keep `REMOVE_CARD` distinct from permanent `DELETE_CARD` behaviour.
 
-## Important Design Question
+## Design Decision
 
-Decide whether the removed-card collection stores live `Card` nodes, card data/resources, card IDs, or dedicated lightweight records. That choice should be made when the revival/return effect is designed, because it determines whether cards are reparented and reused or reconstructed when returned.
+The promoted story resolves the open storage question: use lightweight graveyard records plus an append-only lifecycle history. Do not retain hidden live `Card` nodes. Revival reconstructs a card through `CreateCard` while preserving its logical gameplay identity.
 
 ## Story Boundary
 
-Do not reopen Story 8 to build this system. Story 8 only needs to route `REMOVE_CARD` and clear the occupied board slot safely. The collection, lifecycle, and return-to-play behaviour belong to this future story.
+Do not reopen Story 8 to build this system. Story 8 only needed to route `REMOVE_CARD` and clear the occupied board slot safely. Implement the collection, lifecycle, history, and return-to-play behavior in [[Story 11 Pre-Chore - Graveyard and Death Contract]].

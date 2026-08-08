@@ -11,3 +11,9 @@ func queueAction(action: Dictionary) -> bool:
 
 func getBoardController() -> BoardController:
 	return processor.get_tree().get_first_node_in_group("boardController") as BoardController
+
+func getGraveyardEntries() -> Array[GraveyardEntry]:
+	return Graveyard.getEntries()
+
+func getBoardHistory(eventType: String = "") -> Array[Dictionary]:
+	return BoardHistory.getEvents(eventType)

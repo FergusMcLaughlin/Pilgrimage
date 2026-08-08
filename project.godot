@@ -25,6 +25,8 @@ InputManager="*uid://cjiam2j6ggy51"
 ActionQueue="*uid://dkkpyn2l3ey7e"
 ActionProcessor="*uid://byceawn7gne4r"
 EffectProcessor="*uid://bwgmcsl8kuouu"
+BoardHistory="*uid://b1dyex4kan607"
+Graveyard="*uid://bcs3prtwe8076"
 
 [display]
 

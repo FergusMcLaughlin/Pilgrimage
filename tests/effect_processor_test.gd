@@ -2,6 +2,8 @@ extends Node
 
 const VALID_SCRIPT := "res://src/main/effects/handlers/gain_health_on_play.gd"
 const INVALID_TYPE_SCRIPT := "res://tests/fixtures/not_card_effect.gd"
+const REMOVAL_SCRIPT := "res://tests/fixtures/removal_recorder_effect.gd"
+const RemovalRecorder := preload("res://tests/fixtures/removal_recorder_effect.gd")
 
 var _createdCards: Array[Card] = []
 var _originalEffectData: Dictionary
@@ -19,6 +21,7 @@ func _ready() -> void:
 	await _runTest(_testNonPositiveAmountQueuesNothing)
 	await _runTest(_testNonRevealDoesNotActivateCard)
 	await _runTest(_testRemoveDeactivatesEffects)
+	await _runTest(_testRemovalEventArrivesBeforeDeactivation)
 	await _runTest(_testReactivationDoesNotDuplicateEffects)
 	await _runTest(_testBrokenEffectDoesNotBlockValidEffect)
 
@@ -42,6 +45,7 @@ func _beforeEach() -> void:
 	await _waitForProcessor()
 	ActionQueue.clearQueue()
 	EffectProcessor.clearEffects()
+	RemovalRecorder.reset()
 	EffectLibrary.effectDataById = _originalEffectData.duplicate()
 
 
@@ -150,6 +154,37 @@ func _testRemoveDeactivatesEffects() -> void:
 		null,
 	)
 	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "Remove must deactivate the card's effects.")
+
+
+func _testRemovalEventArrivesBeforeDeactivation() -> void:
+	var target := _createCardWithEffects(["record_removal"])
+	var attacker := _createCard("M_0003")
+	EffectLibrary.effectDataById = {
+		"record_removal": _makeEffectData("record_removal", REMOVAL_SCRIPT, 1),
+	}
+	_emitPlayed(target)
+	_expect(EffectProcessor.activeEffectsByCard.has(target), "The recorder effect should activate.")
+
+	var entry := GraveyardEntry.new()
+	entry.cardId = target.data.id
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(
+			ActionType.REMOVE_CARD,
+			attacker,
+			target,
+			{"cause": "combat"},
+		),
+		entry,
+	)
+
+	_expect(
+		RemovalRecorder.callOrder == ["event", "deactivated"],
+		"The leaving card must receive its event before deactivation.",
+	)
+	_expect(RemovalRecorder.observedSource == attacker, "The removal event should expose its source.")
+	_expect(RemovalRecorder.observedCause == "combat", "The removal event should expose its cause.")
+	_expect(RemovalRecorder.observedResult == entry, "The removal event should expose its graveyard entry.")
+	_expect(!EffectProcessor.activeEffectsByCard.has(target), "The leaving card must be deactivated afterward.")
 
 
 func _testReactivationDoesNotDuplicateEffects() -> void:

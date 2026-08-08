@@ -32,11 +32,11 @@ func _resolveAction(action: Dictionary) -> Variant:
 			_handleModifyStats(action)
 			return null
 		ActionType.REMOVE_CARD:
-			_handleRemoveCard(action)
-			return null
+			return _handleRemoveCard(action)
 		ActionType.DELETE_CARD:
-			_handleDeleteCard(action)
-			return null
+			return _handleDeleteCard(action)
+		ActionType.REVIVE_CARD:
+			return _handleReviveCard(action)
 		_:
 			push_warning("ActionProcessor: Unsupported action type: %s" % action["type"])
 			return null
@@ -95,7 +95,7 @@ func _handleModifyStats(action: Dictionary) -> void:
 	if !target.modifyStat(data["stat"], data["amount"]):
 		push_warning("ActionProcessor: MODIFY_STATS rejected the requested change.")
 
-func _handleRemoveCard(action: Dictionary) -> void:
+func _handleRemoveCard(action: Dictionary) -> GraveyardEntry:
 	var target = action["target"]
 	
 	if !(target is Card):
@@ -107,21 +107,37 @@ func _handleRemoveCard(action: Dictionary) -> void:
 		push_warning("ActionProcessor: REMOVE_CARD requires an active BoardController.")
 		return
 	
-	var cardWasRemoved: bool = boardController.removeCard(target)
-	if !cardWasRemoved:
-		push_warning("ActionProcessor: REMOVE_CARD target is not on the active board.")
+	return Graveyard.buryCard(target, action["source"], action["data"].get("cause", "effect"), boardController)
 
-func _handleDeleteCard(action: Dictionary) -> void:
+func _handleDeleteCard(action: Dictionary) -> bool:
 	var target = action["target"]
+	if target is GraveyardEntry:
+		return Graveyard.deleteEntry(target.entryId, action["source"])
 
-	if !(target is Card):
-		push_warning("ActionProcessor: DELETE_CARD target must be a Card.")
-		return
+	if target is Card:
+		var boardController = _getBoardController()
+		if boardController != null:
+			boardController.removeCard(target)
 
-	# A deleted card must not remain referenced by an occupied board slot.
-	# Deletion also works for cards that are already outside active play.
+		BoardHistory.recordEvent("deleted", {
+			"instance_id": target.instanceId,
+			"card_id": target.data.id,
+			"from": "active_play"
+		})
+		target.queue_free()
+		return true
+
+	push_warning("ActionProcessor: inavlid DELETE_CARD target.")
+	return false
+
+func _handleReviveCard(action: Dictionary) -> Card:
+	var entry = action["source"]
+	var slot = action["target"]
+	if !(entry is GraveyardEntry) or !(slot is CardSlot):
+		push_warning("ActionProcessor: invalid REVIVE_CARD action.")
+		return null
+
 	var boardController = _getBoardController()
-	if boardController != null:
-		boardController.removeCard(target)
-
-	target.queue_free()
+	if boardController == null:
+		return null
+	return Graveyard.reviveCard(entry.entryId, slot, boardController)

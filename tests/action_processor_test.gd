@@ -24,7 +24,7 @@ func _runTests() -> void:
 	await _runTest(_testTwoActionsKeepFifoOrder)
 	await _runTest(_testUnsupportedActionDoesNotBlockNextAction)
 	await _runTest(_testMoveChangesSlots)
-	await _runTest(_testRemoveClearsSlotWithoutFreeing)
+	await _runTest(_testRemoveMovesCardToGraveyard)
 	await _runTest(_testDeleteClearsSlotBeforeFreeing)
 	await _runTest(_testRevealBlocksUntilAnimationFinishes)
 
@@ -41,10 +41,14 @@ func _beforeEach() -> void:
 	# from the previous test.
 	await _waitForProcessor()
 	ActionQueue.clearQueue()
+	Graveyard.reset()
+	BoardHistory.reset()
 
 
 func _afterEach() -> void:
 	ActionQueue.clearQueue()
+	Graveyard.reset()
+	BoardHistory.reset()
 
 	# Track everything created by a test and clean it in one place.
 	for node in _createdNodes:
@@ -175,17 +179,28 @@ func _testMoveChangesSlots() -> void:
 	assert(destination.currentCard == card, "MOVE_CARD must fill the destination slot.")
 
 
-func _testRemoveClearsSlotWithoutFreeing() -> void:
+func _testRemoveMovesCardToGraveyard() -> void:
 	var board := await _createBoardFixture()
 	var card := _createCard("M_0001")
 	var slot: CardSlot = board.grid.getSlotAt(Vector2i(0, 0))
+	var instanceId := card.instanceId
 
 	assert(board.controller.placeCard(card, slot), "Test setup should place the card.")
-	assert(ActionQueue.enqueueAction(ActionType.make(ActionType.REMOVE_CARD, null, card)))
+	assert(ActionQueue.enqueueAction(ActionType.make(
+		ActionType.REMOVE_CARD,
+		null,
+		card,
+		{"cause": "test"},
+	)))
 	await _waitForProcessor()
+	await get_tree().process_frame
 
 	assert(slot.currentCard == null, "REMOVE_CARD must clear the occupied slot.")
-	assert(is_instance_valid(card), "REMOVE_CARD must leave the card node alive.")
+	assert(!is_instance_valid(card), "REMOVE_CARD must free the old visual card node.")
+	assert(Graveyard.entries.size() == 1, "REMOVE_CARD must add one graveyard entry.")
+	assert(Graveyard.entries[0].instanceId == instanceId)
+	assert(Graveyard.entries[0].cause == "test")
+	assert(BoardHistory.getEvents("removed").size() == 1)
 
 
 func _testDeleteClearsSlotBeforeFreeing() -> void:
@@ -200,6 +215,8 @@ func _testDeleteClearsSlotBeforeFreeing() -> void:
 
 	assert(slot.currentCard == null, "DELETE_CARD must clear the occupied slot.")
 	assert(!is_instance_valid(card), "DELETE_CARD must free the occupied card.")
+	assert(Graveyard.entries.is_empty(), "DELETE_CARD must bypass the graveyard.")
+	assert(BoardHistory.getEvents("deleted").size() == 1)
 
 
 func _testRevealBlocksUntilAnimationFinishes() -> void:
