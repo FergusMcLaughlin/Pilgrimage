@@ -2,7 +2,7 @@
 
 Date noted: 2026-08-08
 
-Related: [[Story 11 Pre-Chore - Graveyard and Death Contract]] · [[Future Story - Removed Card System]]
+Related: [[Story 14 Pre-Chore - Graveyard and Death Contract]] · [[Future Story - Removed Card System]]
 
 ## Current Position
 

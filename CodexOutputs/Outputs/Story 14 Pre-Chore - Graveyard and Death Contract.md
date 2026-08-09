@@ -1,14 +1,16 @@
-# Story 11 Pre-Chore: Build Graveyard and Board History
+# Story 14 Pre-Chore: Build Graveyard and Board History
 
 Date: 2026-08-08
 
-Status: Ready to implement
+Status: Complete
+
+Completed: 2026-08-09
 
 Related: [[Story 10 Implementation Guide]] · [[Future Story - Removed Card System]] · [[Action Processor Delegation Principle]]
 
 ## Goal
 
-Build the removal foundation required by Story 11's kill effects:
+Build the removal foundation required by Story 14's kill effects:
 
 - `Graveyard` stores cards that left active play and may be revived.
 - `BoardHistory` stores an ordered, append-only record of removals, revivals, and deletions.
@@ -494,7 +496,7 @@ Update `tests/effect_processor_test.gd` to prove a removed card receives its own
 ## Outside This Pre-Chore
 
 - Full combat calculations.
-- Story 11's three effects.
+- Story 14's three effects.
 - Graveyard UI.
 - Final revival target-selection UI.
 - Saving history between runs.
@@ -515,21 +517,39 @@ git diff --check
 
 ## Definition of Done
 
-- [ ] `Graveyard` owns currently removed cards.
-- [ ] `BoardHistory` owns chronological lifecycle events.
-- [ ] Graveyard stores typed entries, not only IDs or hidden live nodes.
-- [ ] `REMOVE_CARD` adds one entry and one history event.
-- [ ] `DELETE_CARD` permanently removes active cards or exact entries.
-- [ ] Deletion never rewrites history.
-- [ ] `REVIVE_CARD` reconstructs one exact entry and preserves identity.
-- [ ] Failed revival cannot lose an entry.
-- [ ] Removal records source and cause.
-- [ ] A removed card receives its last effect event before deactivation.
-- [ ] Effects receive read-only access through `EffectContext`.
-- [ ] Both singletons reset cleanly between runs and tests.
-- [ ] All new and existing tests pass.
-- [ ] `git diff --check` passes.
+- [x] `Graveyard` owns currently removed cards.
+- [x] `BoardHistory` owns chronological lifecycle events.
+- [x] Graveyard stores typed entries, not only IDs or hidden live nodes.
+- [x] `REMOVE_CARD` adds one entry and one history event.
+- [x] `DELETE_CARD` permanently removes active cards or exact entries.
+- [x] Deletion never rewrites history.
+- [x] `REVIVE_CARD` reconstructs one exact entry and preserves identity.
+- [x] Failed revival cannot lose an entry.
+- [x] Removal records source and cause.
+- [x] A removed card receives its last effect event before deactivation.
+- [x] Effects receive read access through `EffectContext` without lifecycle mutation methods.
+- [x] Both singletons reset cleanly in automated tests.
+- [x] All new and existing tests pass.
+- [x] `git diff --check` passes.
 
-## Story 11 Ready When
+## Completion Audit
 
-Story 11 can begin when kill effects no longer need temporary answers for death storage, attacker attribution, event order, revival identity, history counting, or listener cleanup.
+Verified on 2026-08-09:
+
+- Graveyard: 7 tests passed.
+- BoardHistory: 5 tests passed.
+- ActionProcessor: 10 tests passed.
+- EffectProcessor: 11 tests passed.
+- EffectLibrary: 8 tests passed.
+- Story 10 integration: 4 tests passed.
+- Total: 45 tests passed.
+
+`Graveyard.getEntries()` returns a copied array, but its `GraveyardEntry` objects are not deeply immutable. Effects receive query methods—not mutation methods—through `EffectContext`. Deep immutable snapshots can be added later if untrusted effect code makes that necessary.
+
+The singleton reset behavior is tested. [[Story 11 GameController Implementation Guide]] makes GameController the production owner that calls both resets at the start of each run.
+
+The EffectProcessor test executable still reports known Godot resource-leak diagnostics during shutdown despite passing its assertions and returning success. This is test-harness cleanup, not a failed lifecycle contract.
+
+## Story 14 Ready When
+
+Story 14 can begin when kill effects no longer need temporary answers for death storage, attacker attribution, event order, revival identity, history counting, or listener cleanup.

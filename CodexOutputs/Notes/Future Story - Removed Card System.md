@@ -2,7 +2,7 @@
 
 Date noted: 2026-07-22
 
-Status: Promoted to [[Story 11 Pre-Chore - Graveyard and Death Contract]]
+Status: Promoted to [[Story 14 Pre-Chore - Graveyard and Death Contract]]
 
 Related: [[Story 8 Implementation Guide]] · [[Story 8.5 Action Processor Completion]]
 
@@ -34,4 +34,4 @@ The promoted story resolves the open storage question: use lightweight graveyard
 
 ## Story Boundary
 
-Do not reopen Story 8 to build this system. Story 8 only needed to route `REMOVE_CARD` and clear the occupied board slot safely. Implement the collection, lifecycle, history, and return-to-play behavior in [[Story 11 Pre-Chore - Graveyard and Death Contract]].
+Do not reopen Story 8 to build this system. Story 8 only needed to route `REMOVE_CARD` and clear the occupied board slot safely. Implement the collection, lifecycle, history, and return-to-play behavior in [[Story 14 Pre-Chore - Graveyard and Death Contract]].

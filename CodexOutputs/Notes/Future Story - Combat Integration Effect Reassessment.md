@@ -2,26 +2,26 @@
 
 Date noted: 2026-08-09
 
-Related: [[Story 11 Implementation Guide]] · [[Story 11 Pre-Chore - Graveyard and Death Contract]] · [[Action Processor Delegation Principle]] · [[Future Story - Revival Presentation and Placement]]
+Related: [[Story 14 Effects Implementation Guide]] · [[Story 14 Pre-Chore - Graveyard and Death Contract]] · [[Action Processor Delegation Principle]] · [[Future Story - Revival Presentation and Placement]]
 
 ## Why This Story Is Needed
 
-Story 11 introduces stateful effects before the real combat and turn systems exist. Its Stage A implementation uses documented placeholder events and temporary damage conventions so effect state can be designed and tested without inventing the complete combat loop early.
+The stateful effects were designed before the real combat and player action cycle existed. The amended order now implements those systems first, but the planned effect contracts must still be reassessed against the finished behavior before Story 14 is implemented.
 
-When combat is implemented, every existing effect must be reassessed against real action ordering, damage results, kills, removal, turns, and animation timing.
+When combat is implemented, every existing effect must be reassessed against real action ordering, damage results, kills, removal, completed player cycles, and animation timing.
 
 This is not optional cleanup. It is the integration step that prevents temporary Story 11 assumptions from becoming permanent combat architecture.
 
 ## Trigger
 
-Perform this reassessment during Story 14, after the first working versions of:
+Perform this reassessment at the end of Story 13 and while implementing Story 14, after working versions of:
 
 - attack declaration and resolution;
 - `DEAL_DAMAGE`;
 - lethal-damage detection;
 - combat-caused `REMOVE_CARD`;
 - attacker/defender result data;
-- turn progression;
+- the player action cycle and after-move phase;
 - combat animation completion.
 
 Do it before Story 14 is considered complete.
@@ -55,8 +55,9 @@ Do it before Story 14 is considered complete.
 - Consume `temporary_health_lost` from the damage result rather than requested damage.
 - Confirm only a successful combat kill attributed to the host grants the buff.
 - Confirm simultaneous, reflected, environmental, and effect-caused kills have explicit attribution.
-- Connect duration to real host turns and confirm precisely when the fourth turn expires.
-- Confirm refresh behavior remains non-stacking: restore to +3 and restart four turns.
+- Connect duration to completed player action cycles and confirm precisely when the fourth cycle expires.
+- Confirm invalid moves do not tick duration, and a zero-work after-move phase adds no extra tick beyond its one completed player cycle.
+- Confirm refresh remains non-stacking: restore to +3 and restart four cycles.
 - Add temporary-health feedback to combat/debug UI if it is not already visible.
 
 ## Required Combat Result Contracts
@@ -116,11 +117,11 @@ Do not allow individual effects to invent their own ordering.
 
 - Remove test-only combat event producers from production paths.
 - Keep `EffectProcessor.dispatchGameplayEvent()` only if it remains the intentional boundary for CombatResolver and GameController.
-- Replace Story 11's temporary damage convention with `DEAL_DAMAGE`.
+- Ensure Story 14 uses `DEAL_DAMAGE` rather than the discarded temporary damage convention.
 - Update effect scripts to consume authoritative result fields.
-- Update Story 11 tests so synthetic unit tests remain small while new integration tests use real combat.
+- Keep effect-local unit tests small while requiring Story 14 integration tests to use real combat.
 - Update effect JSON only if trigger names or parameters genuinely change.
-- Update Story 11 documentation to mark Stage B complete.
+- Update Story 14 documentation with the final combat event contracts.
 
 ## Required Integration Tests
 
@@ -131,7 +132,7 @@ Do not allow individual effects to invent their own ordering.
 5. A real attributed kill grants Taste of Victory once.
 6. Temporary health absorbs real damage before base health.
 7. Damage allocation matches the displayed and stored health values.
-8. Taste of Victory expires after exactly four host turns.
+8. Taste of Victory expires after exactly four completed player action cycles.
 9. A second kill refreshes rather than stacks the buff.
 10. Solitary Beast recalculates correctly across a complete attack, removal, and refill chain.
 11. Removed cards leave no active effect instances.
@@ -139,7 +140,7 @@ Do not allow individual effects to invent their own ordering.
 
 ## Definition of Done
 
-- [ ] Every existing effect has been reviewed against real combat and turn behavior.
+- [ ] Every existing effect has been reviewed against real combat and player-cycle behavior.
 - [ ] Placeholder attack and damage assumptions are removed from production behavior.
 - [ ] Combat and damage results expose authoritative effect context.
 - [ ] Waxing Ferocity uses real attack outcomes.
@@ -148,5 +149,5 @@ Do not allow individual effects to invent their own ordering.
 - [ ] Reveal and revival trigger policy is explicit.
 - [ ] Unit tests still cover effect-local rules.
 - [ ] Integration tests cover the real combat pipeline.
-- [ ] Story 11 Stage B is marked complete.
+- [ ] Story 14 documents the final real-combat integration.
 - [ ] `git diff --check` passes.
