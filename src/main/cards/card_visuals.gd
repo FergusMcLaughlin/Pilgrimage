@@ -26,7 +26,10 @@ func init(cardReference: Card):
 
 func refresh() -> void:
 	nameLable.text = str(card.data.name)
-	healthLable.text = str(card.health)
+	healthLable.text = (
+	str(card.health)
+	if card.temporaryHealth <= 0 else "%s (+%s)" % [card.health, card.temporaryHealth]
+		)#temp for testing show health lost #TODO REMOVE
 	attackLable.text = str(card.attack)
 
 	_loadCardImage()
@@ -103,3 +106,6 @@ func handleDragging(dragging: bool) -> void:
 		return
 	
 	applyInteractionVisuals(isHovered, dragging)
+
+func isFaceUp() -> bool:
+	return face.visible and !back.visible

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://baps1v7ppwuuk"]
+
+[ext_resource type="Script" uid="uid://bi4u61ecuirwj" path="res://src/main/board/board_refill/board_refill_controller.gd" id="1_p16d0"]
+
+[node name="BoardRefillController" type="Node" unique_id=479683705]
+script = ExtResource("1_p16d0")

@@ -4,6 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/main/decks/deck_types/journey_deck.tscn" id="3_1djoe"]
 [ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/main/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
 [ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/main/board/board_controller/board_controller.tscn" id="4_board"]
+[ext_resource type="Script" uid="uid://k2dgk0h70d17" path="res://src/main/controllers/game_controller.gd" id="5_game_controller"]
+[ext_resource type="Script" uid="uid://107y3l7yfnj7" path="res://src/main/controllers/player_movement_controller.gd" id="6_player_movement"]
+[ext_resource type="Script" uid="uid://cctp8hqdl6a2j" path="res://src/main/combat/combat_resolver.gd" id="7_eo4wq"]
+[ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_alu3s"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -42,20 +46,58 @@ text = "Add Stew"
 layout_mode = 2
 text = "Clear Cards"
 
-[node name="RemoveBoardCardButton" type="Button" parent="CanvasLayer/Controls"]
+[node name="RemoveBoardCardButton" type="Button" parent="CanvasLayer/Controls" unique_id=433671512]
 layout_mode = 2
 tooltip_text = "Moves the first occupied board card into the Graveyard."
 text = "Remove First Board Card"
 
-[node name="DeleteGraveyardCardButton" type="Button" parent="CanvasLayer/Controls"]
+[node name="DeleteGraveyardCardButton" type="Button" parent="CanvasLayer/Controls" unique_id=515663522]
 layout_mode = 2
 tooltip_text = "Permanently deletes the first card currently in the Graveyard."
 text = "Delete First Graveyard Card"
 
-[node name="ReviveGraveyardCardButton" type="Button" parent="CanvasLayer/Controls"]
+[node name="ReviveGraveyardCardButton" type="Button" parent="CanvasLayer/Controls" unique_id=2116186934]
 layout_mode = 2
 tooltip_text = "Revives the first Graveyard card into the first empty board slot."
 text = "Revive First Graveyard Card"
+
+[node name="PlayerCyclePanel" type="PanelContainer" parent="CanvasLayer" unique_id=978092449]
+offset_left = 68.0
+offset_top = 370.0
+offset_right = 350.0
+offset_bottom = 510.0
+
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/PlayerCyclePanel" unique_id=1572894037]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Content" type="VBoxContainer" parent="CanvasLayer/PlayerCyclePanel/Margin" unique_id=908084449]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayerCycleStatus" type="RichTextLabel" parent="CanvasLayer/PlayerCyclePanel/Margin/Content" unique_id=1597298850]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 64)
+layout_mode = 2
+text = "State: SETUP
+Player cycle: 0
+Input: LOCKED"
+fit_content = true
+
+[node name="AdvancePlayerCycleButton" type="Button" parent="CanvasLayer/PlayerCyclePanel/Margin/Content" unique_id=773594256]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Run"
+
+[node name="MovementStatus" type="RichTextLabel" parent="CanvasLayer/PlayerCyclePanel/Margin/Content" unique_id=55466499]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 54)
+layout_mode = 2
+text = "Movement: click an occupied cardinal neighbour"
+fit_content = true
 
 [node name="CardsRoot" type="Control" parent="CanvasLayer" unique_id=1273091550]
 layout_mode = 3
@@ -65,31 +107,31 @@ offset_top = 396.0
 offset_right = 787.0
 offset_bottom = 396.0
 
-[node name="LifecycleDebugPanel" type="PanelContainer" parent="CanvasLayer"]
+[node name="LifecycleDebugPanel" type="PanelContainer" parent="CanvasLayer" unique_id=535592545]
 offset_left = 1160.0
 offset_top = 280.0
 offset_right = 1580.0
 offset_bottom = 860.0
 mouse_filter = 2
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer/LifecycleDebugPanel"]
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/LifecycleDebugPanel" unique_id=706799863]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 10
 
-[node name="Lists" type="VBoxContainer" parent="CanvasLayer/LifecycleDebugPanel/Margin"]
+[node name="Lists" type="VBoxContainer" parent="CanvasLayer/LifecycleDebugPanel/Margin" unique_id=2059692293]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="GraveyardHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+[node name="GraveyardHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists" unique_id=365567374]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
 theme_override_font_sizes/font_size = 22
 text = "GRAVEYARD"
 
-[node name="GraveyardList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+[node name="GraveyardList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists" unique_id=541023584]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(390, 210)
 layout_mode = 2
@@ -98,16 +140,14 @@ mouse_filter = 2
 theme_override_colors/default_color = Color(1, 0.25, 0.25, 1)
 theme_override_font_sizes/normal_font_size = 16
 text = "(empty)"
-fit_content = false
-scroll_active = true
 
-[node name="HistoryHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+[node name="HistoryHeading" type="Label" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists" unique_id=413160149]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.15, 1)
 theme_override_font_sizes/font_size = 22
 text = "BOARD HISTORY"
 
-[node name="BoardHistoryList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists"]
+[node name="BoardHistoryList" type="RichTextLabel" parent="CanvasLayer/LifecycleDebugPanel/Margin/Lists" unique_id=845116548]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(390, 260)
 layout_mode = 2
@@ -116,8 +156,6 @@ mouse_filter = 2
 theme_override_colors/default_color = Color(1, 0.85, 0.15, 1)
 theme_override_font_sizes/normal_font_size = 16
 text = "(no events)"
-fit_content = false
-scroll_active = true
 
 [node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
 layout_mode = 1
@@ -132,3 +170,18 @@ offset_left = 1272.0
 offset_top = 39.0
 offset_right = -53.0
 offset_bottom = -668.0
+
+[node name="GameController" type="Node" parent="." unique_id=560721635]
+script = ExtResource("5_game_controller")
+
+[node name="PlayerMovementController" type="Node" parent="." unique_id=1274520873]
+script = ExtResource("6_player_movement")
+
+[node name="CombatResolver" type="Node" parent="." unique_id=647952854 node_paths=PackedStringArray("gameController", "boardController", "slotGrid")]
+script = ExtResource("7_eo4wq")
+gameController = NodePath("../GameController")
+boardController = NodePath("../BoardController")
+slotGrid = NodePath("../SlotGrid")
+
+[node name="BoardRefillController" parent="." unique_id=479683705 node_paths=PackedStringArray("journeyDeck") instance=ExtResource("8_alu3s")]
+journeyDeck = NodePath("../JourneyDeck")

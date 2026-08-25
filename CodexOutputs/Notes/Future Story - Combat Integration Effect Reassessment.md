@@ -64,33 +64,31 @@ Do it before Story 14 is considered complete.
 
 The final combat system should publish enough information for effects without requiring them to reconstruct combat from unrelated signals.
 
-Suggested attack result:
+Story 13 now defines a typed `CombatResult` containing:
 
 ```gdscript
-{
-	"type": "attack_resolved",
-	"attacker": attacker,
-	"defender": defender,
-	"damage_requested": 5,
-	"damage_dealt": 5,
-	"was_kill": true,
-	"removal_entry": graveyardEntry,
-}
+result.context: CombatContext
+result.defenderDamage: DamageResult
+result.playerDamage: DamageResult
+result.defenderGraveyardEntry: GraveyardEntry
+result.playerGraveyardEntry: GraveyardEntry
+result.playerMoved: bool
 ```
 
-Suggested damage action result:
+Replacement-card information is deliberately excluded. The independent board-refill flow publishes `BoardRefillResult.revealedCard`.
+
+The typed `DamageResult` preserves:
 
 ```gdscript
-{
-	"damage_requested": 5,
-	"damage_dealt": 5,
-	"temporary_health_lost": 3,
-	"base_health_lost": 2,
-	"remaining_health": 2,
-}
+result.damageRequested
+result.damageDealt
+result.temporaryHealthLost
+result.baseHealthLost
+result.remainingHealth
+result.wasLethal
 ```
 
-These are provisional shapes. Story 14 may refine them, but it must preserve clear attacker, defender, damage-allocation, and kill outcomes.
+Story 14 may extend these contracts, but must preserve clear attacker, defender, damage-allocation, stable identity, removal, and kill outcomes.
 
 ## Ordering Questions to Decide
 
@@ -105,8 +103,9 @@ attack requested
 → lethal state determined
 → removal queued/resolved
 → kill effects trigger
-→ board refill queued
 → combat completes
+→ separate board refill requested when a slot was vacated
+→ board refill completes
 ```
 
 Clarify whether effects may alter an attack before damage, react after damage, react after removal, or use more than one phase.

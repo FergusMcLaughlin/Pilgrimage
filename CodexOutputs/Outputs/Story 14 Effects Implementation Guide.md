@@ -26,49 +26,42 @@ Story 11 provides:
 
 Story 12 provides:
 
-- action-based movement;
-- previous-slot refill;
 - occupied adjacent targets routed to combat.
 
 Story 13 provides:
 
+- action-based player movement after successful combat;
 - `DEAL_DAMAGE`;
 - authoritative attack results;
 - actual damage dealt;
 - lethal removal through `REMOVE_CARD` with `cause=combat`;
+- post-combat player movement plus a separate authoritative board-refill flow;
 - attacker and defender attribution;
 - one documented combat ordering.
 
 The completed pre-chore already provides GraveyardEntry results, BoardHistory, and final effect dispatch before deactivation.
 
-## Required Event Shapes
+## Required Typed Event Contracts
 
 Story 14 consumes, rather than invents, these Story 11–13 events.
 
-Attack result:
+Combat completion:
 
 ```gdscript
-{
-	"type": "attack_resolved",
-	"attacker": attacker,
-	"defender": defender,
-	"damage_dealt": 2,
-	"was_kill": false,
-	"removal_entry": null,
-}
+func _onCombatCompleted(result: CombatResult) -> void:
+	var attacker := result.context.attacker
+	var defenderDamage := result.defenderDamage
+	var wasKill := result.wasKill()
 ```
 
-Damage result:
+Damage resolution:
 
 ```gdscript
-{
-	"type": "damage_resolved",
-	"source": attacker,
-	"target": defender,
-	"damage_requested": 5,
-	"damage_dealt": 5,
-	"remaining_health": 2,
-}
+func consumeDamage(result: DamageResult) -> void:
+	var source := result.source
+	var target := result.target
+	var damageDealt := result.damageDealt
+	var temporaryHealthLost := result.temporaryHealthLost
 ```
 
 Player-cycle completion:
@@ -96,7 +89,7 @@ Recalculate on activation and after successful:
 - removal;
 - deletion;
 - revival;
-- combat refill.
+- board-refill completion after combat-caused movement.
 
 Store the previously applied bonus and enqueue only the delta. Never react to its own `MODIFY_STATS` actions.
 
@@ -182,10 +175,10 @@ Keep it unattached to production card data until its owner is chosen.
 var _accumulatedBonus := 0
 ```
 
-On `attack_resolved`:
+On `combatCompleted`:
 
-- require `attacker == hostCard`;
-- require `was_kill == false`;
+- require `result.context.attacker == hostCard`;
+- require `result.wasKill() == false`;
 - increment stored bonus by the configured amount;
 - enqueue that increment through `MODIFY_STATS`.
 
@@ -202,7 +195,7 @@ If the host itself leaves, clear internal state during deactivation without targ
 
 When the host successfully kills another card in combat, it gains a three-point temporary-health pool lasting through the next four completed player action cycles.
 
-Temporary health is represented in total displayed health but tracked separately by the effect:
+Temporary health is stored on `Card`, displayed beside base health, and tracked separately from base health:
 
 ```text
 base 4 + temporary 3
@@ -254,24 +247,20 @@ var _remainingTemporaryHealth := 0
 var _cyclesRemaining := 0
 ```
 
-Grant/refresh only when a resolved removal has:
+Grant/refresh only when `combatCompleted` has:
 
 ```gdscript
-action.get("source") == hostCard
-action.get("data", {}).get("cause") == "combat"
-event.get("result") is GraveyardEntry
+result.succeeded
+result.context.attacker == hostCard
+result.wasKill()
 ```
 
 Enqueue only the difference between three and the current temporary pool.
 
-On `damage_resolved` targeting the host:
+On a `DamageResult` targeting the host:
 
 ```gdscript
-var absorbed := mini(
-	int(event.get("damage_dealt", 0)),
-	_remainingTemporaryHealth,
-)
-_remainingTemporaryHealth -= absorbed
+_remainingTemporaryHealth -= result.temporaryHealthLost
 ```
 
 On authoritative `playerCycleCompleted`, decrement duration. When the fourth completed player cycle ends, enqueue a negative health `MODIFY_STATS` equal only to the remaining temporary pool, then clear state.

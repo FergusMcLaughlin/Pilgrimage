@@ -2,9 +2,9 @@
 
 Date: 2026-08-09
 
-Status: Ready to implement
+Status: Core complete — see [[Story 11 Add-ons Before Movement]]
 
-Related: [[Amended Implementation Story Order]] · [[Story 14 Pre-Chore - Graveyard and Death Contract]] · [[Future Story - Combat Integration Effect Reassessment]]
+Related: [[Amended Implementation Story Order]] · [[Story 11 Add-ons Before Movement]] · [[Story 14 Pre-Chore - Graveyard and Death Contract]] · [[Future Story - Combat Integration Effect Reassessment]]
 
 ## Goal
 
@@ -268,17 +268,17 @@ No movement or combat calculation belongs in this story.
 
 ## Definition of Done
 
-- [ ] GameController owns one run and one player action cycle.
-- [ ] No enemy or board-card turn system is introduced.
-- [ ] Player starts in center and surrounding slots fill through actions.
-- [ ] Setup locks input and successful setup enters `PLAYER_READY`.
-- [ ] Valid actions move through resolution and `AFTER_MOVE`.
-- [ ] `AFTER_MOVE` exists even when it completes immediately.
-- [ ] Effects and maintenance settle before cycle completion.
-- [ ] Only completed valid player actions advance the cycle counter.
-- [ ] Input unlocks only in `PLAYER_READY`.
-- [ ] New and existing tests pass.
-- [ ] `git diff --check` passes.
+- [x] GameController owns one run and one player action cycle.
+- [x] No enemy or board-card turn system is introduced.
+- [x] Player starts in center and surrounding slots fill through actions.
+- [x] Setup locks input and successful setup enters `PLAYER_READY`.
+- [x] Valid actions move through resolution and `AFTER_MOVE`.
+- [x] `AFTER_MOVE` exists even when it completes immediately.
+- [x] Effects and maintenance settle before cycle completion.
+- [x] Only completed valid player actions advance the cycle counter.
+- [x] Input unlocks only in `PLAYER_READY`.
+- [x] New and existing tests pass.
+- [x] `git diff --check` passes.
 
 ## Story 12 Ready When
 

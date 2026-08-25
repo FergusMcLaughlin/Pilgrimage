@@ -4,6 +4,8 @@ extends Control
 @onready var journeyDeck: JourneyDeck = $JourneyDeck
 @onready var slotGrid: SlotGrid = $SlotGrid
 @onready var boardController: BoardController = $BoardController
+@onready var gameController: GameController = $GameController
+@onready var playerMovementController: PlayerMovementController = $PlayerMovementController
 
 @onready var addPlayerButton: Button = $CanvasLayer/Controls/AddPlayerButton
 @onready var addKnightButton: Button = $CanvasLayer/Controls/AddKnightButton
@@ -15,6 +17,9 @@ extends Control
 @onready var reviveGraveyardCardButton: Button = $CanvasLayer/Controls/ReviveGraveyardCardButton
 @onready var graveyardList: RichTextLabel = %GraveyardList
 @onready var boardHistoryList: RichTextLabel = %BoardHistoryList
+@onready var playerCycleStatus: RichTextLabel = %PlayerCycleStatus
+@onready var advancePlayerCycleButton: Button = %AdvancePlayerCycleButton
+@onready var movementStatus: RichTextLabel = %MovementStatus
 
 var createCard := CreateCard.new()
 
@@ -46,9 +51,19 @@ func _ready() -> void:
 
 	journeyDeck.boardController = boardController
 	journeyDeck.slotGrid = slotGrid
-	journeyDeck.initialiseJourneyDeck()
+	gameController.boardController = boardController
+	gameController.slotGrid = slotGrid
+	gameController.journeyDeck = journeyDeck
+	playerMovementController.gameController = gameController
+	playerMovementController.boardController = boardController
+	playerMovementController.slotGrid = slotGrid
 	_connectButtons()
+	GlobalSignalBus.gameStateChanged.connect(_onGameStateChanged)
+	GlobalSignalBus.playerCombatRequested.connect(_onPlayerCombatRequested)
 	_refreshLifecycleDebugPanel()
+	_refreshPlayerCyclePanel()
+	await gameController.startRun(false)
+	_refreshPlayerCyclePanel()
 
 	if debug_stat_cycle:
 		_startDebugStatCycle()
@@ -156,6 +171,58 @@ func _connectButtons() -> void:
 	removeBoardCardButton.pressed.connect(_onRemoveBoardCardPressed)
 	deleteGraveyardCardButton.pressed.connect(_onDeleteGraveyardCardPressed)
 	reviveGraveyardCardButton.pressed.connect(_onReviveGraveyardCardPressed)
+	advancePlayerCycleButton.pressed.connect(_onAdvancePlayerCyclePressed)
+
+
+func _onGameStateChanged(_previousState: int, _newState: int) -> void:
+	_refreshPlayerCyclePanel()
+
+
+func _onPlayerCombatRequested(
+	player: Card,
+	defender: Card,
+	playerSlot: CardSlot,
+	targetSlot: CardSlot,
+	cycleNumber: int,
+) -> void:
+	movementStatus.text = "Combat requested: %s -> %s\nSlots: %s -> %s | Cycle: %s" % [
+		player.data.name,
+		defender.data.name,
+		playerSlot.coordinates,
+		targetSlot.coordinates,
+		cycleNumber,
+	]
+	_refreshPlayerCyclePanel()
+
+
+func _refreshPlayerCyclePanel() -> void:
+	var stateName: String = GameController.GameState.keys()[gameController.state]
+	playerCycleStatus.text = "State: %s\nPlayer cycle: %s\nInput: %s" % [
+		stateName,
+		gameController.playerCycleNumber,
+		"LOCKED" if InputManager.inputLocked else "READY",
+	]
+	advancePlayerCycleButton.text = (
+		"Start Run" if gameController.state == GameController.GameState.SETUP
+		else "Advance Player Cycle"
+	)
+
+
+func _onAdvancePlayerCyclePressed() -> void:
+	advancePlayerCycleButton.disabled = true
+	match gameController.state:
+		GameController.GameState.SETUP:
+			await gameController.startRun(false)
+		GameController.GameState.PLAYER_READY:
+			gameController.beginPlayerAction()
+		GameController.GameState.RESOLVING_MOVE:
+			gameController.beginCombat()
+		GameController.GameState.COMBAT:
+			gameController.beginAfterMovePhase()
+		GameController.GameState.AFTER_MOVE:
+			gameController.completePlayerCycle()
+	_refreshPlayerCyclePanel()
+	advancePlayerCycleButton.disabled = false
 
 
 func _onAddPlayerPressed() -> void:

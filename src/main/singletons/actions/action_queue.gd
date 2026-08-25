@@ -16,11 +16,11 @@ func waitForActionToResolve(expectedAction: Dictionary) -> Variant:
 		var resolution: Array = await GlobalSignalBus.actionResolved
 		if resolution.size() < 2:
 			continue
-
+		
 		var resolvedAction = resolution[0]
 		if is_same(resolvedAction, expectedAction):
 			return resolution[1]
-
+		
 	return null
 
 func popNextAction() -> Dictionary:

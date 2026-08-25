@@ -26,11 +26,12 @@ func _resolveAction(action: Dictionary) -> Variant:
 		ActionType.REVEAL_CARD:
 			return await _handleRevealCard(action)
 		ActionType.MOVE_CARD:
-			_handleMoveCard(action)
-			return null
+			return _handleMoveCard(action)
 		ActionType.MODIFY_STATS:
 			_handleModifyStats(action)
 			return null
+		ActionType.DEAL_DAMAGE:
+			return _handleDealDamage(action)
 		ActionType.REMOVE_CARD:
 			return _handleRemoveCard(action)
 		ActionType.DELETE_CARD:
@@ -56,25 +57,28 @@ func _handleRevealCard(action: Dictionary) -> Card:
 	var card: Card = await source.revealTopCard(target)
 	return card
 
-func _handleMoveCard(action: Dictionary) -> void:
+func _handleMoveCard(action: Dictionary) -> bool:
 	var card = action["source"]
 	var destinationSlot = action["target"]
 	
 	if !(card is Card):
 		push_warning("ActionProcessor: MOVE_CARD source must be a Card.")
-		return
+		return false
 	
 	if !(destinationSlot is CardSlot):
 		push_warning("ActionProcessor: MOVE_CARD target must be a CardSlot.")
-		return
+		return false
 	
 	var boardController = _getBoardController()
 	if boardController == null:
 		push_warning("ActionProcessor: MOVE_CARD requires an active BoardController.")
-		return
+		return false
 	
-	if !boardController.moveCard(card, destinationSlot):
+	var moved = boardController.moveCard(card, destinationSlot)
+	if !moved:
 		push_warning("ActionProcessor: MOVE_CARD could not move the card.")
+	
+	return moved
 
 func _handleModifyStats(action: Dictionary) -> void:
 	var data = action["data"]
@@ -95,6 +99,29 @@ func _handleModifyStats(action: Dictionary) -> void:
 	if !target.modifyStat(data["stat"], data["amount"]):
 		push_warning("ActionProcessor: MODIFY_STATS rejected the requested change.")
 
+func _handleDealDamage(action: Dictionary) -> DamageResult:
+	var source = action["source"]
+	var target = action ["target"]
+	var data: Dictionary = action["data"]
+	
+	if !(source is Card):
+		return DamageResult.rejected("ActionProcessor: DEAL_DAMAGE source must be a Card.")
+	if !(target is Card):
+		return DamageResult.rejected("ActionProcessor: DEAL_DAMAGE target must be a Card.")
+	if !data.has("amount") or !(data["amount"] is int):
+		return DamageResult.rejected("ActionProcessor: DEAL_DAMAGE amount must be an integer.")
+	if data["amount"] < 0:
+		return DamageResult.rejected("ActionProcessor: DEAL_DAMAGE amount must not be negitive.")
+	
+	var result = target.applyDamage(data["amount"])
+	result.source = source
+	result.sourceInstanceId = source.instanceId
+	result.sourceCardId = source.data.id
+	result.cause = data.get("cause", "effect")
+	result.cycleNumber = data.get("cycle_number", 0)
+	
+	return result
+
 func _handleRemoveCard(action: Dictionary) -> GraveyardEntry:
 	var target = action["target"]
 	
@@ -107,7 +134,7 @@ func _handleRemoveCard(action: Dictionary) -> GraveyardEntry:
 		push_warning("ActionProcessor: REMOVE_CARD requires an active BoardController.")
 		return
 	
-	return Graveyard.buryCard(target, action["source"], action["data"].get("cause", "effect"), boardController)
+	return Graveyard.buryCard(target, action["source"], action["data"].get("cause", "effect"), boardController, action["data"].get("source_instance_id", 0))
 
 func _handleDeleteCard(action: Dictionary) -> bool:
 	var target = action["target"]

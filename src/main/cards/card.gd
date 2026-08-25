@@ -3,6 +3,7 @@ class_name Card
 
 var data: CardData
 var health: int
+var temporaryHealth: int = 0
 var attack: int
 var imagePath: String
 var effectName: String # placeholde
@@ -49,6 +50,37 @@ func modifyStat(statName: String, amount: int) -> bool:
 
 	_refreshCard()
 	return true
+
+func applyDamage(amount: int) -> DamageResult:
+	if amount < 0:
+		return DamageResult.rejected("attack damage cannot be negitive")
+	
+	var result = DamageResult.new()
+	result.succeeded = true
+	result.target = self
+	result.targetInstanceId = instanceId
+	result.targetCardId = data.id
+	result.damageRequested = amount
+	
+	result.temporaryHealthLost = mini(temporaryHealth, amount)
+	temporaryHealth -= result.temporaryHealthLost
+	var remaningDamage = amount - result.temporaryHealthLost
+	
+	result.baseHealthLost = mini(health, remaningDamage)
+	health -= result.baseHealthLost
+	
+	result.damageDealt = (
+		result.temporaryHealthLost + result.baseHealthLost
+		)
+	
+	result.remainingTemporaryHealth = temporaryHealth
+	result.remainingHealth = health
+	result.wasLethal = health <= 0
+	
+	if is_node_ready():
+		_refreshCard()
+	
+	return result
 
 func _refreshCard() -> void:
 	visuals.refresh()

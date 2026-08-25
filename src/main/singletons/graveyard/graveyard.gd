@@ -4,7 +4,7 @@ var entries: Array[GraveyardEntry] = []
 var _nextEntryId = 1
 var _createCard = CreateCard.new()
 
-func buryCard(card: Card, source, cause: String, boardController: BoardController) -> GraveyardEntry:
+func buryCard(card: Card, source, cause: String, boardController: BoardController, sourceInstanceId: int = 0 ) -> GraveyardEntry:
 	if card == null or card.data == null:
 		return null
 	
@@ -15,9 +15,13 @@ func buryCard(card: Card, source, cause: String, boardController: BoardControlle
 	entry.entryId = _nextEntryId
 	entry.instanceId = card.instanceId
 	entry.cardId = card.data.id
-	entry.sourceInstanceId = source.instanceId if source is Card else 0
 	entry.cause = cause
-	entry.statSnapshot = {"health": card.health, "attack": card.attack}
+	entry.statSnapshot = {"health": card.health, "temporary_health": card.temporaryHealth, "attack": card.attack}
+	entry.sourceInstanceId = (
+		source.instanceId
+		if is_instance_valid(source) and source is Card
+		else sourceInstanceId
+	)
 	entry.removedSequence = BoardHistory.getNextSequence()
 	_nextEntryId += 1
 	

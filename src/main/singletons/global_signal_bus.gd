@@ -60,6 +60,30 @@ signal queueCleared()
 signal actionResolved(action,result)
 
 # ==================================================
+# GAME CONTROLLER SIGNALS
+# ==================================================
+
+signal gameStateChanged(previousState, newState)
+signal playerCycleStarted(player, cycleNumber)
+signal afterMoveStarted(player, cycleNumber)
+signal playerCycleCompleted(player, cycleNumber)
+
+# ==================================================
+# PLAYER MOVMENT CONTROLLER SIGNALS
+# ==================================================
+
+signal playerCombatRequested(player, defender, playerSlot, targetSlot, cycleNumber)
+signal combatStarted(context: CombatContext)
+signal combatEnded(result: CombatResult)
+
+# ==================================================
+# BOARD REFILL SIGNALS
+# ==================================================
+
+signal boardRefillRequested(request: BoardRefillRequest)
+signal boardRefillCompleted(result: BoardRefillResult)
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -154,3 +178,42 @@ func emitQueueCleared() -> void:
 
 func emitActionResolved(action, result) -> void:
 	emit_signal("actionResolved", action, result)
+
+# ==================================================
+# GAME CONTROLLER WRAPPERS
+# ==================================================
+
+func emitGameStateChanged(previousState, newState) -> void:
+	emit_signal("gameStateChanged", previousState, newState)
+
+func emitPlayerCycleStarted(player, cycleNumber) -> void:
+	emit_signal("playerCycleStarted", player, cycleNumber)
+
+func emitAfterMoveStarted(player, cycleNumber) -> void:
+	emit_signal("afterMoveStarted", player, cycleNumber)
+
+func emitPlayerCycleCompleted(player, cycleNumber) -> void:
+	emit_signal("playerCycleCompleted", player, cycleNumber)
+
+# ==================================================
+# PLAYER MOVMENT CONTROLLER WRAPPERs
+# ==================================================
+
+func emitPlayerCombatRequested(player: Card, defender: Card, playerSlot: CardSlot, targetSlot: CardSlot, cycleNumber: int) -> void:
+	emit_signal("playerCombatRequested", player, defender, playerSlot, targetSlot, cycleNumber)
+
+func emitCombatStarted(context: CombatContext) -> void:
+	emit_signal("combatStarted", context)
+
+func emitCombatEnded(result: CombatResult) -> void:
+	emit_signal("combatEnded", result)
+
+# ==================================================
+# BOARD REFILL WRAPPERS
+# ==================================================
+
+func emitBoardRefillRequested(request: BoardRefillRequest) -> void:
+	emit_signal("boardRefillRequested", request)
+
+func emitBoardRefillResult(result: BoardRefillResult) -> void:
+	emit_signal("boardRefillCompleted", result)
