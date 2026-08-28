@@ -26,7 +26,7 @@ func _ready() -> void:
 		return
 	print("PASS: Story 13 board refill tests (%s passed)" % _passed)
 	get_tree().quit(0)
-
+	
 
 func _testRequestContract() -> void:
 	var slot := CardSlot.new()
@@ -34,7 +34,7 @@ func _testRequestContract() -> void:
 	_expect(request.slot == slot, "A refill request must identify one exact slot.")
 	_expect(request.cycleNumber == 4, "A refill request must retain its cycle number.")
 	_expect(request.cause == "player_moved", "A refill request must identify why maintenance is needed.")
-
+	
 
 func _testInvalidTargets() -> void:
 	var fixture := await _createRefillFixture(false)
@@ -49,7 +49,7 @@ func _testInvalidTargets() -> void:
 	_expect(_results.size() == 1 and !_results[0].succeeded, "An occupied refill slot must emit one failed result.")
 	_expect(_enqueuedTypes.is_empty(), "Invalid refill requests must enqueue no reveal action.")
 	await _destroyFixture(fixture.root)
-
+	
 
 func _testEmptyDeckSkipped() -> void:
 	var fixture := await _createRefillFixture(false)
@@ -61,7 +61,7 @@ func _testEmptyDeckSkipped() -> void:
 	_expect(result.succeeded and result.skipped and result.revealedCard == null, "An empty deck must produce a successful skipped result.")
 	_expect(slot.currentCard == null and _enqueuedTypes.is_empty(), "A skipped refill must leave the slot open and enqueue nothing.")
 	await _destroyFixture(fixture.root)
-
+	
 
 func _testSuccessfulExactSlotRefill() -> void:
 	var fixture := await _createRefillFixture(true)
@@ -74,7 +74,7 @@ func _testSuccessfulExactSlotRefill() -> void:
 	_expect(untouched.currentCard == null, "A refill must leave every other empty slot unchanged.")
 	_expect(_enqueuedTypes == [ActionType.REVEAL_CARD], "A valid refill must enqueue exactly one REVEAL_CARD.")
 	await _destroyFixture(fixture.root)
-
+	
 
 func _testGameControllerRefillBoundary() -> void:
 	await _resetSignals()
@@ -105,7 +105,7 @@ func _testGameControllerRefillBoundary() -> void:
 	_expect(!ActionQueue.queueHasActions() and !ActionProcessor.isProcessingAction, "The action system must be idle after cycle completion.")
 	controller.queue_free()
 	await get_tree().process_frame
-
+	
 
 func _testCombatWithoutMovementSkipsRefill() -> void:
 	await _resetSignals()
@@ -125,7 +125,7 @@ func _testCombatWithoutMovementSkipsRefill() -> void:
 	_expect(controller.state == GameController.GameState.PLAYER_READY and !InputManager.inputLocked, "Combat without maintenance must complete and unlock input.")
 	controller.queue_free()
 	await get_tree().process_frame
-
+	
 
 func _createRefillFixture(withCards: bool) -> Dictionary:
 	await _resetSignals()
@@ -149,13 +149,13 @@ func _createRefillFixture(withCards: bool) -> Dictionary:
 	if withCards:
 		deck.initialiseJourneyDeck(false)
 	return {"root": root, "grid": grid, "board": board, "deck": deck, "controller": controller}
-
+	
 
 func _destroyFixture(root: Node) -> void:
 	root.queue_free()
 	await get_tree().process_frame
 	await _resetSignals()
-
+	
 
 func _waitForResult(maxFrames := 240) -> void:
 	for _frame in range(maxFrames):
@@ -163,7 +163,7 @@ func _waitForResult(maxFrames := 240) -> void:
 			return
 		await get_tree().process_frame
 	_expect(false, "Board refill did not settle within %s frames." % maxFrames)
-
+	
 
 func _waitForReady(controller: GameController, maxFrames := 240) -> void:
 	for _frame in range(maxFrames):
@@ -171,7 +171,7 @@ func _waitForReady(controller: GameController, maxFrames := 240) -> void:
 			return
 		await get_tree().process_frame
 	_expect(false, "GameController did not return to PLAYER_READY.")
-
+	
 
 func _resetSignals() -> void:
 	for _frame in range(240):
@@ -182,7 +182,7 @@ func _resetSignals() -> void:
 	_results.clear()
 	_requests.clear()
 	_enqueuedTypes.clear()
-
+	
 
 func _makeBareCard() -> Card:
 	var card := Card.new()
@@ -190,19 +190,19 @@ func _makeBareCard() -> Card:
 	data.id = "player"
 	card.data = data
 	return card
-
+	
 
 func _recordResult(result: BoardRefillResult) -> void:
 	_results.append(result)
-
+	
 
 func _recordRequest(request: BoardRefillRequest) -> void:
 	_requests.append(request)
+	
 
-
-func _recordAction(action: Dictionary) -> void:
+func _recordAction(action: GameAction) -> void:
 	_enqueuedTypes.append(action.type)
-
+	
 
 func _expect(condition: bool, message: String) -> void:
 	if condition:

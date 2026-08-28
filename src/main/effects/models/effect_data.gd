@@ -7,4 +7,4 @@ class_name EffectData
 @export var operation: String
 @export var target: String
 @export var scriptPath: String
-@export var parameters: Dictionary = {}
+var parameters: EffectParameters

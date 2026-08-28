@@ -1,28 +1,31 @@
 extends Node
-var events: Array[Dictionary] = []
+var events: Array[BoardHistoryEvent] = []
 var _nextSequence = 1
 
-func recordEvent(eventType: String, details: Dictionary = {}) -> Dictionary:
-	var event = details.duplicate(true)
-	event["sequence"] = _nextSequence
-	event["event"] = eventType
+func recordEvent(event: BoardHistoryEvent) -> BoardHistoryEvent:
+	if event == null:
+		return null
+	event.sequence = _nextSequence
+	if event is CardRemovedHistoryEvent:
+		event.removedSequence = event.sequence
 	_nextSequence += 1
-	events.append(event)
-	return event.duplicate(true)
+	var storedEvent = event.copy()
+	events.append(storedEvent)
+	return storedEvent.copy()
 
-func getEvents(eventType: String = "") -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
+func getEvents(eventType: String = "") -> Array[BoardHistoryEvent]:
+	var result: Array[BoardHistoryEvent] = []
 	for event in events:
-		if eventType.is_empty() or event.get("event") == eventType:
-			result.append(event.duplicate(true))
+		if eventType.is_empty() or event.type == eventType:
+			result.append(event.copy())
 	return result
 
 func countRemovedCards(cardId: String = "") -> int:
 	var count := 0
 	for event in events:
-		if event.get("event") != "removed":
+		if event.type != "removed":
 			continue
-		if !cardId.is_empty() and event.get("card_id") != cardId:
+		if !cardId.is_empty() and event.cardId != cardId:
 			continue
 		count += 1
 	return count

@@ -24,7 +24,7 @@ func _ready() -> void:
 	await _runTest(_testRemovalEventArrivesBeforeDeactivation)
 	await _runTest(_testReactivationDoesNotDuplicateEffects)
 	await _runTest(_testBrokenEffectDoesNotBlockValidEffect)
-
+	
 	EffectLibrary.effectDataById = _originalEffectData
 	if _failures > 0:
 		push_error("FAIL: EffectProcessor tests (%s failures)" % _failures)
@@ -32,14 +32,14 @@ func _ready() -> void:
 		return
 	print("PASS: EffectProcessor tests (%s passed)" % _passed)
 	get_tree().quit(0)
-
+	
 
 func _runTest(testMethod: Callable) -> void:
 	await _beforeEach()
 	await testMethod.call()
 	_passed += 1
 	await _afterEach()
-
+	
 
 func _beforeEach() -> void:
 	await _waitForProcessor()
@@ -47,7 +47,7 @@ func _beforeEach() -> void:
 	EffectProcessor.clearEffects()
 	RemovalRecorder.reset()
 	EffectLibrary.effectDataById = _originalEffectData.duplicate()
-
+	
 
 func _afterEach() -> void:
 	ActionQueue.clearQueue()
@@ -57,27 +57,28 @@ func _afterEach() -> void:
 			card.queue_free()
 	_createdCards.clear()
 	await get_tree().process_frame
-
+	
 
 func _testOnPlayHealthGainUsesModifyStats() -> void:
 	var goatman := _createCard("M_0002")
 	var startingHealth := goatman.health
-	var queuedActions: Array[Dictionary] = []
-	var recordAction := func(action: Dictionary) -> void:
+	var queuedActions: Array[GameAction] = []
+	var recordAction = func(action: GameAction) -> void:
 		queuedActions.append(action)
 	GlobalSignalBus.actionEnqueued.connect(recordAction)
-
+	
 	_emitPlayed(goatman)
 	await _waitForProcessor()
 	GlobalSignalBus.actionEnqueued.disconnect(recordAction)
-
+	
 	_expect(goatman.health == startingHealth + 2, "Goatman should gain exactly 2 health.")
 	_expect(queuedActions.size() == 1, "The effect should queue exactly one action.")
-	_expect(queuedActions[0].get("type") == ActionType.MODIFY_STATS, "The effect must queue MODIFY_STATS.")
-	_expect(queuedActions[0].get("target") == goatman, "The queued action must target Goatman.")
-	_expect(queuedActions[0].get("data", {}).get("stat") == "health", "The action must modify health.")
-	_expect(queuedActions[0].get("data", {}).get("amount") == 2, "The action amount must be 2.")
-
+	_expect(queuedActions[0].type == ActionType.MODIFY_STATS, "The effect must queue MODIFY_STATS.")
+	_expect(queuedActions[0].target == goatman, "The queued action must target Goatman.")
+	var payload = queuedActions[0].payload as ModifyStatsPayload
+	_expect(payload.stat == "health", "The action must modify health.")
+	_expect(payload.amount == 2, "The action amount must be 2.")
+	
 
 func _testOnlyPlayedCardReacts() -> void:
 	var firstGoatman := _createCard("M_0002")
@@ -85,12 +86,12 @@ func _testOnlyPlayedCardReacts() -> void:
 	_emitPlayed(secondGoatman)
 	await _waitForProcessor()
 	var secondHealthAfterPlay := secondGoatman.health
-
+	
 	_emitPlayed(firstGoatman)
 	await _waitForProcessor()
 	_expect(firstGoatman.health == firstGoatman.data.baseHealth + 2, "The played Goatman should react.")
 	_expect(secondGoatman.health == secondHealthAfterPlay, "Another Goatman must not react.")
-
+	
 
 func _testCardWithoutEffectsDoesNothing() -> void:
 	var knight := _createCard("M_0001")
@@ -99,7 +100,7 @@ func _testCardWithoutEffectsDoesNothing() -> void:
 	await _waitForProcessor()
 	_expect(knight.health == startingHealth, "A card without effects must not gain health.")
 	_expect(!EffectProcessor.activeEffectsByCard.has(knight), "A card without effects must not retain instances.")
-
+	
 
 func _testEmptyScriptPathIsSkipped() -> void:
 	var card := _createCardWithEffects(["empty_script"])
@@ -108,63 +109,63 @@ func _testEmptyScriptPathIsSkipped() -> void:
 	await _waitForProcessor()
 	_expect(card.health == card.data.baseHealth, "An empty script path must do nothing.")
 	_expect(!EffectProcessor.activeEffectsByCard.has(card), "An empty path must not retain an instance.")
-
+	
 
 func _testWrongScriptTypeIsSkipped() -> void:
 	var card := _createCardWithEffects(["wrong_type"])
 	EffectLibrary.effectDataById = {
-		"wrong_type": _makeEffectData("wrong_type", INVALID_TYPE_SCRIPT, 2),
+		"wrong_type": _makeEffectData("wrong_type", INVALID_TYPE_SCRIPT, 2)
 	}
 	_emitPlayed(card)
 	await _waitForProcessor()
 	_expect(card.health == card.data.baseHealth, "A wrong script type must do nothing.")
 	_expect(!EffectProcessor.activeEffectsByCard.has(card), "A wrong script type must not be retained.")
-
+	
 
 func _testNonPositiveAmountQueuesNothing() -> void:
 	var card := _createCardWithEffects(["zero_gain"])
 	EffectLibrary.effectDataById = {
-		"zero_gain": _makeEffectData("zero_gain", VALID_SCRIPT, 0),
+		"zero_gain": _makeEffectData("zero_gain", VALID_SCRIPT, 0)
 	}
 	_emitPlayed(card)
 	await _waitForProcessor()
 	_expect(card.health == card.data.baseHealth, "A non-positive amount must do nothing.")
 	_expect(!ActionQueue.queueHasActions(), "A non-positive amount must queue nothing.")
-
+	
 
 func _testNonRevealDoesNotActivateCard() -> void:
 	var goatman := _createCard("M_0002")
 	GlobalSignalBus.emitActionResolved(
-		ActionType.make(ActionType.MODIFY_STATS, goatman, goatman),
-		null,
+		ActionType.make(ActionType.MODIFY_STATS, goatman, goatman, ModifyStatsPayload.create("health", 1, "test")),
+		null
 	)
 	await get_tree().process_frame
 	_expect(goatman.health == goatman.data.baseHealth, "A non-reveal event must do nothing.")
 	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "A non-reveal event must not activate effects.")
-
+	
 
 func _testRemoveDeactivatesEffects() -> void:
 	var goatman := _createCard("M_0002")
 	_emitPlayed(goatman)
 	await _waitForProcessor()
 	_expect(EffectProcessor.activeEffectsByCard.has(goatman), "Reveal should activate Goatman's effect.")
-
+	
 	GlobalSignalBus.emitActionResolved(
-		ActionType.make(ActionType.REMOVE_CARD, null, goatman),
-		null,
+		ActionType.make(ActionType.REMOVE_CARD, null, goatman, RemoveCardPayload.create(0, "test")),
+		null
 	)
 	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "Remove must deactivate the card's effects.")
-
+	
 
 func _testRemovalEventArrivesBeforeDeactivation() -> void:
 	var target := _createCardWithEffects(["record_removal"])
 	var attacker := _createCard("M_0003")
 	EffectLibrary.effectDataById = {
-		"record_removal": _makeEffectData("record_removal", REMOVAL_SCRIPT, 1),
+		"record_removal": _makeEffectData("record_removal", REMOVAL_SCRIPT, 1)
 	}
 	_emitPlayed(target)
 	_expect(EffectProcessor.activeEffectsByCard.has(target), "The recorder effect should activate.")
-
+	
 	var entry := GraveyardEntry.new()
 	entry.cardId = target.data.id
 	GlobalSignalBus.emitActionResolved(
@@ -172,20 +173,20 @@ func _testRemovalEventArrivesBeforeDeactivation() -> void:
 			ActionType.REMOVE_CARD,
 			attacker,
 			target,
-			{"cause": "combat"},
+			RemoveCardPayload.create(0, "combat")
 		),
-		entry,
+		entry
 	)
-
+	
 	_expect(
 		RemovalRecorder.callOrder == ["event", "deactivated"],
-		"The leaving card must receive its event before deactivation.",
+		"The leaving card must receive its event before deactivation."
 	)
 	_expect(RemovalRecorder.observedSource == attacker, "The removal event should expose its source.")
 	_expect(RemovalRecorder.observedCause == "combat", "The removal event should expose its cause.")
 	_expect(RemovalRecorder.observedResult == entry, "The removal event should expose its graveyard entry.")
 	_expect(!EffectProcessor.activeEffectsByCard.has(target), "The leaving card must be deactivated afterward.")
-
+	
 
 func _testReactivationDoesNotDuplicateEffects() -> void:
 	var goatman := _createCard("M_0002")
@@ -195,26 +196,26 @@ func _testReactivationDoesNotDuplicateEffects() -> void:
 	await _waitForProcessor()
 	_expect(EffectProcessor.activeEffectsByCard[goatman].size() == 1, "Reactivation must not duplicate instances.")
 	_expect(goatman.health == goatman.data.baseHealth + 4, "Two plays should trigger exactly twice.")
-
+	
 
 func _testBrokenEffectDoesNotBlockValidEffect() -> void:
 	var card := _createCardWithEffects(["broken", "valid"])
 	EffectLibrary.effectDataById = {
 		"broken": _makeEffectData("broken", INVALID_TYPE_SCRIPT, 2),
-		"valid": _makeEffectData("valid", VALID_SCRIPT, 2),
+		"valid": _makeEffectData("valid", VALID_SCRIPT, 2)
 	}
 	_emitPlayed(card)
 	await _waitForProcessor()
 	_expect(card.health == card.data.baseHealth + 2, "A broken effect must not block a valid effect.")
 	_expect(EffectProcessor.activeEffectsByCard[card].size() == 1, "Only the valid instance should be retained.")
-
+	
 
 func _emitPlayed(card: Card) -> void:
 	GlobalSignalBus.emitActionResolved(
-		ActionType.make(ActionType.REVEAL_CARD),
-		card,
+		ActionType.make(ActionType.REVEAL_CARD, null, null, RevealCardPayload.create("test")),
+		card
 	)
-
+	
 
 func _createCard(cardId: String) -> Card:
 	var card := CreateCard.new().createCard(cardId)
@@ -222,14 +223,14 @@ func _createCard(cardId: String) -> Card:
 	add_child(card)
 	_createdCards.append(card)
 	return card
-
+	
 
 func _createCardWithEffects(effectIds: Array[String]) -> Card:
 	var card := _createCard("M_0001")
 	card.data = card.data.duplicate(true)
 	card.data.effects = effectIds
 	return card
-
+	
 
 func _makeEffectData(effectId: String, scriptPath: String, amount: int) -> EffectData:
 	return EffectDataFactory.fromDictionary({
@@ -239,9 +240,9 @@ func _makeEffectData(effectId: String, scriptPath: String, amount: int) -> Effec
 		"operation": "gain_health",
 		"target": "self",
 		"script_path": scriptPath,
-		"parameters": {"amount": amount},
+		"parameters": {"amount": amount}
 	})
-
+	
 
 func _waitForProcessor(maxFrames := 120) -> void:
 	for _frame in range(maxFrames):
@@ -249,7 +250,7 @@ func _waitForProcessor(maxFrames := 120) -> void:
 			return
 		await get_tree().process_frame
 	_expect(false, "ActionProcessor did not become idle.")
-
+	
 
 func _expect(condition: bool, message: String) -> void:
 	if condition:

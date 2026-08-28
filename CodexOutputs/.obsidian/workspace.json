@@ -4,21 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "70436551eef81232",
+        "id": "cc3deb9429a02aac",
         "type": "tabs",
         "children": [
           {
-            "id": "7c70e9d8c84dcd5e",
+            "id": "7ce768758512475a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "bases",
               "state": {
-                "file": "Systems/Combat System.md",
-                "mode": "source",
-                "source": false
+                "file": "Outputs/Untitled.base",
+                "viewName": "Table"
               },
-              "icon": "lucide-file",
-              "title": "Combat System"
+              "icon": "lucide-table",
+              "title": "Untitled"
             }
           }
         ]
@@ -185,35 +184,37 @@
       "bases:Create new base": false
     }
   },
-  "active": "3a89356606c6f990",
+  "active": "7ce768758512475a",
   "lastOpenFiles": [
+    "Outputs/2026-08-27.md",
+    "Outputs/Untitled.base",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
+    "Outputs/Story 13.4 Typed Runtime Models Migration.md",
+    "Outputs/Story 13 Combat and Board Refill Implementation Guide.md",
+    "Outputs/Story 13.5 Board Shift and Edge Refill Helper.md",
+    "Notes/Post Story 13 Spike - Typed Gameplay Contracts.md",
+    "Notes/Future Story - Revival Presentation and Placement.md",
+    "Outputs/2026-08-25.md",
+    "Notes/Future Story - Configurable Movement Patterns.md",
+    "Notes/Future Story - Removed Card System.md",
+    "Notes/Future Story - Combat Integration Effect Reassessment.md",
+    "Systems/Combat System.md",
     "Systems/Board Refill System.md",
     "Systems/Action System.md",
-    "Outputs/Story 13 Combat and Board Refill Implementation Guide.md",
-    "Systems/Combat System.md",
     "Systems",
-    "Outputs/Story 13.5 Board Shift and Edge Refill Helper.md",
-    "Outputs/Story 13 (Halfway Point).md",
-    "Outputs/Story 12 Cardinal Movement Implementation Guide.md",
-    "Notes/Post Story 13 Spike - Typed Gameplay Contracts.md",
-    "Outputs/Story 11 Add-ons Before Movement.md",
-    "Notes/Future Story - Configurable Movement Patterns.md",
-    "Outputs/Story 11 GameController Implementation Guide.md",
     "Outputs/Story 14 Pre-Chore - Graveyard and Death Contract.md",
     "Outputs/Story 14 Effects Implementation Guide.md",
-    "Outputs/Original PDF Progress Audit.md",
-    "Outputs/Amended Implementation Story Order.md",
-    "Notes/Future Story - Revival Presentation and Placement.md",
-    "Notes/Future Story - Combat Integration Effect Reassessment.md",
-    "Outputs/Story 11 Implementation Guide.md",
-    "Outputs/Story 11 Pre-Chore - Graveyard and Death Contract.md",
+    "Outputs/Story 13 (Halfway Point).md",
+    "Outputs/Story 12 Cardinal Movement Implementation Guide.md",
+    "Outputs/Story 11 GameController Implementation Guide.md",
+    "Outputs/Story 11 Add-ons Before Movement.md",
     "Outputs/Story 10.5 Manual Test Scene Update.md",
     "Outputs/Story 10 Implementation Guide.md",
-    "Outputs/Story 8.5 Action Processor Completion.md",
-    "Outputs/Story 8 Implementation Guide.md",
-    "Outputs/Story 9 Effect Data Draft.md",
     "Outputs/Story 10 Action Integration Review.md",
+    "Outputs/Original PDF Progress Audit.md",
     "Outputs/Codex Help So Far and Working Process.md",
+    "Outputs/Amended Implementation Story Order.md",
     "Notes"
   ]
 }

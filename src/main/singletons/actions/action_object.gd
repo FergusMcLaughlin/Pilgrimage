@@ -24,36 +24,8 @@ const VALID_TYPES: Array[String] = [
 	REVEAL_CARD,
 	HIDE_CARD,
 	MUTATE_CARD,
-	GAME_OVER,
+	GAME_OVER
 ]
 
-static func make(actionType: String, source = null, target = null, data: Dictionary = {}) -> Dictionary:
-	return {
-		"type": actionType,
-		"source": source,
-		"target": target,
-		"data": data.duplicate(),
-	}
-	
-static func isValid(action: Dictionary) -> bool:
-	if action.is_empty():
-		push_error("ActionType: Malformed action. Action is empty.")
-		return false
-	
-	if !action.has("type") || !action.has("source") || !action.has("target") || !action.has("data"):
-		push_error("ActionType: Malformed action. Missing required action parts.")
-		return false
-	
-	if !(action["type"] is String):
-		push_error("ActionType: Malformed action. Type is not a String.")
-		return false
-	
-	if action["type"] not in VALID_TYPES:
-		push_error("ActionType: Unknown action type: %s." % action["type"])
-		return false
-	
-	if !(action["data"] is Dictionary):
-		push_error("ActionType: Malformed action. Data is not a Dictionary.")
-		return false
-	
-	return true
+static func make(actionType: String, source: Variant = null, target: Variant = null, payload: GameActionPayload = null) -> GameAction:
+	return GameAction.create(actionType, source, target, payload)

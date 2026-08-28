@@ -4,7 +4,7 @@ Date: 2026-08-16
 
 Status: Active build order
 
-Related: [[Original PDF Progress Audit]] · [[Story 11 GameController Implementation Guide]] · [[Story 11 Add-ons Before Movement]] · [[Story 12 Cardinal Movement Implementation Guide]] · [[Story 13 Combat and Board Refill Implementation Guide]] · [[Post Story 13 Spike - Typed Gameplay Contracts]] · [[Story 13.5 Board Shift and Edge Refill Helper]] · [[Story 14 Effects Implementation Guide]]
+Related: [[Original PDF Progress Audit]] · [[Story 11 GameController Implementation Guide]] · [[Story 11 Add-ons Before Movement]] · [[Story 12 Cardinal Movement Implementation Guide]] · [[Story 13 Combat and Board Refill Implementation Guide]] · [[Post Story 13 Spike - Typed Gameplay Contracts]] · [[Story 13.4 Typed Runtime Models Migration]] · [[Story 13.5 Board Shift and Edge Refill Helper]] · [[Story 14 Effects Implementation Guide]]
 
 ## Why the Order Changed
 
@@ -26,8 +26,9 @@ Stories 1–10 remain unchanged and complete according to the project's revised 
 |---:|---|---:|---|
 | ~~11~~ | ~~GameController and run setup~~ — **Complete** | 12 | Existing board, deck, actions, Graveyard |
 | ~~12~~ | ~~Player selection and occupied cardinal targets~~ — **Complete** | 13 | Story 11 add-on gate |
-| 13 | Combat, damage, kills, movement, and a separate board-refill flow | 14 | Stories 11–12 |
-| 13.5 | Board-shift planning, vacancy propagation, and correct edge refill | New refinement | Story 13 and typed-contract spike |
+| ~~13~~ | ~~Combat, damage, kills, movement, and a separate board-refill flow~~ — **Complete** | 14 | Stories 11–12 |
+| 13.4 | Replace POJO-like runtime Dictionaries with typed models and organize model folders | New architecture story | Story 13 and typed-contract spike |
+| 13.5 | Board-shift planning, vacancy propagation, and correct edge refill | New refinement | Story 13.4 |
 | 14 | Stateful effects: SolitaryBeast, WaxingFerocity, TasteOfVictory | Revised 11 | Stories 11–13.5 |
 | 15 | Game-over conditions | 15 | Stories 11 and 13 |
 | 16 | Production game scene | 16 | Stories 11–15 |
@@ -46,6 +47,8 @@ Story 12 — selection and occupied cardinal-target intent
 Story 13 — combat, DEAL_DAMAGE, removal and results
     ↓
 Post-Story 13 spike — audit typed gameplay contracts
+    ↓
+Story 13.4 — typed runtime models and model folders
     ↓
 Story 13.5 — board-shift planning and edge refill
     ↓
@@ -76,6 +79,10 @@ Own card/slot selection, occupied-card cardinal validation, invalid feedback, an
 
 Own attack resolution, `DEAL_DAMAGE`, temporary/base-health allocation, lethal removal, player movement after combat, kill attribution, retaliation, and authoritative combat result events. Also add the separate board-refill flow needed after the player vacates a slot; replacement-card data does not belong to `CombatResult`.
 
+### Story 13.4
+
+Replace stable runtime Dictionary contracts with typed RefCounted models. Migrate actions, action payloads, effect events, effect parameters, Graveyard stat snapshots, and BoardHistory records. Organize data-only contracts into feature-local `models/` folders while leaving behavioral RefCounted helpers in their proper feature folders.
+
 ### Story 13.5
 
 Replace Story 13's temporary direct-slot refill with a side-effect-free board-shift planner. Existing cards close the player's vacancy along a deterministic path, the vacancy propagates to the correct outer edge, and BoardRefillController executes the plan before revealing exactly one new Journey card.
@@ -84,7 +91,7 @@ Replace Story 13's temporary direct-slot refill with a side-effect-free board-sh
 
 Consume the real Story 11–13.5 events and the final settled-board boundary. Do not retain synthetic attack, damage, refill, or player-cycle behavior in production code.
 
-Before implementing the final Story 14 event contracts, complete [[Post Story 13 Spike - Typed Gameplay Contracts]] and [[Story 13.5 Board Shift and Edge Refill Helper]].
+Before implementing the final Story 14 event contracts, complete [[Post Story 13 Spike - Typed Gameplay Contracts]], [[Story 13.4 Typed Runtime Models Migration]], and [[Story 13.5 Board Shift and Edge Refill Helper]].
 
 ### Story 15
 
@@ -92,13 +99,13 @@ Own run termination, player death, empty-deck outcome, and permanent input lock 
 
 ## Remaining Count
 
-There are seven stories remaining including the inserted refinement:
+There are seven stories remaining including the two inserted refinements:
 
 ```text
-Stories 13, 13.5, and 14–18
+Stories 13.4, 13.5, and 14–18
 ```
 
-Stories 11 and 12 are complete. After combat and effects are complete, four remain: game over, production scene, UI, and lab cleanup.
+Stories 11–13 are complete. After the model migration, refill refinement, and effects are complete, four remain: game over, production scene, UI, and lab cleanup.
 
 ## Source-of-Truth Rule
 

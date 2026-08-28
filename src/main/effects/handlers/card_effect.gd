@@ -13,7 +13,7 @@ func setup (card: Card, effectData: EffectData, effectContext: EffectContext) ->
 func onActivated() -> void:
 	pass
 
-func onEvent(_event: Dictionary) -> void:
+func onEvent(_event: GameplayEvent) -> void:
 	pass
 
 func onDeactivated() -> void:

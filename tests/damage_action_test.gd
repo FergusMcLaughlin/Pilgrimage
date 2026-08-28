@@ -17,7 +17,7 @@ func _ready() -> void:
 		return
 	print("PASS: Story 13 damage action tests (%s passed)" % _passed)
 	get_tree().quit(0)
-
+	
 
 func _makeCard(cardId: String, health: int, attack: int = 1) -> Card:
 	var card := Card.new()
@@ -30,7 +30,7 @@ func _makeCard(cardId: String, health: int, attack: int = 1) -> Card:
 	card.attack = attack
 	card.instanceId = randi_range(1, 1000000)
 	return card
-
+	
 
 func _testActionTypeAndDirectDamage() -> void:
 	_expect(ActionType.DEAL_DAMAGE in ActionType.VALID_TYPES, "DEAL_DAMAGE must remain registered.")
@@ -39,13 +39,13 @@ func _testActionTypeAndDirectDamage() -> void:
 	_testDamage(5, 3, 5, 3, 2, 3, 0, false)
 	_testDamage(5, 0, 5, 0, 5, 0, 0, true)
 	_testDamage(5, 0, 99, 0, 5, 0, 0, true)
-
+	
 	var target := _makeCard("target", 5)
 	var rejected := target.applyDamage(-1)
 	_expect(rejected is DamageResult and !rejected.succeeded, "Negative direct damage must return a rejected DamageResult.")
 	_expect(target.health == 5, "Rejected damage must not change health.")
 	target.free()
-
+	
 
 func _testDamage(startingHealth: int, temporaryHealth: int, amount: int, expectedTempLost: int, expectedBaseLost: int, expectedHealth: int, expectedTemp: int, lethal: bool) -> void:
 	var target := _makeCard("target", startingHealth)
@@ -61,34 +61,35 @@ func _testDamage(startingHealth: int, temporaryHealth: int, amount: int, expecte
 	_expect(result.wasLethal == lethal, "Lethal state must reflect remaining base health.")
 	_expect(result.target == target and result.targetInstanceId == target.instanceId, "Direct damage must identify its target.")
 	target.free()
-
+	
 
 func _testRejectedActions() -> void:
 	var source := _makeCard("source", 5)
 	var target := _makeCard("target", 5)
 	for action in [
-		ActionType.make(ActionType.DEAL_DAMAGE, null, target, {"amount": 1}),
-		ActionType.make(ActionType.DEAL_DAMAGE, Node.new(), target, {"amount": 1}),
-		ActionType.make(ActionType.DEAL_DAMAGE, source, null, {"amount": 1}),
-		ActionType.make(ActionType.DEAL_DAMAGE, source, Node.new(), {"amount": 1}),
-		ActionType.make(ActionType.DEAL_DAMAGE, source, target, {}),
-		ActionType.make(ActionType.DEAL_DAMAGE, source, target, {"amount": "1"}),
-		ActionType.make(ActionType.DEAL_DAMAGE, source, target, {"amount": -1}),
+		ActionType.make(ActionType.DEAL_DAMAGE, null, target, DealDamagePayload.create(1, "test", 0)),
+		ActionType.make(ActionType.DEAL_DAMAGE, Node.new(), target, DealDamagePayload.create(1, "test", 0)),
+		ActionType.make(ActionType.DEAL_DAMAGE, source, null, DealDamagePayload.create(1, "test", 0)),
+		ActionType.make(ActionType.DEAL_DAMAGE, source, Node.new(), DealDamagePayload.create(1, "test", 0)),
+		ActionType.make(ActionType.DEAL_DAMAGE, source, target, null),
+		ActionType.make(ActionType.DEAL_DAMAGE, source, target, MoveCardPayload.create("test")),
+		ActionType.make(ActionType.DEAL_DAMAGE, source, target, DealDamagePayload.create(-1, "test", 0))
 	]:
 		var startingHealth := target.health
 		var result = await _enqueueAndWait(action)
 		_expect(result is DamageResult and !result.succeeded, "Invalid DEAL_DAMAGE input must return a rejected DamageResult.")
 		_expect(target.health == startingHealth, "Rejected action damage must change nothing.")
-
+	
 
 func _testTypedAttribution() -> void:
 	var source := _makeCard("source", 5)
 	var target := _makeCard("target", 5)
-	var action := ActionType.make(ActionType.DEAL_DAMAGE, source, target, {
-		"amount": 2,
-		"cause": "combat",
-		"cycle_number": 7,
-	})
+	var action = ActionType.make(
+		ActionType.DEAL_DAMAGE,
+		source,
+		target,
+		DealDamagePayload.create(2, "combat", 7)
+	)
 	var result = await _enqueueAndWait(action)
 	_expect(result is DamageResult and result.succeeded, "Valid queued damage must return a successful DamageResult.")
 	_expect(result.source == source and result.target == target, "DamageResult must retain source and target references.")
@@ -97,7 +98,7 @@ func _testTypedAttribution() -> void:
 	_expect(result.cause == "combat" and result.cycleNumber == 7, "Cause and cycle must survive the action boundary.")
 	source.free()
 	target.free()
-
+	
 
 func _testVisualRefresh() -> void:
 	var target := CreateCard.new().createCard("M_0001")
@@ -109,25 +110,25 @@ func _testVisualRefresh() -> void:
 	target.applyDamage(2)
 	_expect(target.visuals.healthLable.text == str(target.health), "Damage overflow must refresh the visible base-health value.")
 	target.queue_free()
-
+	
 
 func _testModifyStatsRemainsIndependent() -> void:
 	var target := CreateCard.new().createCard("M_0001")
 	add_child(target)
 	target.health = 2
 	var result = await _enqueueAndWait(ActionType.make(
-		ActionType.MODIFY_STATS, null, target, {"stat": "health", "amount": 2}
+		ActionType.MODIFY_STATS, null, target, ModifyStatsPayload.create("health", 2, "test")
 	))
 	_expect(result == null and target.health == 4, "MODIFY_STATS healing must remain independent of DEAL_DAMAGE.")
 	target.queue_free()
+	
 
-
-func _enqueueAndWait(action: Dictionary) -> Variant:
+func _enqueueAndWait(action: GameAction) -> Variant:
 	if !ActionQueue.enqueueAction(action):
 		_expect(false, "A structurally valid test action must enter ActionQueue.")
 		return null
 	return await ActionQueue.waitForActionToResolve(action)
-
+	
 
 func _expect(condition: bool, message: String) -> void:
 	if condition:

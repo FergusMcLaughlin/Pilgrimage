@@ -6,7 +6,7 @@ var processor: Node
 func _init(effectProcessor: Node) -> void:
 	processor = effectProcessor
 
-func queueAction(action: Dictionary) -> bool:
+func queueAction(action: GameAction) -> bool:
 	return ActionQueue.enqueueAction(action)
 
 func getBoardController() -> BoardController:
@@ -15,5 +15,5 @@ func getBoardController() -> BoardController:
 func getGraveyardEntries() -> Array[GraveyardEntry]:
 	return Graveyard.getEntries()
 
-func getBoardHistory(eventType: String = "") -> Array[Dictionary]:
+func getBoardHistory(eventType: String = "") -> Array[BoardHistoryEvent]:
 	return BoardHistory.getEvents(eventType)

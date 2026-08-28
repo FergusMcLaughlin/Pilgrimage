@@ -7,7 +7,7 @@ var cardId: String
 var removedSequence: int
 var sourceInstanceId: int
 var cause: String
-var statSnapshot: Dictionary = {}
+var statSnapshot: CardStatSnapshot
 
 func toDictionary() -> Dictionary:
 	return {
@@ -17,5 +17,5 @@ func toDictionary() -> Dictionary:
 		"removed_sequence": removedSequence,
 		"source_instance_id": sourceInstanceId,
 		"cause": cause,
-		"stat_snapshot": statSnapshot.duplicate(true)
+		"stat_snapshot": statSnapshot.toDictionary() if statSnapshot != null else {}
 	}

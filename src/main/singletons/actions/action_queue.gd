@@ -1,9 +1,9 @@
 extends Node
 
-var _queue: Array[Dictionary] = []
+var _queue: Array[GameAction] = []
 
-func enqueueAction(action: Dictionary) -> bool:
-	if !ActionType.isValid(action):
+func enqueueAction(action: GameAction) -> bool:
+	if action == null or !action.isValid():
 		push_warning("ActionQueue: Rejected invalid action.")
 		return false
 	
@@ -11,29 +11,31 @@ func enqueueAction(action: Dictionary) -> bool:
 	GlobalSignalBus.emitActionEnqueued(action)
 	return true
 
-func waitForActionToResolve(expectedAction: Dictionary) -> Variant:
+func waitForActionToResolve(expectedAction: GameAction) -> Variant:
+	if expectedAction == null:
+		return null
 	while true:
 		var resolution: Array = await GlobalSignalBus.actionResolved
 		if resolution.size() < 2:
 			continue
-		
-		var resolvedAction = resolution[0]
+	
+		var resolvedAction = resolution[0] as GameAction
 		if is_same(resolvedAction, expectedAction):
 			return resolution[1]
-		
+	
 	return null
 
-func popNextAction() -> Dictionary:
+func popNextAction() -> GameAction:
 	if _queue.is_empty():
-		return {}
+		return null
 	
 	var action = _queue.pop_front()
 	GlobalSignalBus.emitActionPopped(action)
 	return action
 
-func peekNextAction() -> Dictionary:
+func peekNextAction() -> GameAction:
 	if _queue.is_empty():
-		return {}
+		return null
 	else:
 		return _queue.front()
 

@@ -54,10 +54,10 @@ signal cardDrawnFromDeck(card)
 # ACTION QUEUE SIGNALS
 # ==================================================
 
-signal actionEnqueued(action)
-signal actionPopped(action)
+signal actionEnqueued(action: GameAction)
+signal actionPopped(action: GameAction)
 signal queueCleared()
-signal actionResolved(action,result)
+signal actionResolved(action: GameAction,result: Variant)
 
 # ==================================================
 # GAME CONTROLLER SIGNALS
@@ -167,16 +167,16 @@ func emitCardDrawnFromDeck(card) -> void:
 # ACTION QUEUE EMIT WRAPPERS
 # ==================================================
 
-func emitActionEnqueued(action) -> void:
+func emitActionEnqueued(action: GameAction) -> void:
 	emit_signal("actionEnqueued", action)
 
-func emitActionPopped(action) -> void:
+func emitActionPopped(action: GameAction) -> void:
 	emit_signal("actionPopped", action)
 
 func emitQueueCleared() -> void:
 	emit_signal("queueCleared")
 
-func emitActionResolved(action, result) -> void:
+func emitActionResolved(action: GameAction, result: Variant) -> void:
 	emit_signal("actionResolved", action, result)
 
 # ==================================================

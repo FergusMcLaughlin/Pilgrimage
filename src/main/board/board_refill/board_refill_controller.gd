@@ -21,7 +21,12 @@ func _onBoardRefillRequested(refillRequest: BoardRefillRequest) -> void:
 		GlobalSignalBus.emitBoardRefillResult(result)
 		return
 	
-	var reveal = ActionType.make(ActionType.REVEAL_CARD, journeyDeck, refillRequest.slot, {"cause": refillRequest.cause})
+	var reveal = ActionType.make(
+		ActionType.REVEAL_CARD,
+		journeyDeck,
+		refillRequest.slot,
+		RevealCardPayload.create(refillRequest.cause)
+		)
 	
 	if !ActionQueue.enqueueAction(reveal):
 		result.failureReason = "The refil action has been rejected"

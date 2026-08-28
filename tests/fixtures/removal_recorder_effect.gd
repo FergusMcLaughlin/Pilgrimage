@@ -11,22 +11,24 @@ static func reset() -> void:
 	observedSource = null
 	observedCause = ""
 	observedResult = null
+	
 
-
-func onEvent(event: Dictionary) -> void:
-	if event.get("type") != "action_resolved":
+func onEvent(event: GameplayEvent) -> void:
+	var resolvedEvent = event as ActionResolvedEvent
+	if resolvedEvent == null:
 		return
-	var action: Dictionary = event.get("action", {})
-	if action.get("type") != ActionType.REMOVE_CARD:
+	var action = resolvedEvent.action
+	if action == null or action.type != ActionType.REMOVE_CARD:
 		return
-	if action.get("target") != hostCard:
+	if action.target != hostCard:
 		return
-
+	
 	callOrder.append("event")
-	observedSource = action.get("source")
-	observedCause = action.get("data", {}).get("cause", "")
-	observedResult = event.get("result")
-
+	observedSource = action.source
+	var payload = action.payload as RemoveCardPayload
+	observedCause = payload.cause if payload != null else ""
+	observedResult = resolvedEvent.result
+	
 
 func onDeactivated() -> void:
 	callOrder.append("deactivated")

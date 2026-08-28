@@ -53,40 +53,32 @@ func _resolveCombat(context: CombatContext) -> void:
 		ActionType.DEAL_DAMAGE,
 		context.attacker,
 		context.defender,
-		{
-			"amount": context.attackerDamage,
-			"cause": "combat",
-			"cycle_number": context.cycleNumber
-		}
+		DealDamagePayload.create(context.attackerDamage, "combat", context.cycleNumber)
 	)
-	var retalitation = ActionType.make(
+	var retaliation = ActionType.make(
 		ActionType.DEAL_DAMAGE,
 		context.defender,
 		context.attacker,
-		{
-			"amount": context.retaliationDamage,
-			"cause": "combat_retaliation",
-			"cycle_number": context.cycleNumber
-		}
+		DealDamagePayload.create(context.retaliationDamage, "combat_retaliation", context.cycleNumber)
 	)
 	
-	if !ActionType.isValid(defenderHit):
+	if !defenderHit.isValid():
 		_finishFailedCombat(context, "defender's damage was rejected")
 		return
-	if !ActionType.isValid(retalitation):
+	if !retaliation.isValid():
 		_finishFailedCombat(context, "retaliation was rejected")
 		return
 	if !ActionQueue.enqueueAction(defenderHit):
 		_finishFailedCombat(context, "defender's damage could not be queued")
 		return
-	if !ActionQueue.enqueueAction(retalitation):
+	if !ActionQueue.enqueueAction(retaliation):
 		_finishFailedCombat(context, "retaliation could not be queued")
 		return
 	
 	var result = CombatResult.new()
 	result.context = context
 	result.defenderDamage = (await ActionQueue.waitForActionToResolve(defenderHit) as DamageResult)
-	result.playerDamage = (await ActionQueue.waitForActionToResolve(retalitation) as DamageResult)
+	result.playerDamage = (await ActionQueue.waitForActionToResolve(retaliation) as DamageResult)
 	
 	if result.defenderDamage == null or !result.defenderDamage.succeeded:
 		_finishFailedCombat(context, "defender's damage failed")
@@ -107,10 +99,7 @@ func _resolveDefeatedCards(result: CombatResult) -> void:
 			ActionType.REMOVE_CARD,
 			context.attacker,
 			context.defender,
-			{
-				"cause": "combat",
-				"source_instance_id": context.attackerInstanceId
-			}
+			RemoveCardPayload.create(context.attackerInstanceId,"combat")
 		)
 		if !ActionQueue.enqueueAction(removeDefender):
 			_finishFailedCombat(context, "defender removal was rejected")
@@ -127,10 +116,7 @@ func _resolveDefeatedCards(result: CombatResult) -> void:
 			ActionType.REMOVE_CARD,
 			context.defender,
 			context.attacker,
-			{
-				"cause": "combat_retaliation",
-				"source_instance_id": context.defenderInstanceId
-			}
+			RemoveCardPayload.create(context.defenderInstanceId, "combat_retaliation")
 		)
 		if !ActionQueue.enqueueAction(removePlayer):
 			_finishFailedCombat(context, "player removal was rejected")
@@ -141,7 +127,7 @@ func _resolveDefeatedCards(result: CombatResult) -> void:
 		if result.playerGraveyardEntry == null:
 			_finishFailedCombat(context, "player removal failed")
 			return
-			
+	
 	await _resolveCombatMovement(result)
 
 func _resolveCombatMovement(result: CombatResult) -> void:
@@ -152,7 +138,7 @@ func _resolveCombatMovement(result: CombatResult) -> void:
 			ActionType.MOVE_CARD,
 			context.attacker,
 			context.targetSlot,
-			{"cause": "combat_advance"}
+			MoveCardPayload.create("combat_advance")
 		)
 		if !ActionQueue.enqueueAction(movePlayer):
 			_finishFailedCombat(context, "combat movement was rejected")

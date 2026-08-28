@@ -16,17 +16,16 @@ func buryCard(card: Card, source, cause: String, boardController: BoardControlle
 	entry.instanceId = card.instanceId
 	entry.cardId = card.data.id
 	entry.cause = cause
-	entry.statSnapshot = {"health": card.health, "temporary_health": card.temporaryHealth, "attack": card.attack}
+	entry.statSnapshot = CardStatSnapshot.fromCard(card)
 	entry.sourceInstanceId = (
 		source.instanceId
 		if is_instance_valid(source) and source is Card
 		else sourceInstanceId
 	)
-	entry.removedSequence = BoardHistory.getNextSequence()
 	_nextEntryId += 1
 	
-	var event = BoardHistory.recordEvent("removed", entry.toDictionary())
-	assert(event["sequence"] == entry.removedSequence)
+	var event = BoardHistory.recordEvent(CardRemovedHistoryEvent.fromGraveyardEntry(entry))
+	entry.removedSequence = event.sequence
 	entries.append(entry)
 	
 	card.queue_free()
@@ -53,13 +52,7 @@ func deleteEntry(entryId: int, source = null) -> bool:
 		return false
 	
 	entries.erase(entry)
-	BoardHistory.recordEvent("deleted", {
-		"entry_id": entry.entryId,
-		"instance_id": entry.instanceId,
-		"card_id": entry.cardId,
-		"source_instance_id": source.instanceId if source is Card else 0,
-		"from": "graveyard"
-		})
+	BoardHistory.recordEvent(CardDeletedHistoryEvent.fromGraveyardEntry(entry, source))
 	return true
 
 func reviveCard(entryId: int, slot: CardSlot, boardController: BoardController) -> Card:
@@ -76,11 +69,7 @@ func reviveCard(entryId: int, slot: CardSlot, boardController: BoardController) 
 	
 	entries.erase(entry)
 	
-	BoardHistory.recordEvent("revived", {
-		"entry_id": entry.entryId,
-		"instance_id": entry.instanceId,
-		"card_id": entry.cardId
-	})
+	BoardHistory.recordEvent(CardRevivedHistoryEvent.fromGraveyardEntry(entry))
 	
 	return card
 

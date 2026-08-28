@@ -22,7 +22,7 @@ const JOURNEY_DECK_PRESET_CARDS: Array[String] = [
 	"M_0008",
 	"M_0009",
 	"M_0010",
-	"M_0011",
+	"M_0011"
 ]
 
 func initialiseJourneyDeck(shuffleAfter: bool = true) -> void:
@@ -57,23 +57,24 @@ func revealTopCard(slot: CardSlot) -> Card:
 		journeyDeckCardBag.addCardToTop(cardToPlace.data.id)
 		cardToPlace.queue_free()
 		return null
-		
+	
 	deckVisuals.refresh()
 	return cardToPlace
 
 func _requestRevealAtSlot(slot: CardSlot) -> Card:
 	if slot == null or slot.isOccupied():
 		return null
-
+	
 	var revealAction = ActionType.make(
 		ActionType.REVEAL_CARD,
 		self,
-		slot
+		slot,
+		RevealCardPayload.create("deck_reveal")
 	)
-
+	
 	if !ActionQueue.enqueueAction(revealAction):
 		return null
-
+	
 	var result = await ActionQueue.waitForActionToResolve(revealAction)
 	return result as Card
 
@@ -85,7 +86,7 @@ func fillEmptySlots(grid: SlotGrid) -> void:
 	for slot in grid.getEmptySlots():
 		if isEmpty():
 			return
-		
+	
 		var revealedCard = await _requestRevealAtSlot(slot)
 		if revealedCard == null:
 			return
@@ -98,7 +99,7 @@ func revealToNextEmptySlot() -> Card:
 	var emptySlots := slotGrid.getEmptySlots()
 	if emptySlots.is_empty():
 		return null
-		
+	
 	return await _requestRevealAtSlot(emptySlots[0])
 
 func queueRevealToNextEmptySlot() -> void:
@@ -112,10 +113,10 @@ func _processRevealQueue() -> void:
 	
 	while pendingRevealRequests > 0:
 		pendingRevealRequests -= 1
-		
+	
 		if isEmpty():
 			break
-		
+	
 		var revealedCard := await revealToNextEmptySlot()
 		if revealedCard == null:
 			break
