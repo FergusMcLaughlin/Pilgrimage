@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://tests/board_refill_shift_integration_test.gd" id="1_test"]
 
-[node name="BoardRefillControllerTest" type="Node"]
+[node name="BoardRefillShiftIntegrationTest" type="Node"]
 script = ExtResource("1_test")

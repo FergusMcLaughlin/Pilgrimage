@@ -1,13 +1,17 @@
 extends RefCounted
 class_name BoardRefillRequest
 
-var slot: CardSlot
+var vacatedPlayerSlot: CardSlot
+var playerDestinationSlot: CardSlot
+var movementDirection: Vector2i
 var cycleNumber: int
 var cause: String
 
-static func forEmptySlot(emptySlot: CardSlot, cycle: int) -> BoardRefillRequest:
+static func afterPlayerMove(vacatedSlot: CardSlot, destinationSlot: CardSlot, moveDirection: Vector2i, cycle: int, refillCause = "player_moved") -> BoardRefillRequest:
 	var request = BoardRefillRequest.new()
-	request.slot = emptySlot
+	request.vacatedPlayerSlot = vacatedSlot
+	request.playerDestinationSlot = destinationSlot
+	request.movementDirection = moveDirection
 	request.cycleNumber = cycle
-	request.cause = "player_moved"
+	request.cause = refillCause
 	return request

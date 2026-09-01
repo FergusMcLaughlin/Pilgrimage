@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://clyul5x8wv3wp"]
 
-[ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests/card_test_scene.gd" id="1_ir41h"]
-[ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/main/decks/deck_types/journey_deck.tscn" id="3_1djoe"]
-[ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/main/board/slot_grid/slot_grid.tscn" id="3_dntrw"]
-[ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/main/board/board_controller/board_controller.tscn" id="4_board"]
-[ext_resource type="Script" uid="uid://k2dgk0h70d17" path="res://src/main/controllers/game_controller.gd" id="5_game_controller"]
-[ext_resource type="Script" uid="uid://107y3l7yfnj7" path="res://src/main/controllers/player_movement_controller.gd" id="6_player_movement"]
-[ext_resource type="Script" uid="uid://cctp8hqdl6a2j" path="res://src/main/combat/combat_resolver.gd" id="7_eo4wq"]
-[ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_alu3s"]
+[ext_resource type="Script" uid="uid://cr1cg85g3flen" path="res://src/tests scenes/card_test_scene.gd" id="1_1w35f"]
+[ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/main/board/slot_grid/slot_grid.tscn" id="2_v6rog"]
+[ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/main/board/board_controller/board_controller.tscn" id="3_canra"]
+[ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/main/decks/deck_types/journey_deck.tscn" id="4_xxy8c"]
+[ext_resource type="Script" uid="uid://k2dgk0h70d17" path="res://src/main/controllers/game_controller.gd" id="5_tncas"]
+[ext_resource type="Script" uid="uid://107y3l7yfnj7" path="res://src/main/controllers/player_movement_controller.gd" id="6_6uhih"]
+[ext_resource type="Script" uid="uid://cctp8hqdl6a2j" path="res://src/main/combat/combat_resolver.gd" id="7_xco6i"]
+[ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_babqd"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -16,7 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ir41h")
+script = ExtResource("1_1w35f")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=924718054]
 
@@ -157,31 +157,36 @@ theme_override_colors/default_color = Color(1, 0.85, 0.15, 1)
 theme_override_font_sizes/normal_font_size = 16
 text = "(no events)"
 
-[node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("3_dntrw")]
+[node name="SlotGrid" parent="." unique_id=481412509 instance=ExtResource("2_v6rog")]
 layout_mode = 1
 
-[node name="BoardController" parent="." unique_id=1044313469 instance=ExtResource("4_board")]
+[node name="BoardController" parent="." unique_id=1044313469 instance=ExtResource("3_canra")]
 layout_mode = 0
 slotGridPath = NodePath("../SlotGrid")
 
-[node name="JourneyDeck" parent="." unique_id=694193839 instance=ExtResource("3_1djoe")]
+[node name="JourneyDeck" parent="." unique_id=694193839 instance=ExtResource("4_xxy8c")]
 layout_mode = 1
 offset_left = 1272.0
 offset_top = 39.0
 offset_right = -53.0
 offset_bottom = -668.0
 
-[node name="GameController" type="Node" parent="." unique_id=560721635]
-script = ExtResource("5_game_controller")
+[node name="GameController" type="Node" parent="." unique_id=560721635 node_paths=PackedStringArray("boardController", "slotGrid", "journeyDeck")]
+script = ExtResource("5_tncas")
+boardController = NodePath("../BoardController")
+slotGrid = NodePath("../SlotGrid")
+journeyDeck = NodePath("../JourneyDeck")
 
 [node name="PlayerMovementController" type="Node" parent="." unique_id=1274520873]
-script = ExtResource("6_player_movement")
+script = ExtResource("6_6uhih")
 
 [node name="CombatResolver" type="Node" parent="." unique_id=647952854 node_paths=PackedStringArray("gameController", "boardController", "slotGrid")]
-script = ExtResource("7_eo4wq")
+script = ExtResource("7_xco6i")
 gameController = NodePath("../GameController")
 boardController = NodePath("../BoardController")
 slotGrid = NodePath("../SlotGrid")
 
-[node name="BoardRefillController" parent="." unique_id=479683705 node_paths=PackedStringArray("journeyDeck") instance=ExtResource("8_alu3s")]
+[node name="BoardRefillController" parent="." unique_id=479683705 node_paths=PackedStringArray("journeyDeck", "slotGrid", "gameController") instance=ExtResource("8_babqd")]
 journeyDeck = NodePath("../JourneyDeck")
+slotGrid = NodePath("../SlotGrid")
+gameController = NodePath("../GameController")

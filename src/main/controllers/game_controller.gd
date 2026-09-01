@@ -108,9 +108,19 @@ func beginCombat() -> bool:
 
 func _onCombatCompleted(combatResult: CombatResult) -> void:
 	if combatResult.succeeded and combatResult.playerMoved:
-		GlobalSignalBus.emitBoardRefillRequested(
-			BoardRefillRequest.forEmptySlot(combatResult.context.playerSlot, combatResult.context.cycleNumber)
+		var context: CombatContext = combatResult.context
+		var playerMoveDirection = Vector2i.ZERO
+		if context.playerSlot != null and context.targetSlot != null:
+			playerMoveDirection = context.targetSlot.coordinates - context.playerSlot.coordinates
+		
+		var refillRequest = BoardRefillRequest.afterPlayerMove(
+			context.playerSlot,
+			context.targetSlot,
+			playerMoveDirection,
+			context.cycleNumber
 		)
+		
+		GlobalSignalBus.emitBoardRefillRequested(refillRequest)
 		return
 	
 	_finishResolvedPlayerAction()
