@@ -27,6 +27,7 @@ ActionProcessor="*uid://byceawn7gne4r"
 EffectProcessor="*uid://bwgmcsl8kuouu"
 BoardHistory="*uid://b1dyex4kan607"
 Graveyard="*uid://bcs3prtwe8076"
+SceneLoader="*uid://busjifrrrdqyc"
 
 [display]
 

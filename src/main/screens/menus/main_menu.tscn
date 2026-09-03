@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://br3wjvjcvnd8q"]
+
+[ext_resource type="Script" uid="uid://dv5bqruup1dd3" path="res://src/main/screens/menus/main_menu.gd" id="1_j8qus"]
+
+[node name="MainMenu" type="Node" unique_id=555490332 node_paths=PackedStringArray("playButton")]
+script = ExtResource("1_j8qus")
+playButton = NodePath("Button")
+initalScene = &"uid://clyul5x8wv3wp"
+
+[node name="Button" type="Button" parent="." unique_id=433293552]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "START"
