@@ -45,6 +45,8 @@ func _loadCardImage() -> void:
 
 func _updateStatColours() -> void:
 	if card.data.type == "player":
+		attackLable.modulate = STAT_COLOUR_NORMAL
+		healthLable.modulate = STAT_COLOUR_NORMAL
 		return
 	
 	attackLable.modulate = _getStatColour(card.attack, card.data.baseAttack)

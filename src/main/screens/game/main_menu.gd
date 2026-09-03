@@ -1,7 +1,7 @@
 extends Node
 
 @export var playButton: Button
-@export var initalScene: StringName = &""
+@export var initalScene: StringName = &"uid://clyul5x8wv3wp"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

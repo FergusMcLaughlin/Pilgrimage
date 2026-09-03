@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dp08j8ldqsa6j" path="res://assets/images/cards/default_image.png" id="5_jhkr3"]
 [ext_resource type="Theme" uid="uid://548ab7bk5nlu" path="res://assets/themes/CardLabeltheme.tres" id="6_jhkr3"]
 [ext_resource type="Script" uid="uid://mq8neguao2yu" path="res://src/main/cards/card_outline.gd" id="9_eyjew"]
+[ext_resource type="FontFile" uid="uid://dlrbw8ii7vfsi" path="res://assets/fonts/alagard.ttf" id="9_si65y"]
 
 [node name="Card" type="Control" unique_id=944151678]
 light_mask = 2
@@ -131,6 +132,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme = ExtResource("6_jhkr3")
+theme_override_fonts/normal_font = ExtResource("9_si65y")
 theme_override_font_sizes/normal_font_size = 35
 theme_override_font_sizes/bold_font_size = 35
 theme_override_font_sizes/bold_italics_font_size = 35
@@ -149,6 +151,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme = ExtResource("6_jhkr3")
+theme_override_fonts/normal_font = ExtResource("9_si65y")
 theme_override_font_sizes/normal_font_size = 35
 theme_override_font_sizes/bold_font_size = 35
 theme_override_font_sizes/bold_italics_font_size = 35
@@ -177,6 +180,7 @@ layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("6_jhkr3")
 theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("9_si65y")
 theme_override_font_sizes/normal_font_size = 35
 theme_override_font_sizes/bold_font_size = 35
 theme_override_font_sizes/bold_italics_font_size = 35

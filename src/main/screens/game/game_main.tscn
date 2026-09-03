@@ -1,3 +1,150 @@
 [gd_scene format=3 uid="uid://c7wxpcrbkmmt0"]
 
-[node name="GameMain" type="Node" unique_id=967636088]
+[ext_resource type="FontFile" uid="uid://bv8q21mv214e6" path="res://assets/fonts/7613_gossip_gothic_pixel_font/Gossip/Files/Gossip Font/woff2/Gossip-HighPixel.woff2" id="1_6jpfw"]
+[ext_resource type="Script" uid="uid://dv5bqruup1dd3" path="res://src/main/screens/game/main_menu.gd" id="1_n8xeg"]
+[ext_resource type="FontFile" uid="uid://dlrbw8ii7vfsi" path="res://assets/fonts/alagard.ttf" id="1_rrh62"]
+[ext_resource type="Script" uid="uid://cff45xtrltlh6" path="res://src/main/screens/game/effects/button_effects.gd" id="2_sl2y4"]
+[ext_resource type="Script" uid="uid://da13vcr8gfacl" path="res://src/main/screens/game/effects/title_effect.gd" id="3_oe77a"]
+[ext_resource type="Texture2D" uid="uid://c2peo4g0qbmse" path="res://assets/images/junk/pixel_art_large(1).png" id="4_rrh62"]
+[ext_resource type="Script" uid="uid://d1dsltroae57q" path="res://src/main/screens/game/effects/rain_background_effect.gd" id="5_rain"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_7l3lh"]
+script = ExtResource("3_oe77a")
+metadata/_custom_type_script = "uid://da13vcr8gfacl"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menuButton"]
+
+[node name="GameMain" type="Node" unique_id=967636088 node_paths=PackedStringArray("playButton")]
+script = ExtResource("1_n8xeg")
+playButton = NodePath("CanvasLayer/MarginContainer/VBoxContainer/Play")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=624205589]
+
+[node name="RainBackgroundEffect" type="Control" parent="CanvasLayer" unique_id=556662800]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_rain")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=358647032]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+offset_right = 62.0
+grow_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer" unique_id=668444104]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Play" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1283817469]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rrh62")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menuButton")
+text = "Start"
+
+[node name="ButtonEffects" type="Node" parent="CanvasLayer/MarginContainer/VBoxContainer/Play" unique_id=1594649438]
+script = ExtResource("2_sl2y4")
+
+[node name="Continue" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1949959514]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rrh62")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menuButton")
+text = "Continue"
+
+[node name="ButtonEffects" type="Node" parent="CanvasLayer/MarginContainer/VBoxContainer/Continue" unique_id=623493749]
+script = ExtResource("2_sl2y4")
+
+[node name="Load Game" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=229094453]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rrh62")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menuButton")
+text = "Load Game"
+
+[node name="ButtonEffects" type="Node" parent="CanvasLayer/MarginContainer/VBoxContainer/Load Game" unique_id=1674343243]
+script = ExtResource("2_sl2y4")
+
+[node name="Settings" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=1713340462]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rrh62")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menuButton")
+text = "Settings"
+
+[node name="ButtonEffects" type="Node" parent="CanvasLayer/MarginContainer/VBoxContainer/Settings" unique_id=351288362]
+script = ExtResource("2_sl2y4")
+
+[node name="Exit" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer" unique_id=458528507]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rrh62")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/normal = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_menuButton")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_menuButton")
+text = "Quit Game"
+
+[node name="ButtonEffects" type="Node" parent="CanvasLayer/MarginContainer/VBoxContainer/Exit" unique_id=452254890]
+script = ExtResource("2_sl2y4")
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer" unique_id=1483324008]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -445.5
+offset_top = -120.5
+offset_right = 445.5
+offset_bottom = 120.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 500
+
+[node name="Title" type="RichTextLabel" parent="CanvasLayer/MarginContainer2" unique_id=1154430264]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_6jpfw")
+theme_override_font_sizes/normal_font_size = 120
+bbcode_enabled = true
+text = "[title_wave speed=0.55 amplitude=7.0]Pilgrimage[/title_wave]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+custom_effects = [SubResource("RichTextEffect_7l3lh")]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1585085541]
+offset_left = 4.0
+offset_top = -294.0
+offset_right = 1600.798
+offset_bottom = 903.0
+texture = ExtResource("4_rrh62")
+flip_h = true
