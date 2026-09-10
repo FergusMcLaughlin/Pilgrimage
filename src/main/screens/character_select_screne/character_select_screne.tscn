@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dtt0wa05rdil2"]
+
+[ext_resource type="Script" uid="uid://daot73ykngt6q" path="res://src/main/screens/character_select_screne/character_select_screne.gd" id="1_5ppyv"]
+
+[node name="CharacterSelectScrene" type="Control" unique_id=1603263715]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5ppyv")
+newGameScenePath = "uid://clyul5x8wv3wp"
+backButtonDestinationPath = "uid://cp0r6ldd0jruc"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1236655205]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -102.5
+offset_bottom = 102.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleText" type="RichTextLabel" parent="CenterContainer" unique_id=496511132]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 150
+text = "Character Select"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="ButtonMargin" type="MarginContainer" parent="." unique_id=2046484555]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+offset_right = 96.0
+grow_vertical = 0
+
+[node name="ButtonContainer" type="VBoxContainer" parent="ButtonMargin" unique_id=1789036311]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="StartButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=424907788]
+unique_name_in_owner = true
+layout_mode = 2
+text = "START_BUTTON"
+
+[node name="BackButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=1627924182]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_BUTTON"

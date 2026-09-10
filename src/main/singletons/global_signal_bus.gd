@@ -84,6 +84,15 @@ signal boardRefillRequested(request: BoardRefillRequest)
 signal boardRefillCompleted(result: BoardRefillResult)
 
 # ==================================================
+# SCREEN LOADER SIGNALS
+# ==================================================
+
+signal progressChanged(progress: float)
+signal loadFinished()
+signal loadScreenReady()
+signal loadScreenClosed()
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -217,3 +226,19 @@ func emitBoardRefillRequested(request: BoardRefillRequest) -> void:
 
 func emitBoardRefillResult(result: BoardRefillResult) -> void:
 	emit_signal("boardRefillCompleted", result)
+
+# ==================================================
+# SCREEN LOADER WRAPPERS
+# ==================================================
+
+func emitProgressChanged(progress: float) -> void:
+	emit_signal("progressChanged", progress)
+
+func emitLoadFinished() -> void:
+	emit_signal("loadFinished")
+
+func emitLoadScreenReady() -> void:
+	emit_signal("loadScreenReady")
+
+func emitLoadScreenClosed() -> void:
+	emit_signal("loadScreenClosed")

@@ -27,6 +27,7 @@ ActionProcessor="*uid://byceawn7gne4r"
 EffectProcessor="*uid://bwgmcsl8kuouu"
 BoardHistory="*uid://b1dyex4kan607"
 Graveyard="*uid://bcs3prtwe8076"
+ScreenLoader="*res://src/main/singletons/screen_loader.gd"
 
 [display]
 
@@ -40,6 +41,10 @@ project/assembly_name="Pilgrimage-2"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/project_time_tracker/plugin.cfg")
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://data/localisation/ui.en.translation")
 
 [physics]
 

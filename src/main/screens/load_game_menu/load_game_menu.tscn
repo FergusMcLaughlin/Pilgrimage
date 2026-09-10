@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://erls5m0i3m7s"]
+
+[ext_resource type="Script" uid="uid://b5f38e2alf3xd" path="res://src/main/screens/load_game_menu/load_game_menu.gd" id="1_4jrx0"]
+
+[node name="LoadGameMenu" type="Control" unique_id=1448088613]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4jrx0")
+backButtonDestinationPath = "res://src/main/screens/main_menu/main_menu.tscn"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1361724590]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -102.5
+offset_bottom = 102.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleText" type="RichTextLabel" parent="CenterContainer" unique_id=1205882515]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 150
+text = "Load Game Menu"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="ButtonMargin" type="MarginContainer" parent="." unique_id=1388912693]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+offset_right = 96.0
+grow_vertical = 0
+
+[node name="ButtonContainer" type="VBoxContainer" parent="ButtonMargin" unique_id=1018687520]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="BackButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=2061024568]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK_BUTTON"
