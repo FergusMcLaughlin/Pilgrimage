@@ -14,50 +14,51 @@ newGameScenePath = "uid://dtt0wa05rdil2"
 loadingMenuScenePath = "res://src/main/screens/load_game_menu/load_game_menu.tscn"
 settingsMenuScenePath = "res://src/main/screens/settings_menu/settings_menu.tscn"
 
-[node name="ButtonMargin" type="MarginContainer" parent="." unique_id=1192647065]
+[node name="MenuMarginContainer" type="MarginContainer" parent="." unique_id=1014833327]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -136.0
-offset_right = 96.0
-grow_vertical = 0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
 
-[node name="ButtonContainer" type="VBoxContainer" parent="ButtonMargin" unique_id=1569037959]
+[node name="ButtonMargin" type="MarginContainer" parent="MenuMarginContainer" unique_id=1192647065]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="ButtonContainer" type="VBoxContainer" parent="MenuMarginContainer/ButtonMargin" unique_id=1569037959]
 layout_mode = 2
 
-[node name="NewGameButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=1040797142]
+[node name="NewGameButton" type="Button" parent="MenuMarginContainer/ButtonMargin/ButtonContainer" unique_id=1040797142]
 unique_name_in_owner = true
 layout_mode = 2
 text = "NEW_GAME_BUTTON"
 
-[node name="LoadGameButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=1542000650]
+[node name="LoadGameButton" type="Button" parent="MenuMarginContainer/ButtonMargin/ButtonContainer" unique_id=1542000650]
 unique_name_in_owner = true
 layout_mode = 2
 text = "LOAD_BUTTON"
 
-[node name="SettingsMenuButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=590836113]
+[node name="SettingsMenuButton" type="Button" parent="MenuMarginContainer/ButtonMargin/ButtonContainer" unique_id=590836113]
 unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS_BUTTON"
 
-[node name="ExitGameButton" type="Button" parent="ButtonMargin/ButtonContainer" unique_id=1361244082]
+[node name="ExitGameButton" type="Button" parent="MenuMarginContainer/ButtonMargin/ButtonContainer" unique_id=1361244082]
 unique_name_in_owner = true
 layout_mode = 2
 text = "EXIT_BUTTON"
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1285238781]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -102.5
-offset_bottom = 102.5
-grow_horizontal = 2
-grow_vertical = 2
+[node name="CenterContainer" type="CenterContainer" parent="MenuMarginContainer" unique_id=1285238781]
+layout_mode = 2
+mouse_filter = 2
 
-[node name="TitleText" type="RichTextLabel" parent="CenterContainer" unique_id=538141483]
+[node name="TitleText" type="RichTextLabel" parent="MenuMarginContainer/CenterContainer" unique_id=538141483]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 150
 text = "Pilgrimage"
