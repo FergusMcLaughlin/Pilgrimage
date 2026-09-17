@@ -67,6 +67,7 @@ signal gameStateChanged(previousState, newState)
 signal playerCycleStarted(player, cycleNumber)
 signal afterMoveStarted(player, cycleNumber)
 signal playerCycleCompleted(player, cycleNumber)
+signal gameOverRequested()
 
 # ==================================================
 # PLAYER MOVMENT CONTROLLER SIGNALS
@@ -203,6 +204,9 @@ func emitAfterMoveStarted(player, cycleNumber) -> void:
 
 func emitPlayerCycleCompleted(player, cycleNumber) -> void:
 	emit_signal("playerCycleCompleted", player, cycleNumber)
+
+func emitGameOverRequested() -> void:
+	emit_signal("gameOverRequested")
 
 # ==================================================
 # PLAYER MOVMENT CONTROLLER WRAPPERs

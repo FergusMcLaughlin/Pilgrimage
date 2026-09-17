@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://cpo2741avbs5b"]
+
+[ext_resource type="Script" uid="uid://r6v4e1504g3s" path="res://src/main/screens/post_game_screen/post_game_screen.gd" id="1_c4crr"]
+
+[node name="PostGameScreen" type="Control" unique_id=269718575]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c4crr")
+mainMenuScenePath = "uid://cp0r6ldd0jruc"
+
+[node name="MenuMarginContainer" type="MarginContainer" parent="." unique_id=1785041957]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MenuMarginContainer" unique_id=1419521642]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="MainMenuButton" type="Button" parent="MenuMarginContainer/ButtonContainer" unique_id=572937582]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAIN_MENU_BUTTON"
+
+[node name="ExitGameButton" type="Button" parent="MenuMarginContainer/ButtonContainer" unique_id=1011888514]
+unique_name_in_owner = true
+layout_mode = 2
+text = "EXIT_BUTTON"
+
+[node name="CenterContainer" type="CenterContainer" parent="MenuMarginContainer" unique_id=2089144928]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitleText" type="RichTextLabel" parent="MenuMarginContainer/CenterContainer" unique_id=189739993]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 50
+text = "JOURNEY_OVER_TEXT"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0

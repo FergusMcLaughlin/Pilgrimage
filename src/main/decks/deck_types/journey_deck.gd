@@ -45,8 +45,13 @@ const JOURNEY_DECK_PRESET_CARDS: Array[String] = [
 	"M_0010",
 ]
 
+const JOURNEY_DECK_COPIES := 3
+
 func initialiseJourneyDeck(shuffleAfter: bool = true) -> void:
-	journeyDeckCardBag.initialiseDeck(JOURNEY_DECK_PRESET_CARDS, shuffleAfter)
+	var cardIds: Array[String] = []
+	for _copy in range(JOURNEY_DECK_COPIES):
+		cardIds.append_array(JOURNEY_DECK_PRESET_CARDS)
+	journeyDeckCardBag.initialiseDeck(cardIds, shuffleAfter)
 	deckVisuals.refresh()
 
 func _ready() -> void:

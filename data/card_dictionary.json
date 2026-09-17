@@ -131,7 +131,7 @@
 		"name": "Dobhar-chú",
 		"type": "unit",
 		"health": 2.0,
-		"attack": 6.0,
+		"attack": 50.0,
 		"effects": [],
 		"image_path": "res://assets/images/new_cards_512_768/dobhar_chu.png"
 	},

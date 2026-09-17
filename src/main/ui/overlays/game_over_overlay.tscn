@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://bo5xkiqwpdy4n"]
+
+[ext_resource type="Script" uid="uid://bvpddbgyok2rp" path="res://src/main/ui/overlays/game_over_overlay.gd" id="1_fyi8g"]
+
+[node name="GameOverOverlay" type="Control" unique_id=1509402386]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fyi8g")
+postGameScreen = "uid://cpo2741avbs5b"
+
+[node name="BackGround" type="ColorRect" parent="." unique_id=373845621]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -144.0
+offset_bottom = 144.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0, 0, 0.32156864)
+
+[node name="MarginContainer" type="MarginContainer" parent="BackGround" unique_id=1137606951]
+custom_maximum_size = Vector2(1500, 220)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BackGround/MarginContainer" unique_id=2100984891]
+layout_mode = 2
+
+[node name="GameOver" type="RichTextLabel" parent="BackGround/MarginContainer/VBoxContainer" unique_id=706975637]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_font_sizes/normal_font_size = 60
+text = "GAME_OVER"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonHolder" type="HBoxContainer" parent="BackGround/MarginContainer/VBoxContainer" unique_id=44674802]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+
+[node name="ContinueButton" type="Button" parent="BackGround/MarginContainer/VBoxContainer/ButtonHolder" unique_id=453717699]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CONTINUE_BUTTON"

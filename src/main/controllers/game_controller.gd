@@ -129,9 +129,16 @@ func _onBoardRefillCompleted(_result: BoardRefillResult) -> void:
 	_finishResolvedPlayerAction()
 
 func _finishResolvedPlayerAction() -> void:
-	if beginAfterMovePhase():
-		await  _waitForActionSystemIdle()
-		completePlayerCycle()
+	if !beginAfterMovePhase():
+		return
+
+	await  _waitForActionSystemIdle()
+
+	if _isPlayerDefeatedAfterSettlement():
+		_enterGameOver()
+		return
+
+	completePlayerCycle()
 
 func beginAfterMovePhase() -> bool:
 	if state not in [GameState.RESOLVING_MOVE, GameState.COMBAT]:
@@ -142,7 +149,6 @@ func beginAfterMovePhase() -> bool:
 		playerCycleNumber,
 	)
 	return true
-
 
 func completePlayerCycle() -> bool:
 	if state != GameState.AFTER_MOVE:
@@ -156,3 +162,16 @@ func completePlayerCycle() -> bool:
 	)
 	_enterPlayerReady()
 	return true
+
+func _isPlayerDefeatedAfterSettlement() -> bool:
+	if playerCard == null or !is_instance_valid(playerCard) or playerCard.health <= 0:
+		return true
+	else:
+		return false
+
+func _enterGameOver() -> void:
+	if state == GameState.GAME_OVER:
+		return
+	setState(GameState.GAME_OVER)
+	InputManager.lockInput()
+	GlobalSignalBus.emitGameOverRequested()
