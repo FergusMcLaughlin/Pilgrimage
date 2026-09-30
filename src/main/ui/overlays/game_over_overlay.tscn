@@ -10,7 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fyi8g")
-postGameScreen = "uid://cpo2741avbs5b"
 
 [node name="BackGround" type="ColorRect" parent="." unique_id=373845621]
 layout_mode = 1

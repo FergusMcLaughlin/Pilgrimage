@@ -17,6 +17,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1w35f")
+postRunScenePath = "uid://cpo2741avbs5b"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=924718054]
 

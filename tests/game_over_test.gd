@@ -20,6 +20,7 @@ var _failures := 0
 
 func _ready() -> void:
 	GlobalSignalBus.gameOverRequested.connect(_on_game_over_requested)
+	GlobalSignalBus.gameOverContinueRequested.connect(_on_game_over_continue_requested)
 	GlobalSignalBus.playerCycleCompleted.connect(_on_player_cycle_completed)
 	GlobalSignalBus.actionResolved.connect(_on_action_resolved)
 
@@ -39,6 +40,7 @@ func _ready() -> void:
 	await _test_overlay_contract()
 
 	GlobalSignalBus.gameOverRequested.disconnect(_on_game_over_requested)
+	GlobalSignalBus.gameOverContinueRequested.disconnect(_on_game_over_continue_requested)
 	GlobalSignalBus.playerCycleCompleted.disconnect(_on_player_cycle_completed)
 	GlobalSignalBus.actionResolved.disconnect(_on_action_resolved)
 
@@ -160,10 +162,12 @@ func _test_overlay_contract() -> void:
 		_expect(dimmer.anchor_top == 0.5 and dimmer.anchor_bottom == 0.5, "The backdrop must keep the intended centred message band layout.")
 	if continue_button != null:
 		_expect(!continue_button.disabled, "The Continue button must remain usable after game over.")
-	_expect(overlay.has_signal("continueRequested"), "The overlay must expose a Continue handoff signal for the post-run screen flow.")
-	if continue_button != null and overlay.has_signal("continueRequested"):
+	_expect(
+		GlobalSignalBus.has_signal("gameOverContinueRequested"),
+		"The GlobalSignalBus must expose a Continue handoff signal for the post-run screen flow."
+	)
+	if continue_button != null and GlobalSignalBus.has_signal("gameOverContinueRequested"):
 		_overlay_continue_count = 0
-		overlay.connect("continueRequested", _on_overlay_continue_requested)
 		continue_button.pressed.emit()
 		_expect(_overlay_continue_count == 1, "Continue must emit exactly one handoff request.")
 		_expect(continue_button.disabled, "Continue must disable itself to prevent repeated scene transitions.")
@@ -187,7 +191,7 @@ func _on_action_resolved(_action: GameAction, _result: Variant) -> void:
 	_resolved_action_before_game_over = true
 
 
-func _on_overlay_continue_requested() -> void:
+func _on_game_over_continue_requested() -> void:
 	_overlay_continue_count += 1
 
 

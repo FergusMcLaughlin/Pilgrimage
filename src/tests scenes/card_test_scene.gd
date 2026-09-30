@@ -2,6 +2,8 @@ extends Control
 
 const GAME_OVER_OVERLAY_SCENE := preload("res://src/main/ui/overlays/game_over_overlay.tscn")
 
+@export_file("*.tscn") var postRunScenePath: String
+
 @onready var cardsRoot: Control = $CanvasLayer/CardsRoot
 @onready var canvasLayer: CanvasLayer = $CanvasLayer
 @onready var journeyDeck: JourneyDeck = $JourneyDeck
@@ -53,6 +55,7 @@ func _ready() -> void:
 	GlobalSignalBus.cardStateChanged.connect(_onCardStateChanged)
 	GlobalSignalBus.actionResolved.connect(_onLifecycleActionResolved)
 	GlobalSignalBus.gameOverRequested.connect(_onGameOverRequested)
+	GlobalSignalBus.gameOverContinueRequested.connect(_onGameOverContinueRequested)
 	
 	journeyDeck.boardController = boardController
 	journeyDeck.slotGrid = slotGrid
@@ -80,6 +83,8 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if GlobalSignalBus.gameOverRequested.is_connected(_onGameOverRequested):
 		GlobalSignalBus.gameOverRequested.disconnect(_onGameOverRequested)
+	if GlobalSignalBus.gameOverContinueRequested.is_connected(_onGameOverContinueRequested):
+		GlobalSignalBus.gameOverContinueRequested.disconnect(_onGameOverContinueRequested)
 
 
 func _onGameOverRequested() -> void:
@@ -88,6 +93,13 @@ func _onGameOverRequested() -> void:
 
 	gameOverOverlay = GAME_OVER_OVERLAY_SCENE.instantiate()
 	canvasLayer.add_child(gameOverOverlay)
+
+
+func _onGameOverContinueRequested() -> void:
+	if !is_instance_valid(gameOverOverlay) or ScreenLoader.isCurrentlyLoadingScene():
+		return
+
+	await ScreenLoader.loadScene(postRunScenePath)
 
 
 func _onLifecycleActionResolved(action: GameAction, _result: Variant) -> void:
