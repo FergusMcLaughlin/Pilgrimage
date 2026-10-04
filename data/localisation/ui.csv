@@ -8,5 +8,14 @@ BACK_BUTTON,Back
 START_BUTTON,Start
 MAIN_MENU_BUTTON,Main Menu
 CONTINUE_BUTTON,Continue
+SAVE_GAME_BUTTON,Save Game
+QUIT_GAME_BUTTON,Quit
+RESUME_GAME_BUTTON,Resume
+PAUSED_MENU,Paused
 GAME_OVER,Game Over
 JOURNEY_OVER_TEXT,Your journey has ended.
+PAUSE_CONFIRM_MAIN_MENU,Return to the main menu? Your current run will be lost.
+PAUSE_CONFIRM_EXIT,Exit the game? Your current run will be lost.
+PAUSE_CANCEL_BUTTON,Cancel
+PAUSE_CONFIRM_BUTTON,Confirm
+PAUSE_LOAD_FAILED,Could not return to the main menu. Please try again.

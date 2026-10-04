@@ -3,6 +3,8 @@ extends Node
 var loadingScene: PackedScene = preload("res://src/main/ui/overlays/loading_overlay.tscn")
 var loadedResource: PackedScene
 var scenePathToLoad: String
+var pendingFailurePath: String = ""
+var pendingFailureMessage: String = ""
 var progress: Array = []
 var useSubThreads: bool = true
 var isLoading: bool = false
@@ -16,9 +18,13 @@ func loadScene(scenePath: String) -> void:
 		return
 	
 	if scenePath.is_empty() or not ResourceLoader.exists(scenePath, "PackedScene"):
-		push_error("LoadScene: invalid PackedScene path: " + scenePath)
+		var message = "LoadScene: Invalid scene path: " + scenePath
+		push_error(message)
+		GlobalSignalBus.emitSceneLoadFailed(scenePath, message)
 		return
 	
+	pendingFailurePath = ""
+	pendingFailureMessage = ""
 	scenePathToLoad = scenePath
 	isLoading = true
 	progress.clear()
@@ -66,11 +72,19 @@ func _finishLoading() -> void:
 
 func _finishLoadingWithError(message: String) -> void:
 	push_error(message)
+	pendingFailurePath = scenePathToLoad
+	pendingFailureMessage = message
 	set_process(false)
 	GlobalSignalBus.emitLoadFinished()
 
 func _onLoadScreenClosed() -> void:
 	isLoading = false
+	var failedPath := pendingFailurePath
+	var failureMessage := pendingFailureMessage
+	pendingFailurePath = ""
+	pendingFailureMessage = ""
+	if !failureMessage.is_empty():
+		GlobalSignalBus.emitSceneLoadFailed(failedPath, failureMessage)
 
 func isCurrentlyLoadingScene() -> bool:
 	return isLoading

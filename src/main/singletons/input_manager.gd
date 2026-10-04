@@ -9,13 +9,17 @@ var inputLocked: bool = false
 var originalCardMouseFilter: int = Control.MOUSE_FILTER_STOP
 var nextCardZIndex: int = 10
 
+#added for testing: only the manual test scene enables drag placement.
+var debugDraggingEnabled: bool = false
+var debugBoardController: BoardController
+
 func _ready() -> void:
 	GlobalSignalBus.cardPressed.connect(_onCardPressed)
 	GlobalSignalBus.slotHovered.connect(_onSlotHovered)
 	GlobalSignalBus.slotUnhovered.connect(_onSlotUnhovered)
 
 func _input(event: InputEvent) -> void:
-	if inputLocked or cardBeingDragged == null:
+	if !isGameplayInputAllowed() or cardBeingDragged == null:
 		return
 
 	if event is InputEventMouseMotion:
@@ -24,7 +28,7 @@ func _input(event: InputEvent) -> void:
 		_finishDragging(event.global_position)
 
 func _onCardPressed(card: Card) -> void:
-	if inputLocked or cardBeingDragged != null:
+	if !isGameplayInputAllowed() or cardBeingDragged != null:
 		return
 
 	if not _canStartDragging(card):
@@ -40,6 +44,10 @@ func _onSlotUnhovered(slot: CardSlot) -> void:
 		hoveredSlot = null
 
 func _canStartDragging(card: Card) -> bool:
+	#added for testing: dragging is an explicit test-harness override.
+	if !debugDraggingEnabled or !isGameplayInputAllowed():
+		return false
+
 	if card == null:
 		return false
 
@@ -133,8 +141,14 @@ func _isCardSlotValid(card: Card, slot: CardSlot) -> bool:
 	return true
 
 func _placeCardInSlot(card: Card, slot: CardSlot) -> void:
-	var placedSuccessfully := slot.setCard(card)
-	if not placedSuccessfully:
+	#added for testing: debug drops use the board owner and its notifications.
+	if !debugDraggingEnabled or !isGameplayInputAllowed():
+		_dropCard(card)
+		return
+	if !is_instance_valid(debugBoardController):
+		_dropCard(card)
+		return
+	if !debugBoardController.placeCard(card, slot):
 		_dropCard(card)
 
 func _dropCard(card: Card) -> void:
@@ -152,5 +166,16 @@ func _bringCardToFront(card: Card) -> void:
 func lockInput() -> void:
 	inputLocked = true
 
+	if is_instance_valid(cardBeingDragged):
+		var card = cardBeingDragged
+		card.cancelDrag()
+		card.rotation = originalCardRotation
+		card.mouse_filter = originalCardMouseFilter
+
+	_clearDrag()
+
 func unlockInput() -> void:
 	inputLocked = false
+
+func isGameplayInputAllowed() -> bool:
+	return !inputLocked

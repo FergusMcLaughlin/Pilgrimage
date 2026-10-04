@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://cctx4t3kao8m1"]
+
+[ext_resource type="Shader" uid="uid://e4e78r0j3r08" path="res://src/main/shaders/pause_menu_blur.gdshader" id="1_4a7ne"]
+[ext_resource type="Script" uid="uid://ci7flpbekrw1m" path="res://src/main/ui/overlays/pause_menu_overlay.gd" id="1_okt1w"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hrcml"]
+shader = ExtResource("1_4a7ne")
+shader_parameter/amount = 2.000000095
+
+[node name="PauseMenuOverlay" type="Control" unique_id=395882982]
+process_mode = 2
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_okt1w")
+
+[node name="Blur" type="ColorRect" parent="." unique_id=238792907]
+material = SubResource("ShaderMaterial_hrcml")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="Panel" parent="." unique_id=1280435336]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -201.0
+offset_right = 154.0
+offset_bottom = 201.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu" unique_id=370770868]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="Menu/VBoxContainer" unique_id=1093188987]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Menu/VBoxContainer/MarginContainer2" unique_id=1738394492]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 40
+text = "PAUSED_MENU"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ErrorLabel" type="Label" parent="Menu/VBoxContainer" unique_id=1485764154]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+autowrap_mode = 3
+
+[node name="VBoxContainerButtons" type="VBoxContainer" parent="Menu/VBoxContainer" unique_id=1031208666]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+
+[node name="ResumeGameButton" type="Button" parent="Menu/VBoxContainer/VBoxContainerButtons" unique_id=977362233]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESUME_GAME_BUTTON"
+
+[node name="MainMenuButton" type="Button" parent="Menu/VBoxContainer/VBoxContainerButtons" unique_id=167552707]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "MAIN_MENU_BUTTON"
+
+[node name="ExitGameButton" type="Button" parent="Menu/VBoxContainer" unique_id=1697362168]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+text = "EXIT_BUTTON"
+
+[node name="ConfirmationPanel" type="PanelContainer" parent="." unique_id=1632419490]
+visible = false
+custom_minimum_size = Vector2(520, 180)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -90.0
+offset_right = 260.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationPanel" unique_id=711553864]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ConfirmationText" type="Label" parent="ConfirmationPanel/VBoxContainer" unique_id=1981062031]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationPanel/VBoxContainer" unique_id=2000486697]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CancelButton" type="Button" parent="ConfirmationPanel/VBoxContainer/HBoxContainer" unique_id=1239346617]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "PAUSE_CANCEL_BUTTON"
+
+[node name="ConfirmButton" type="Button" parent="ConfirmationPanel/VBoxContainer/HBoxContainer" unique_id=189206839]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "PAUSE_CONFIRM_BUTTON"

@@ -21,6 +21,7 @@ func _ready() -> void:
 	await _createFixture()
 	_testTargetValidation()
 	_testInvalidClicksDoNothing()
+	_testLockedReadyClickDoesNothing()
 	_testValidClickCreatesOneImmutableRequest()
 	await _cleanup()
 
@@ -114,6 +115,21 @@ func _testInvalidClicksDoNothing() -> void:
 	_expect(_game.state == GameController.GameState.PLAYER_READY, "An invalid click must leave the game ready.")
 	_expect(!InputManager.inputLocked, "An invalid click must leave input unlocked.")
 	_expect(_game.playerCycleNumber == initialCycle, "An invalid click must not change the cycle number.")
+
+
+func _testLockedReadyClickDoesNothing() -> void:
+	var defender: Card = _cards[Vector2i(1, 0)]
+	var initialCycle := _game.playerCycleNumber
+	var initialRequestCount := _combatRequests.size()
+	InputManager.lockInput()
+	_expect(!_movement.isValidTarget(defender), "Locked input must reject an otherwise valid adjacent target.")
+	GlobalSignalBus.emitCardPressed(defender)
+	_expect(_combatRequests.size() == initialRequestCount, "Locked ready input must not request combat.")
+	_expect(_game.state == GameController.GameState.PLAYER_READY, "Locked clicks must leave the ready phase unchanged.")
+	_expect(_game.playerCycleNumber == initialCycle, "Locked clicks must not advance the cycle.")
+	_expect(InputManager.inputLocked, "Rejected clicks must not unlock input.")
+	InputManager.unlockInput()
+	_expect(_movement.isValidTarget(defender), "Unlocking must restore selection of the same target.")
 
 
 func _testValidClickCreatesOneImmutableRequest() -> void:

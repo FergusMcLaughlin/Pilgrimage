@@ -56,7 +56,7 @@ func initialiseJourneyDeck(shuffleAfter: bool = true) -> void:
 
 func _ready() -> void:
 	deckVisuals.init(self)
-	deckImage.gui_input.connect(_onDeckImageGuiInput)
+	#added for testing: manual deck clicks are connected by card_test_scene only.
 
 func getDeckSize() -> int:
 	return journeyDeckCardBag.getDeckSize()
@@ -148,7 +148,3 @@ func _processRevealQueue() -> void:
 	
 	pendingRevealRequests = 0
 	isProcessingRevealQueue = false
-
-func _onDeckImageGuiInput(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		queueRevealToNextEmptySlot()

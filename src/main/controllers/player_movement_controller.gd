@@ -24,6 +24,8 @@ func _getTargetSlot(card: Card) -> CardSlot:
 	return boardController.getSlotCardIsIn(card)
 
 func isValidTarget(card: Card) -> bool:
+	if !InputManager.isGameplayInputAllowed():
+		return false
 	if !_hasRequiredRefs():
 		return false
 	if gameController.state != GameController.GameState.PLAYER_READY:

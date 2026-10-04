@@ -65,6 +65,7 @@ func _ready() -> void:
 	playerMovementController.gameController = gameController
 	playerMovementController.boardController = boardController
 	playerMovementController.slotGrid = slotGrid
+	_configureDebugInput()
 	_connectButtons()
 	GlobalSignalBus.gameStateChanged.connect(_onGameStateChanged)
 	GlobalSignalBus.playerCombatRequested.connect(_onPlayerCombatRequested)
@@ -81,10 +82,38 @@ func _ready() -> void:
 	
 
 func _exit_tree() -> void:
+	_clearDebugInput()
 	if GlobalSignalBus.gameOverRequested.is_connected(_onGameOverRequested):
 		GlobalSignalBus.gameOverRequested.disconnect(_onGameOverRequested)
 	if GlobalSignalBus.gameOverContinueRequested.is_connected(_onGameOverContinueRequested):
 		GlobalSignalBus.gameOverContinueRequested.disconnect(_onGameOverContinueRequested)
+
+
+func _configureDebugInput() -> void:
+	InputManager.debugDraggingEnabled = true
+	InputManager.debugBoardController = boardController
+	journeyDeck.deckImage.gui_input.connect(_onDebugDeckInput)
+
+
+func _clearDebugInput() -> void:
+	if InputManager.debugBoardController == boardController:
+		InputManager.lockInput()
+		InputManager.debugDraggingEnabled = false
+		InputManager.debugBoardController = null
+	if is_instance_valid(journeyDeck) and journeyDeck.deckImage.gui_input.is_connected(_onDebugDeckInput):
+		journeyDeck.deckImage.gui_input.disconnect(_onDebugDeckInput)
+
+
+func _onDebugDeckInput(event: InputEvent) -> void:
+	if !(event is InputEventMouseButton):
+		return
+	if !event.pressed or event.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if !InputManager.isGameplayInputAllowed():
+		return
+	if gameController.state != GameController.GameState.PLAYER_READY:
+		return
+	journeyDeck.queueRevealToNextEmptySlot()
 
 
 func _onGameOverRequested() -> void:

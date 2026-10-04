@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://107y3l7yfnj7" path="res://src/main/controllers/player_movement_controller.gd" id="6_6uhih"]
 [ext_resource type="Script" uid="uid://cctp8hqdl6a2j" path="res://src/main/combat/combat_resolver.gd" id="7_xco6i"]
 [ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_babqd"]
+[ext_resource type="Script" uid="uid://ocb76q7eb3uc" path="res://src/main/controllers/pause_controller.gd" id="9_canra"]
+[ext_resource type="PackedScene" uid="uid://cctx4t3kao8m1" path="res://src/main/ui/overlays/pause_menu_overlay.tscn" id="9_v6rog"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -191,3 +193,14 @@ slotGrid = NodePath("../SlotGrid")
 journeyDeck = NodePath("../JourneyDeck")
 slotGrid = NodePath("../SlotGrid")
 gameController = NodePath("../GameController")
+
+[node name="PauseController" type="Node" parent="." unique_id=311833736 node_paths=PackedStringArray("gameController", "pauseMenu")]
+script = ExtResource("9_canra")
+gameController = NodePath("../GameController")
+pauseMenu = NodePath("../CanvasLayerPause/PauseMenuOverlay")
+mainMenuScenePath = "res://src/main/screens/main_menu/main_menu.tscn"
+
+[node name="CanvasLayerPause" type="CanvasLayer" parent="." unique_id=315292225]
+layer = 10
+
+[node name="PauseMenuOverlay" parent="CanvasLayerPause" unique_id=395882982 instance=ExtResource("9_v6rog")]

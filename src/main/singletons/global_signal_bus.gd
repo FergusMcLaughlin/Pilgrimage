@@ -93,6 +93,17 @@ signal progressChanged(progress: float)
 signal loadFinished()
 signal loadScreenReady()
 signal loadScreenClosed()
+signal sceneLoadFailed(scenePath: String, message: String)
+
+# ==================================================
+# PAUSE MENU SIGNALS
+# ==================================================
+
+signal pauseResumeRequested()
+signal pauseMainMenuRequested()
+signal pauseExitRequested()
+signal pauseConfirmRequested()
+signal pauseCancelRequested()
 
 # ==================================================
 # CARD INPUT EMIT WRAPPERS
@@ -191,7 +202,7 @@ func emitActionResolved(action: GameAction, result: Variant) -> void:
 	emit_signal("actionResolved", action, result)
 
 # ==================================================
-# GAME CONTROLLER WRAPPERS
+# GAME CONTROLLER EMIT WRAPPERS
 # ==================================================
 
 func emitGameStateChanged(previousState, newState) -> void:
@@ -213,7 +224,7 @@ func emitGameOverContinueRequested() -> void:
 	emit_signal("gameOverContinueRequested")
 
 # ==================================================
-# PLAYER MOVMENT CONTROLLER WRAPPERs
+# PLAYER MOVMENT CONTROLLER EMIT WRAPPERs
 # ==================================================
 
 func emitPlayerCombatRequested(player: Card, defender: Card, playerSlot: CardSlot, targetSlot: CardSlot, cycleNumber: int) -> void:
@@ -226,7 +237,7 @@ func emitCombatEnded(result: CombatResult) -> void:
 	emit_signal("combatEnded", result)
 
 # ==================================================
-# BOARD REFILL WRAPPERS
+# BOARD REFILL EMIT WRAPPERS
 # ==================================================
 
 func emitBoardRefillRequested(request: BoardRefillRequest) -> void:
@@ -236,7 +247,7 @@ func emitBoardRefillResult(result: BoardRefillResult) -> void:
 	emit_signal("boardRefillCompleted", result)
 
 # ==================================================
-# SCREEN LOADER WRAPPERS
+# SCREEN LOADER EMIT WRAPPERS
 # ==================================================
 
 func emitProgressChanged(progress: float) -> void:
@@ -250,3 +261,25 @@ func emitLoadScreenReady() -> void:
 
 func emitLoadScreenClosed() -> void:
 	emit_signal("loadScreenClosed")
+
+func emitSceneLoadFailed(scenePath: String, message: String) -> void:
+	emit_signal("sceneLoadFailed", scenePath, message)
+
+# ==================================================
+# PAUSE MENU EMIT WRAPPERS
+# ==================================================
+
+func emitPauseResumeRequested() -> void:
+	emit_signal("pauseResumeRequested")
+
+func emitPauseMainMenuRequested() -> void:
+	emit_signal("pauseMainMenuRequested")
+
+func emitPauseExitRequested() -> void:
+	emit_signal("pauseExitRequested")
+
+func emitPauseConfirmRequested() -> void:
+	emit_signal("pauseConfirmRequested")
+
+func emitPauseCancelRequested() -> void:
+	emit_signal("pauseCancelRequested")

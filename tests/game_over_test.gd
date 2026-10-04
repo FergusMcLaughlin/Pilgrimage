@@ -153,13 +153,13 @@ func _test_overlay_contract() -> void:
 	add_child(overlay)
 	await get_tree().process_frame
 
-	var dimmer := overlay.get_node_or_null("BackGround") as ColorRect
+	var backdrop := overlay.get_node_or_null("BackGround") as Panel
 	var continue_button := overlay.get_node_or_null("BackGround/MarginContainer/VBoxContainer/ButtonHolder/ContinueButton") as Button
-	_expect(dimmer != null, "The Game Over overlay must contain a dimmer.")
+	_expect(backdrop != null, "The Game Over overlay must contain its Panel backdrop.")
 	_expect(continue_button != null, "The Game Over overlay must contain a Continue button.")
-	if dimmer != null:
-		_expect(dimmer.mouse_filter == Control.MOUSE_FILTER_STOP, "The dimmer must block clicks from reaching the frozen board.")
-		_expect(dimmer.anchor_top == 0.5 and dimmer.anchor_bottom == 0.5, "The backdrop must keep the intended centred message band layout.")
+	if backdrop != null:
+		_expect(backdrop.mouse_filter == Control.MOUSE_FILTER_STOP, "The backdrop must block clicks from reaching the frozen board.")
+		_expect(backdrop.anchor_top == 0.5 and backdrop.anchor_bottom == 0.5, "The backdrop must keep the intended centred message band layout.")
 	if continue_button != null:
 		_expect(!continue_button.disabled, "The Continue button must remain usable after game over.")
 	_expect(
