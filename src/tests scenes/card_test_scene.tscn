@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_babqd"]
 [ext_resource type="Script" uid="uid://ocb76q7eb3uc" path="res://src/main/controllers/pause_controller.gd" id="9_canra"]
 [ext_resource type="PackedScene" uid="uid://cctx4t3kao8m1" path="res://src/main/ui/overlays/pause_menu_overlay.tscn" id="9_v6rog"]
+[ext_resource type="PackedScene" path="res://src/main/ui/overlays/encounter_modal.tscn" id="10_encounter"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -111,8 +112,8 @@ offset_right = 787.0
 offset_bottom = 396.0
 
 [node name="LifecycleDebugPanel" type="PanelContainer" parent="CanvasLayer" unique_id=535592545]
-offset_left = 1160.0
-offset_top = 280.0
+offset_left = 1166.0
+offset_top = 284.0
 offset_right = 1580.0
 offset_bottom = 860.0
 mouse_filter = 2
@@ -199,6 +200,11 @@ script = ExtResource("9_canra")
 gameController = NodePath("../GameController")
 pauseMenu = NodePath("../CanvasLayerPause/PauseMenuOverlay")
 mainMenuScenePath = "res://src/main/screens/main_menu/main_menu.tscn"
+
+[node name="CanvasLayerEncounter" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="EncounterModal" parent="CanvasLayerEncounter" instance=ExtResource("10_encounter")]
 
 [node name="CanvasLayerPause" type="CanvasLayer" parent="." unique_id=315292225]
 layer = 10

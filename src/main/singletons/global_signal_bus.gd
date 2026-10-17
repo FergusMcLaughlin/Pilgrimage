@@ -106,6 +106,12 @@ signal pauseConfirmRequested()
 signal pauseCancelRequested()
 
 # ==================================================
+# ENCOUNTER SIGNALS
+# ==================================================
+
+signal encounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome)
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -283,3 +289,10 @@ func emitPauseConfirmRequested() -> void:
 
 func emitPauseCancelRequested() -> void:
 	emit_signal("pauseCancelRequested")
+
+# ==================================================
+# ENCOUNTER EMIT WRAPPERS
+# ==================================================
+
+func emitEncounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome) -> void:
+	emit_signal("encounterOutcomeRequested", encounterId, outcome)

@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://c81c56agniyho"]
+
+[ext_resource type="Texture2D" uid="uid://d1s7b0des0n3e" path="res://assets/images/ui/bg2.png" id="1_jsqrb"]
+
+[node name="EncounterPopup" type="Control" unique_id=1458663116]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=173239417]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.10980392)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1020618600]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.233
+anchor_top = 0.738
+anchor_right = 0.233
+anchor_bottom = 0.767
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=492585913]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer" unique_id=847520962]
+layout_mode = 2
+
+[node name="Artwork" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=2024077259]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_jsqrb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1945455677]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=235918993]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BodyText" type="RichTextLabel" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=23190228]
+unique_name_in_owner = true
+layout_mode = 2
+text = "You come across a body on the road, checking its pockets you find soem dolla."
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1597036562]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"

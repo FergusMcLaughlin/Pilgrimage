@@ -4,6 +4,10 @@ const GAME_OVER_OVERLAY_SCENE := preload("res://src/main/ui/overlays/game_over_o
 
 @export_file("*.tscn") var postRunScenePath: String
 
+#added for testing: F6 opens this resource without requiring a card landing.
+@export var encounterPreviewDefinition: EncounterDefinition = preload("res://data/encounters/roadside_corpse.tres")
+
+@onready var encounterModal: EncounterModal = $CanvasLayerEncounter/EncounterModal
 @onready var cardsRoot: Control = $CanvasLayer/CardsRoot
 @onready var canvasLayer: CanvasLayer = $CanvasLayer
 @onready var journeyDeck: JourneyDeck = $JourneyDeck
@@ -56,6 +60,7 @@ func _ready() -> void:
 	GlobalSignalBus.actionResolved.connect(_onLifecycleActionResolved)
 	GlobalSignalBus.gameOverRequested.connect(_onGameOverRequested)
 	GlobalSignalBus.gameOverContinueRequested.connect(_onGameOverContinueRequested)
+	GlobalSignalBus.encounterOutcomeRequested.connect(_onEncounterOutcomeRequested)
 	
 	journeyDeck.boardController = boardController
 	journeyDeck.slotGrid = slotGrid
@@ -117,11 +122,48 @@ func _onDebugDeckInput(event: InputEvent) -> void:
 
 
 func _onGameOverRequested() -> void:
+	encounterModal.close()
 	if is_instance_valid(gameOverOverlay):
 		return
 
 	gameOverOverlay = GAME_OVER_OVERLAY_SCENE.instantiate()
 	canvasLayer.add_child(gameOverOverlay)
+
+
+#added for testing: preview only between turns; this does not implement landing encounters.
+func _openEncounterPreview() -> void:
+	if encounterModal.visible or gameController.state != GameController.GameState.PLAYER_READY:
+		return
+	if !InputManager.isGameplayInputAllowed() or ScreenLoader.isCurrentlyLoadingScene():
+		return
+	if !encounterModal.present(encounterPreviewDefinition):
+		return
+	InputManager.lockInput()
+	_setEncounterPreviewControlsEnabled(false)
+	_refreshPlayerCyclePanel()
+
+
+func _onEncounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome) -> void:
+	if !encounterModal.visible or encounterModal.definition == null or get_tree().paused:
+		return
+	if encounterId != encounterModal.definition.id:
+		return
+	if outcome not in [EncounterDefinition.Outcome.CONTINUE, EncounterDefinition.Outcome.LEAVE]:
+		return
+	if outcome == EncounterDefinition.Outcome.LEAVE and encounterModal.definition.encounterType != EncounterDefinition.Type.CONTINUE_OR_LEAVE:
+		return
+	print("Encounter preview: ", encounterId, " outcome: ", EncounterDefinition.Outcome.keys()[outcome])
+	encounterModal.close()
+	_setEncounterPreviewControlsEnabled(true)
+	if gameController.state == GameController.GameState.PLAYER_READY:
+		InputManager.unlockInput()
+	_refreshPlayerCyclePanel()
+
+
+func _setEncounterPreviewControlsEnabled(enabled: bool) -> void:
+	for button: Button in $CanvasLayer/Controls.get_children():
+		button.disabled = !enabled
+	advancePlayerCycleButton.disabled = !enabled
 
 
 func _onGameOverContinueRequested() -> void:
@@ -538,6 +580,13 @@ func _onCardPressed(card: Card) -> void:
 	
 
 func _input(event: InputEvent) -> void:
+	#added for testing: F6 in the running game opens the encounter preview.
+	if event is InputEventKey and event.pressed and !event.echo and event.keycode == KEY_F6:
+		get_viewport().set_input_as_handled()
+		_openEncounterPreview()
+		return
+	if encounterModal.visible:
+		return
 	var card := _getActiveCard()
 	
 	if event is InputEventMouseButton:

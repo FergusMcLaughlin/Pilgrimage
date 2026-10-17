@@ -33,6 +33,8 @@ ScreenLoader="*res://src/main/singletons/screen_loader.gd"
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
