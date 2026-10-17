@@ -11,6 +11,7 @@ var pauseView: PauseView = PauseView.CLOSED
 var ownsPause: bool = false
 var requestedScenePath: String = ""
 var inputWasLocked: bool = false
+var focusBeforePause: Control
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -44,6 +45,7 @@ func _canOpenPauseMenu() -> bool:
 	return true
 
 func _openPauseMenu() -> void:
+	focusBeforePause = get_viewport().gui_get_focus_owner()
 	inputWasLocked = InputManager.inputLocked
 	InputManager.lockInput()
 	ownsPause = true
@@ -67,6 +69,20 @@ func _onPauseResumeRequested() -> void:
 		InputManager.lockInput()
 	else:
 		InputManager.unlockInput()
+	_restoreFocusAfterPause.call_deferred()
+
+func _restoreFocusAfterPause() -> void:
+	var previousFocus := focusBeforePause
+	focusBeforePause = null
+	if get_tree().paused or pauseView != PauseView.CLOSED:
+		return
+	if !is_instance_valid(previousFocus):
+		return
+	if !previousFocus.is_visible_in_tree() or previousFocus.focus_mode == Control.FOCUS_NONE:
+		return
+	if previousFocus is BaseButton and previousFocus.disabled:
+		return
+	previousFocus.grab_focus()
 
 func _onPauseMainMenuRequested() -> void:
 	if pauseView != PauseView.MENU or !_canUsePauseMenu():

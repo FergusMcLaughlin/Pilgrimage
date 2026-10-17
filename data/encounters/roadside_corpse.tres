@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EncounterDefinition" format=3 uid="uid://b4gd3a7wxpamh"]
+
+[ext_resource type="Texture2D" uid="uid://bxm8mbjb2o5kv" path="res://assets/images/ui/EncounterBG.png" id="1_4k42a"]
+[ext_resource type="Script" uid="uid://cdm15dmkq6fqt" path="res://src/main/encounters/models/encounter_definitions.gd" id="2_b8wuw"]
+
+[resource]
+script = ExtResource("2_b8wuw")
+id = &"roadside_corpse"
+title = "A Body Beside the Road"
+body = "A traveller lies beside the road. Their coat is torn and their belongings are scattered through the grass. You stop to consider whether to search the remains."
+artwork = ExtResource("1_4k42a")

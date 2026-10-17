@@ -22,6 +22,7 @@ var loaderEvents: Array[Dictionary] = []
 func _ready() -> void:
 	get_tree().root.size = Vector2i(1600, 900)
 	await _testControllerRecovery()
+	await _testEncounterFocus()
 	await _testLoaderDismissal()
 	InputManager.unlockInput()
 	get_tree().paused = false
@@ -111,6 +112,45 @@ func _testControllerRecovery() -> void:
 	f.root.queue_free()
 	await get_tree().process_frame
 	InputManager.unlockInput()
+
+func _testEncounterFocus() -> void:
+	var f := _fixture()
+	var modal: EncounterModal = preload("res://src/main/ui/overlays/encounter_modal.tscn").instantiate()
+	f.root.add_child(modal)
+	var requests: Array[Dictionary] = []
+	var listener := func(encounterId: StringName, outcome: EncounterDefinition.Outcome): requests.append({"id": encounterId, "outcome": outcome})
+	GlobalSignalBus.encounterOutcomeRequested.connect(listener)
+	var corpse := preload("res://data/encounters/roadside_corpse.tres")
+	var quietRoad := preload("res://data/encounters/quiet_road.tres")
+	for choice in ["continueOnly", "leave", "continue"]:
+		requests.clear()
+		modal.present(corpse if choice == "continueOnly" else quietRoad)
+		var button: Button = modal.leaveButton if choice == "leave" else modal.continueButton
+		button.grab_focus()
+		InputManager.lockInput()
+		f.controller._openPauseMenu()
+		_expect(f.menu.resumeGameButton.has_focus(), "Pause takes focus from the encounter: " + choice)
+		await _accept()
+		_expect(!get_tree().paused and !f.menu.visible and InputManager.inputLocked, "Keyboard Resume preserves the encounter input lock: " + choice)
+		_expect(button.has_focus(), "Resume restores the selected encounter button: " + choice)
+		_expect(requests.is_empty(), "Accepting Resume does not also submit the encounter: " + choice)
+		await _accept()
+		var outcome := EncounterDefinition.Outcome.LEAVE if choice == "leave" else EncounterDefinition.Outcome.CONTINUE
+		_expect(requests == [{"id": modal.definition.id, "outcome": outcome}], "Accept after Resume submits the selected outcome once: " + choice)
+		modal.close()
+	GlobalSignalBus.encounterOutcomeRequested.disconnect(listener)
+	f.root.queue_free()
+	await get_tree().process_frame
+	InputManager.unlockInput()
+
+func _accept() -> void:
+	for pressed in [true, false]:
+		var event := InputEventAction.new()
+		event.action = "ui_accept"
+		event.pressed = pressed
+		get_viewport().push_input(event)
+		await get_tree().process_frame
+	await get_tree().process_frame
 
 func _testLoaderDismissal() -> void:
 	var loader := ControlledLoader.new()
