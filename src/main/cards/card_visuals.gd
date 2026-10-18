@@ -34,6 +34,12 @@ func refresh() -> void:
 
 	_loadCardImage()
 	_updateStatColours()
+	_updateStatVisibility()
+
+func _updateStatVisibility() -> void:
+	var showStats := face.visible and card.data.type != "terrain"
+	healthLable.visible = showStats
+	attackLable.visible = showStats
 
 func _loadCardImage() -> void:
 	var imagePath := card.data.imagePath
@@ -91,9 +97,10 @@ func flip() -> void:
 	await flipTween.finished
 
 func _toggleCardVisibility() -> void:
-	var componenets = [face, back, nameLable, healthLable, attackLable]
+	var componenets = [face, back, nameLable]
 	for component in componenets:
 		component.visible = !component.visible
+	_updateStatVisibility()
 
 func handleHovered(hovered: bool) -> void:
 	if isHovered == hovered:

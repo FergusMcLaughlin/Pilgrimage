@@ -110,6 +110,7 @@ signal pauseCancelRequested()
 # ==================================================
 
 signal encounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome)
+signal encounterCompleted(result: EncounterResult)
 
 # ==================================================
 # CARD INPUT EMIT WRAPPERS
@@ -296,3 +297,6 @@ func emitPauseCancelRequested() -> void:
 
 func emitEncounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome) -> void:
 	emit_signal("encounterOutcomeRequested", encounterId, outcome)
+
+func emitEncounterCompleted(result: EncounterResult) -> void:
+	emit_signal("encounterCompleted", result)

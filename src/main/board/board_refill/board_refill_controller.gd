@@ -102,7 +102,7 @@ func _isRefillRequestCurrent(refillRequest: BoardRefillRequest) -> bool:
 	if refillRequest.cycleNumber != gameController.playerCycleNumber:
 		return false
 	
-	return gameController.state == gameController.GameState.COMBAT
+	return gameController.state in [GameController.GameState.COMBAT, GameController.GameState.RESOLVING_MOVE]
 
 func _isShiftStepValid(step: BoardShiftStep, refillRequest: BoardRefillRequest) -> bool:
 	if step == null:

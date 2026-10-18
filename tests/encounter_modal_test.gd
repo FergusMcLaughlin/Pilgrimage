@@ -1,9 +1,9 @@
 extends Node
 
 const MODAL := preload("res://src/main/ui/overlays/encounter_modal.tscn")
-const CORPSE := preload("res://data/encounters/roadside_corpse.tres")
-const QUIET_ROAD := preload("res://data/encounters/quiet_road.tres")
-const CART := preload("res://data/encounters/abandoned_cart.tres")
+@onready var CORPSE: EncounterDefinition = EncounterLibrary.getEncounterData("roadside_corpse")
+@onready var QUIET_ROAD: EncounterDefinition = EncounterLibrary.getEncounterData("quiet_road")
+@onready var CART: EncounterDefinition = EncounterLibrary.getEncounterData("abandoned_cart")
 
 var failures := 0
 var passed := 0

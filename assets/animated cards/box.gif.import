@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://crgox0rlrtb27"
+path="res://.godot/imported/box.gif-27b4fd714ad95fee385c6c5b11edc6a8.tres"
+
+[deps]
+
+source_file="res://assets/animated cards/box.gif"
+dest_files=["res://.godot/imported/box.gif-27b4fd714ad95fee385c6c5b11edc6a8.tres"]
+
+[params]
+

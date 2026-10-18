@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://bcn4mbq3en0jv"
+path="res://.godot/imported/DeadMan.gif-d5065dd2fe2b470c3550355b351f4a91.tres"
+
+[deps]
+
+source_file="res://assets/animated cards/DeadMan.gif"
+dest_files=["res://.godot/imported/DeadMan.gif-d5065dd2fe2b470c3550355b351f4a91.tres"]
+
+[params]
+

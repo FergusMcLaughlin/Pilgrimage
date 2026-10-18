@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://cpaikl6020gkl"
+path="res://.godot/imported/DeadMan.gif-94825dd592d8da0bad997d4b8748c595.tres"
+
+[deps]
+
+source_file="res://assets/images/asprite images/DeadMan.gif"
+dest_files=["res://.godot/imported/DeadMan.gif-94825dd592d8da0bad997d4b8748c595.tres"]
+
+[params]
+

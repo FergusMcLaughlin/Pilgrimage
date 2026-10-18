@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://i7uixrdmcv75"
+path="res://.godot/imported/box2.gif-3f64f7c87b615fc5a6adc6c1bd469818.tres"
+
+[deps]
+
+source_file="res://assets/images/asprite images/box2.gif"
+dest_files=["res://.godot/imported/box2.gif-3f64f7c87b615fc5a6adc6c1bd469818.tres"]
+
+[params]
+

@@ -120,8 +120,8 @@ func _testEncounterFocus() -> void:
 	var requests: Array[Dictionary] = []
 	var listener := func(encounterId: StringName, outcome: EncounterDefinition.Outcome): requests.append({"id": encounterId, "outcome": outcome})
 	GlobalSignalBus.encounterOutcomeRequested.connect(listener)
-	var corpse := preload("res://data/encounters/roadside_corpse.tres")
-	var quietRoad := preload("res://data/encounters/quiet_road.tres")
+	var corpse := EncounterLibrary.getEncounterData("roadside_corpse")
+	var quietRoad := EncounterLibrary.getEncounterData("quiet_road")
 	for choice in ["continueOnly", "leave", "continue"]:
 		requests.clear()
 		modal.present(corpse if choice == "continueOnly" else quietRoad)

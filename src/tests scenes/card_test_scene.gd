@@ -4,8 +4,8 @@ const GAME_OVER_OVERLAY_SCENE := preload("res://src/main/ui/overlays/game_over_o
 
 @export_file("*.tscn") var postRunScenePath: String
 
-#added for testing: F6 opens this resource without requiring a card landing.
-@export var encounterPreviewDefinition: EncounterDefinition = preload("res://data/encounters/roadside_corpse.tres")
+#added for testing: F6 opens this encounter without requiring a card landing.
+@export var encounterPreviewId: String = "roadside_corpse"
 
 @onready var encounterModal: EncounterModal = $CanvasLayerEncounter/EncounterModal
 @onready var cardsRoot: Control = $CanvasLayer/CardsRoot
@@ -20,6 +20,7 @@ const GAME_OVER_OVERLAY_SCENE := preload("res://src/main/ui/overlays/game_over_o
 @onready var addKnightButton: Button = $CanvasLayer/Controls/AddKnightButton
 @onready var addGoatmanButton: Button = $CanvasLayer/Controls/AddGoatmanButton
 @onready var addStewButton: Button = $CanvasLayer/Controls/AddStewButton
+@onready var addRemainsButton: Button = $CanvasLayer/Controls/AddRemainsButton
 @onready var clearCardsButton: Button = $CanvasLayer/Controls/ClearCardsButton
 @onready var removeBoardCardButton: Button = $CanvasLayer/Controls/RemoveBoardCardButton
 @onready var deleteGraveyardCardButton: Button = $CanvasLayer/Controls/DeleteGraveyardCardButton
@@ -76,7 +77,8 @@ func _ready() -> void:
 	GlobalSignalBus.playerCombatRequested.connect(_onPlayerCombatRequested)
 	_refreshLifecycleDebugPanel()
 	_refreshPlayerCyclePanel()
-	await gameController.startRun(false)
+	_setEncounterPreviewControlsEnabled(false)
+	await gameController.startRun()
 	_refreshPlayerCyclePanel()
 	
 	if debug_stat_cycle:
@@ -136,7 +138,7 @@ func _openEncounterPreview() -> void:
 		return
 	if !InputManager.isGameplayInputAllowed() or ScreenLoader.isCurrentlyLoadingScene():
 		return
-	if !encounterModal.present(encounterPreviewDefinition):
+	if !encounterModal.present(EncounterLibrary.getEncounterData(encounterPreviewId)):
 		return
 	InputManager.lockInput()
 	_setEncounterPreviewControlsEnabled(false)
@@ -144,6 +146,8 @@ func _openEncounterPreview() -> void:
 
 
 func _onEncounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefinition.Outcome) -> void:
+	if gameController.state != GameController.GameState.PLAYER_READY:
+		return
 	if !encounterModal.visible or encounterModal.definition == null or get_tree().paused:
 		return
 	if encounterId != encounterModal.definition.id:
@@ -269,6 +273,7 @@ func _connectButtons() -> void:
 	addKnightButton.pressed.connect(_onAddKnightPressed)
 	addGoatmanButton.pressed.connect(_onAddGoatmanPressed)
 	addStewButton.pressed.connect(_onAddStewPressed)
+	addRemainsButton.pressed.connect(_onAddRemainsPressed)
 	clearCardsButton.pressed.connect(_onClearCardsPressed)
 	removeBoardCardButton.pressed.connect(_onRemoveBoardCardPressed)
 	deleteGraveyardCardButton.pressed.connect(_onDeleteGraveyardCardPressed)
@@ -276,7 +281,10 @@ func _connectButtons() -> void:
 	advancePlayerCycleButton.pressed.connect(_onAdvancePlayerCyclePressed)
 	
 
-func _onGameStateChanged(_previousState: int, _newState: int) -> void:
+func _onGameStateChanged(_previousState: int, newState: int) -> void:
+	_setEncounterPreviewControlsEnabled(
+		newState == GameController.GameState.PLAYER_READY
+	)
 	_refreshPlayerCyclePanel()
 	
 
@@ -314,7 +322,7 @@ func _onAdvancePlayerCyclePressed() -> void:
 	advancePlayerCycleButton.disabled = true
 	match gameController.state:
 		GameController.GameState.SETUP:
-			await gameController.startRun(false)
+			await gameController.startRun()
 		GameController.GameState.PLAYER_READY:
 			gameController.beginPlayerAction()
 		GameController.GameState.RESOLVING_MOVE:
@@ -341,6 +349,10 @@ func _onAddGoatmanPressed() -> void:
 
 func _onAddStewPressed() -> void:
 	_addCardById("M_0007")
+
+
+func _onAddRemainsPressed() -> void:
+	_addCardById("M_0012")
 	
 
 func _onClearCardsPressed() -> void:
@@ -516,6 +528,8 @@ func _startDebugStateCycle() -> void:
 	
 
 func _onDebugStatTimeout() -> void:
+	if !InputManager.isGameplayInputAllowed():
+		return
 	var card := _getActiveCard()
 	
 	if card == null or card.data == null:
@@ -547,6 +561,8 @@ func _onDebugStatTimeout() -> void:
 	
 
 func _onDebugStateTimeout() -> void:
+	if !InputManager.isGameplayInputAllowed():
+		return
 	var stateOrder := [
 		CardState.State.IN_DECK,
 		CardState.State.ON_BOARD,
@@ -584,6 +600,8 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and !event.echo and event.keycode == KEY_F6:
 		get_viewport().set_input_as_handled()
 		_openEncounterPreview()
+		return
+	if !InputManager.isGameplayInputAllowed():
 		return
 	if encounterModal.visible:
 		return

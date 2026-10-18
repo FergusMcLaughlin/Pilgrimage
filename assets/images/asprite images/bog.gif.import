@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://252hveiksij5"
+path="res://.godot/imported/bog.gif-f01b85089a7339a5aa9a839635b7e090.tres"
+
+[deps]
+
+source_file="res://assets/images/asprite images/bog.gif"
+dest_files=["res://.godot/imported/bog.gif-f01b85089a7339a5aa9a839635b7e090.tres"]
+
+[params]
+

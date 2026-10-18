@@ -46,6 +46,12 @@ func isValidTarget(card: Card) -> bool:
 func _onCardPressed(card: Card) -> void:
 	if !isValidTarget(card):
 		return
+	if card.data.hasEncounter:
+		if is_instance_valid(gameController.encounterController):
+			gameController.encounterController.beginEncounter(
+				card, _getPlayerSlot(), _getTargetSlot(card)
+			)
+		return
 	_requestCombat(card)
 
 func _requestCombat(defender: Card) -> bool:
