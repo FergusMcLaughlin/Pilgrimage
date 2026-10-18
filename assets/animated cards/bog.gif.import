@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://bdvl8l7kdma4w"
+path="res://.godot/imported/bog.gif-2f66f360d1f8af4d099881423d045d16.tres"
+
+[deps]
+
+source_file="res://assets/animated cards/bog.gif"
+dest_files=["res://.godot/imported/bog.gif-2f66f360d1f8af4d099881423d045d16.tres"]
+
+[params]
+

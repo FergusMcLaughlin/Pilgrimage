@@ -1,0 +1,29 @@
+{
+	"abandoned_cart": {
+		"id": "abandoned_cart",
+		"title": "An Abandoned Cart",
+		"body": "A broken cart rests beside the road. Its owner is nowhere to be seen.",
+		"type": "continue_or_leave",
+		"artwork_path": "",
+		"button_label": "Search",
+		"leave_button_label": "LEAVE_BUTTON"
+	},
+	"quiet_road": {
+		"id": "quiet_road",
+		"title": "A Quiet Stretch of Road",
+		"body": "The road is quiet. It must be safe to continue?",
+		"type": "continue_or_leave",
+		"artwork_path": "res://assets/images/ui/EncounterBG.png",
+		"button_label": "CONTINUE_BUTTON",
+		"leave_button_label": "LEAVE_BUTTON"
+	},
+	"roadside_corpse": {
+		"id": "roadside_corpse",
+		"title": "A Body Beside the Road",
+		"body": "A traveller lies beside the road. Their coat is torn and their belongings are scattered through the grass. You stop to consider whether to search the remains.",
+		"type": "continue_only",
+		"artwork_path": "res://assets/images/ui/EncounterBG.png",
+		"button_label": "CONTINUE_BUTTON",
+		"leave_button_label": "LEAVE_BUTTON"
+	}
+}

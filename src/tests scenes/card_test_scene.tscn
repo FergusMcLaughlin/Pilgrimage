@@ -10,7 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="8_babqd"]
 [ext_resource type="Script" uid="uid://ocb76q7eb3uc" path="res://src/main/controllers/pause_controller.gd" id="9_canra"]
 [ext_resource type="PackedScene" uid="uid://cctx4t3kao8m1" path="res://src/main/ui/overlays/pause_menu_overlay.tscn" id="9_v6rog"]
-[ext_resource type="PackedScene" path="res://src/main/ui/overlays/encounter_modal.tscn" id="10_encounter"]
+[ext_resource type="PackedScene" uid="uid://ce5db5lu6kqmv" path="res://src/main/ui/overlays/encounter_modal.tscn" id="10_encounter"]
+[ext_resource type="Script" uid="uid://cfj08rqo3vwpn" path="res://src/main/encounters/encounter_controller.gd" id="12_tncas"]
 
 [node name="CardTestScene" type="Control" unique_id=484959055]
 layout_mode = 3
@@ -45,6 +46,10 @@ text = "Add Goatman"
 [node name="AddStewButton" type="Button" parent="CanvasLayer/Controls" unique_id=1594565098]
 layout_mode = 2
 text = "Add Stew"
+
+[node name="AddRemainsButton" type="Button" parent="CanvasLayer/Controls" unique_id=575108455]
+layout_mode = 2
+text = "Add Roadside Remains"
 
 [node name="ClearCardsButton" type="Button" parent="CanvasLayer/Controls" unique_id=1837472300]
 layout_mode = 2
@@ -175,9 +180,10 @@ offset_top = 39.0
 offset_right = -53.0
 offset_bottom = -668.0
 
-[node name="GameController" type="Node" parent="." unique_id=560721635 node_paths=PackedStringArray("boardController", "slotGrid", "journeyDeck")]
+[node name="GameController" type="Node" parent="." unique_id=560721635 node_paths=PackedStringArray("boardController", "encounterController", "slotGrid", "journeyDeck")]
 script = ExtResource("5_tncas")
 boardController = NodePath("../BoardController")
+encounterController = NodePath("../EncounterController")
 slotGrid = NodePath("../SlotGrid")
 journeyDeck = NodePath("../JourneyDeck")
 
@@ -201,12 +207,17 @@ gameController = NodePath("../GameController")
 pauseMenu = NodePath("../CanvasLayerPause/PauseMenuOverlay")
 mainMenuScenePath = "res://src/main/screens/main_menu/main_menu.tscn"
 
-[node name="CanvasLayerEncounter" type="CanvasLayer" parent="."]
+[node name="CanvasLayerEncounter" type="CanvasLayer" parent="." unique_id=443815169]
 layer = 5
 
-[node name="EncounterModal" parent="CanvasLayerEncounter" instance=ExtResource("10_encounter")]
+[node name="EncounterModal" parent="CanvasLayerEncounter" unique_id=694208995 instance=ExtResource("10_encounter")]
 
 [node name="CanvasLayerPause" type="CanvasLayer" parent="." unique_id=315292225]
 layer = 10
 
 [node name="PauseMenuOverlay" parent="CanvasLayerPause" unique_id=395882982 instance=ExtResource("9_v6rog")]
+
+[node name="EncounterController" type="Node" parent="." unique_id=490024449 node_paths=PackedStringArray("gameController", "modal")]
+script = ExtResource("12_tncas")
+gameController = NodePath("../GameController")
+modal = NodePath("../CanvasLayerEncounter/EncounterModal")

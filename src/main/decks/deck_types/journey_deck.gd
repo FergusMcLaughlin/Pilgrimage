@@ -46,12 +46,17 @@ const JOURNEY_DECK_PRESET_CARDS: Array[String] = [
 ]
 
 const JOURNEY_DECK_COPIES := 3
+const ROADSIDE_REMAINS_ID := "M_0012"
+const ROADSIDE_REMAINS_EXTRA_COPIES := 9
 
 func initialiseJourneyDeck(shuffleAfter: bool = true) -> void:
 	var cardIds: Array[String] = []
 	for _copy in range(JOURNEY_DECK_COPIES):
 		cardIds.append_array(JOURNEY_DECK_PRESET_CARDS)
+	for _copy in range(ROADSIDE_REMAINS_EXTRA_COPIES):
+		cardIds.append(ROADSIDE_REMAINS_ID)
 	journeyDeckCardBag.initialiseDeck(cardIds, shuffleAfter)
+	journeyDeckCardBag.addCardToTop(ROADSIDE_REMAINS_ID)
 	deckVisuals.refresh()
 
 func _ready() -> void:

@@ -7,10 +7,12 @@ enum GameState {
 	RESOLVING_MOVE,
 	COMBAT,
 	AFTER_MOVE,
-	GAME_OVER
+	GAME_OVER,
+	ENCOUNTER
 }
 
 @export var boardController: BoardController
+@export var encounterController: EncounterController
 @export var slotGrid: SlotGrid
 @export var journeyDeck: JourneyDeck
 @export var playerCardId: String = "C_0000"
@@ -19,10 +21,13 @@ var state: GameState = GameState.SETUP
 var playerCard: Card
 var playerCycleNumber: int = 0
 var _createCard := CreateCard.new()
+var runId = 0
+var pendingRefillRequest: BoardRefillRequest
 
 func _ready() -> void:
 	GlobalSignalBus.combatEnded.connect(_onCombatCompleted)
 	GlobalSignalBus.boardRefillCompleted.connect(_onBoardRefillCompleted)
+	GlobalSignalBus.encounterCompleted.connect(_onEncounterCompleted)
 
 func setState(newState: GameState) -> void:
 	if state == newState:
@@ -36,6 +41,11 @@ func _activatePlayerCard(card: Card) -> void:
 		await card.flipCard()
 
 func startRun(shuffleDeck: bool = true) -> bool:
+	runId += 1
+	pendingRefillRequest = null
+	if is_instance_valid(encounterController):
+		encounterController.cancelEncounters()
+
 	setState(GameState.SETUP)
 	InputManager.lockInput()
 	
@@ -109,35 +119,33 @@ func beginCombat() -> bool:
 func _onCombatCompleted(combatResult: CombatResult) -> void:
 	if combatResult.succeeded and combatResult.playerMoved:
 		var context: CombatContext = combatResult.context
-		var playerMoveDirection = Vector2i.ZERO
-		if context.playerSlot != null and context.targetSlot != null:
-			playerMoveDirection = context.targetSlot.coordinates - context.playerSlot.coordinates
-		
-		var refillRequest = BoardRefillRequest.afterPlayerMove(
-			context.playerSlot,
-			context.targetSlot,
-			playerMoveDirection,
-			context.cycleNumber
-		)
-		
-		GlobalSignalBus.emitBoardRefillRequested(refillRequest)
+		_requestPlayerRefill(context.playerSlot, context.targetSlot, context.cycleNumber, "player_moved")
 		return
-	
 	_finishResolvedPlayerAction()
 
-func _onBoardRefillCompleted(_result: BoardRefillResult) -> void:
+func _onBoardRefillCompleted(result: BoardRefillResult) -> void:
+	if result == null or pendingRefillRequest == null:
+		return
+	if result.request != pendingRefillRequest:
+		return
+	pendingRefillRequest = null
+	if !result.succeeded:
+		push_error("GameController: board refill failed : " + result.failureReason)
 	_finishResolvedPlayerAction()
 
 func _finishResolvedPlayerAction() -> void:
 	if !beginAfterMovePhase():
 		return
-
-	await  _waitForActionSystemIdle()
-
+	var finishingRun = runId
+	var finishingCycle = playerCycleNumber
+	await _waitForActionSystemIdle()
+	if !is_inside_tree() or runId != finishingRun or playerCycleNumber != finishingCycle:
+		return
+	if state != GameState.AFTER_MOVE:
+		return
 	if _isPlayerDefeatedAfterSettlement():
 		_enterGameOver()
 		return
-
 	completePlayerCycle()
 
 func beginAfterMovePhase() -> bool:
@@ -172,6 +180,52 @@ func _isPlayerDefeatedAfterSettlement() -> bool:
 func _enterGameOver() -> void:
 	if state == GameState.GAME_OVER:
 		return
+	pendingRefillRequest = null
 	setState(GameState.GAME_OVER)
 	InputManager.lockInput()
 	GlobalSignalBus.emitGameOverRequested()
+
+func beginEncounter() -> bool:
+	if get_tree().paused or !InputManager.isGameplayInputAllowed():
+		return false
+	if !beginPlayerAction():
+		return false
+	setState(GameState.ENCOUNTER)
+	return true
+
+func _onEncounterCompleted(result: EncounterResult) -> void:
+	if result == null or result.context == null or pendingRefillRequest != null:
+		return
+	var request = result.context
+	if request.runId != runId or request.cycleNumber != playerCycleNumber:
+		return
+	if state not in [GameState.ENCOUNTER, GameState.RESOLVING_MOVE]:
+		return
+	if !result.succeeded:
+		push_error("GameController: encounter failed : " + result.failureReason)
+	if _isPlayerDefeatedAfterSettlement():
+		_enterGameOver()
+		return
+	if !result.succeeded and !request.sourceRemoved and !request.playerMoved:
+		setState(GameState.PLAYER_READY)
+		InputManager.unlockInput()
+		return
+
+	setState(GameState.RESOLVING_MOVE)
+	if result.succeeded and request.playerMoved:
+		_requestPlayerRefill(
+			request.playerSlot, request.targetSlot,
+			request.cycleNumber, "encounter_advance"
+		)
+		return
+	_finishResolvedPlayerAction()
+
+func _requestPlayerRefill(fromSlot: CardSlot, toSlot: CardSlot, cycle: int, cause: String) -> void:
+	pendingRefillRequest = BoardRefillRequest.afterPlayerMove(
+		fromSlot, toSlot, toSlot.coordinates - fromSlot.coordinates, cycle, cause
+	)
+	GlobalSignalBus.emitBoardRefillRequested(pendingRefillRequest)
+
+func _exit_tree() -> void:
+	if is_instance_valid(encounterController):
+		encounterController.cancelEncounters()

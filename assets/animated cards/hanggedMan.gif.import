@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://bvbnfr4bnei5p"
+path="res://.godot/imported/hanggedMan.gif-5ea7e78a1f8eef400d01c227f345764b.tres"
+
+[deps]
+
+source_file="res://assets/animated cards/hanggedMan.gif"
+dest_files=["res://.godot/imported/hanggedMan.gif-5ea7e78a1f8eef400d01c227f345764b.tres"]
+
+[params]
+

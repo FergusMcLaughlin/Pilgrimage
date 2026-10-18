@@ -12,6 +12,9 @@ static func fromDictionary(dictionary: Dictionary) -> CardData:
 	data.isUnlocked = dictionary.get("isUnlocked", false)
 	data.imagePath = dictionary.get("image_path", "")
 	data.effects = _parseEffects(dictionary)
+	data.hasEncounter = dictionary.get("has encounter", false)
+	data.encounterId = dictionary.get("encounter_id", "")
+	data.encounter = _parseEncounter(data)
 
 	return data
 
@@ -24,3 +27,9 @@ static func _parseEffects(dictionary: Dictionary) -> Array[String]:
 			effects.append(str(effect))
 
 	return effects
+
+static func _parseEncounter(data: CardData) -> EncounterDefinition:
+	if !data.hasEncounter:
+		return null
+	
+	return EncounterLibrary.getEncounterData(String(data.encounterId))

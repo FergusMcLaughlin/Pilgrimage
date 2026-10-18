@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://oberldc154el"
+path="res://.godot/imported/WildBoar.gif-7d06f1ff9600531c843ce14036ec3816.tres"
+
+[deps]
+
+source_file="res://assets/animated cards/WildBoar.gif"
+dest_files=["res://.godot/imported/WildBoar.gif-7d06f1ff9600531c843ce14036ec3816.tres"]
+
+[params]
+

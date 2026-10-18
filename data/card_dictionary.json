@@ -7,6 +7,8 @@
 		"attack": 5.0,
 		"isPlayer": true,
 		"isUnlocked": true,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/player.png"
 	},
@@ -18,6 +20,8 @@
 		"attack": 1.0,
 		"isPlayer": true,
 		"isUnlocked": true,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/player.png"
 	},
@@ -29,6 +33,8 @@
 		"attack": 10.0,
 		"isPlayer": true,
 		"isUnlocked": true,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/player.png"
 	},
@@ -40,6 +46,8 @@
 		"attack": 5.0,
 		"isPlayer": true,
 		"isUnlocked": false,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/player.png"
 	},
@@ -49,6 +57,8 @@
 		"type": "unit",
 		"health": 5.0,
 		"attack": 5.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/knight.png"
 	},
@@ -58,6 +68,8 @@
 		"type": "unit",
 		"health": 3.0,
 		"attack": 6.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [
 			"heal_self_on_play"
 		],
@@ -69,6 +81,8 @@
 		"type": "unit",
 		"health": 1.0,
 		"attack": 2.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Goblins.png"
 	},
@@ -78,24 +92,30 @@
 		"type": "unit",
 		"health": 2.0,
 		"attack": 3.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Oddity.png"
 	},
 	"M_0005": {
 		"id": "M_0005",
 		"name": "SnailTown",
-		"type": "location",
+		"type": "terrain",
 		"health": 0.0,
 		"attack": 0.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/SnailTown.png"
 	},
 	"M_0006": {
 		"id": "M_0006",
 		"name": "Woods",
-		"type": "location",
+		"type": "terrain",
 		"health": 0.0,
 		"attack": 0.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Woods.png"
 	},
@@ -105,6 +125,8 @@
 		"type": "buff",
 		"health": 2.0,
 		"attack": 0.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Stew.png"
 	},
@@ -114,6 +136,8 @@
 		"type": "buff",
 		"health": 20.0,
 		"attack": 0.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Ale.png"
 	},
@@ -123,6 +147,8 @@
 		"type": "buff",
 		"health": 0.0,
 		"attack": 3.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/cards/Rally.png"
 	},
@@ -132,8 +158,21 @@
 		"type": "unit",
 		"health": 2.0,
 		"attack": 50.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/new_cards_512_768/dobhar_chu.png"
+	},
+	"M_0012": {
+		"id": "M_0012",
+		"name": "Roadside Remains",
+		"type": "terrain",
+		"health": 0.0,
+		"attack": 0.0,
+		"has encounter": true,
+		"encounter_id": "roadside_corpse",
+		"effects": [],
+		"image_path": "res://assets/images/asprite images/DeadMan.gif"
 	},
 	"M_0011": {
 		"id": "M_0011",
@@ -141,6 +180,8 @@
 		"type": "location",
 		"health": 0.0,
 		"attack": 0.0,
+		"has encounter": false,
+		"encounter_id": "",
 		"effects": [],
 		"image_path": "res://assets/images/new_cards_512_768/dobhar_chu.png"
 	}

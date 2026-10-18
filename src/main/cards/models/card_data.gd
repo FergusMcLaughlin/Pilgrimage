@@ -10,3 +10,6 @@ class_name CardData
 @export var isUnlocked: bool
 @export var imagePath: String
 @export var effects: Array[String] = []
+@export var hasEncounter: bool = false
+@export var encounterId: StringName = &""
+@export var encounter: EncounterDefinition

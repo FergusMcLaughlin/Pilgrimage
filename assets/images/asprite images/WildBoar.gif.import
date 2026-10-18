@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://cy1sbakvsgvik"
+path="res://.godot/imported/WildBoar.gif-a83fcedd6c9051ac5147d222d30e3e33.tres"
+
+[deps]
+
+source_file="res://assets/images/asprite images/WildBoar.gif"
+dest_files=["res://.godot/imported/WildBoar.gif-a83fcedd6c9051ac5147d222d30e3e33.tres"]
+
+[params]
+

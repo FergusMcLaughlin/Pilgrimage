@@ -1,0 +1,14 @@
+[remap]
+
+importer="import_gif_to_animated_texture"
+type="AnimatedTexture"
+uid="uid://decpwlsdec0as"
+path="res://.godot/imported/hanggedMan.gif-23c481be7296af48b1857d8d1989dc05.tres"
+
+[deps]
+
+source_file="res://assets/images/asprite images/hanggedMan.gif"
+dest_files=["res://.godot/imported/hanggedMan.gif-23c481be7296af48b1857d8d1989dc05.tres"]
+
+[params]
+
