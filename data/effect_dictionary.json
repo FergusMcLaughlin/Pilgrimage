@@ -9,5 +9,17 @@
 		"parameters": {
 			"amount": 2
 			}
+	},
+	"stew_feind": {
+	"id": "stew_feind",
+	"name": "Stew Feind",
+	"trigger": "stew_played_or_destroyed",
+	"operation": "stew_feind",
+	"target": "self",
+	"script_path": "res://src/main/effects/handlers/stew_feind.gd",
+	"parameters": {
+		"watched_card_id": "M_0007",
+		"amount": 1
+		}
 	}
 }

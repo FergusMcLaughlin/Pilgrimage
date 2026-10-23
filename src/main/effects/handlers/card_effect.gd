@@ -18,3 +18,6 @@ func onEvent(_event: GameplayEvent) -> void:
 
 func onDeactivated() -> void:
 	pass
+
+func reportTriggered() -> void:
+	GlobalSignalBus.emitCardEffectTriggered(hostCard, data)

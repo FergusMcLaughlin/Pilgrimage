@@ -9,7 +9,7 @@
 		"isUnlocked": true,
 		"has encounter": false,
 		"encounter_id": "",
-		"effects": [],
+		"effects": ["stew_feind"],
 		"image_path": "res://assets/images/cards/player.png"
 	},
 	"C_0001": {

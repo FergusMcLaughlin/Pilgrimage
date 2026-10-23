@@ -16,14 +16,14 @@ func _onActionResolved(action: GameAction, result: Variant) -> void:
 	_dispatchEvent(ActionResolvedEvent.create(action, result))
 	
 	if actionType == ActionType.REVEAL_CARD and result is Card:
-		_activateCardEffects(result)
+		activateCardEffects(result)
 		_dispatchEvent(CardPlayedEvent.create(result))
 	
 	if actionType in [ActionType.REMOVE_CARD, ActionType.DELETE_CARD]:
 		if leavingCard is Card:
 			_deactivateCardEffects(leavingCard)
 
-func _activateCardEffects(card: Card) -> void:
+func activateCardEffects(card: Card) -> void:
 	if card == null || card.data == null:
 		return
 	

@@ -24,6 +24,10 @@ func _ready() -> void:
 	await _runTest(_testRemovalEventArrivesBeforeDeactivation)
 	await _runTest(_testReactivationDoesNotDuplicateEffects)
 	await _runTest(_testBrokenEffectDoesNotBlockValidEffect)
+	await _runTest(_testStewFeindParameters)
+	await _runTest(_testStewFeindReactsToPlayAndRemoval)
+	await _runTest(_testStewFeindIgnoresOwnRemoval)
+	await _runTest(_testStewFeindWithRealRemoval)
 	
 	EffectLibrary.effectDataById = _originalEffectData
 	if _failures > 0:
@@ -209,6 +213,131 @@ func _testBrokenEffectDoesNotBlockValidEffect() -> void:
 	_expect(card.health == card.data.baseHealth + 2, "A broken effect must not block a valid effect.")
 	_expect(EffectProcessor.activeEffectsByCard[card].size() == 1, "Only the valid instance should be retained.")
 	
+
+func _testStewFeindParameters() -> void:
+	var definition = EffectLibrary.getEffectData("stew_feind")
+	_expect(definition != null, "Production Stew Feind must load.")
+	var parameters = definition.parameters as StewFeindParameters
+	_expect(parameters != null, "Production parameters must parse.")
+	if parameters != null:
+		_expect(parameters.watchedCardId == "M_0007" and parameters.amount == 1,
+			"Stew Feind must watch Stew with magnitude one.")
+	for invalidAmount in [null, "1", 1.5, 0, -1]:
+		_expect(StewFeindParameters.fromDictionary({
+			"watched_card_id": "M_0007", "amount": invalidAmount
+		}) == null, "Invalid amounts must be rejected.")
+	for invalidId in [null, 7, "", "   "]:
+		_expect(StewFeindParameters.fromDictionary({
+			"watched_card_id": invalidId, "amount": 1
+		}) == null, "Invalid watched IDs must be rejected.")
+	_expect(StewFeindParameters.fromDictionary({
+		"watched_card_id": "M_0007", "amount": 1.0
+	}) != null, "Integral JSON floats must be accepted.")
+
+
+func _testStewFeindReactsToPlayAndRemoval() -> void:
+	var stew := _createCard("M_0007")
+	_emitPlayed(stew)
+	var first := _createCardWithEffects(["stew_feind"])
+	var second := _createCardWithEffects(["stew_feind"])
+	_emitPlayed(first)
+	_emitPlayed(second)
+	await _waitForProcessor()
+	var startingHealth := first.health
+	_expect(first.health == first.data.baseHealth, "Existing Stews must not award a bonus.")
+	var notifications: Array[Card] = []
+	var recordTrigger = func(source: Card, _effect: EffectData) -> void:
+		notifications.append(source)
+	GlobalSignalBus.cardEffectTriggered.connect(recordTrigger)
+
+	# A failed removal, deletion and unrelated play must not execute the effect.
+	var removeAction = ActionType.make(ActionType.REMOVE_CARD, null, stew,
+		RemoveCardPayload.create(0, "test"))
+	GlobalSignalBus.emitActionResolved(removeAction, null)
+	var entry := GraveyardEntry.new()
+	entry.cardId = "M_0007"
+	entry.instanceId = stew.instanceId
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(ActionType.DELETE_CARD, null, stew), true)
+	_emitPlayed(_createCard("M_0003"))
+	await _waitForProcessor()
+	_expect(first.health == startingHealth and notifications.is_empty(),
+		"Failed removal, deletion and unrelated cards must not trigger.")
+
+	# Destruction counts even though the host never received an earlier play bonus.
+	GlobalSignalBus.emitActionResolved(removeAction, entry)
+	await _waitForProcessor()
+	_expect(first.health == startingHealth - 1 and second.health == startingHealth - 1,
+		"Successful Stew removal must subtract one from each host.")
+	_expect(notifications.size() == 2, "Removal must report once per host.")
+
+	var newStew := _createCard("M_0007")
+	_emitPlayed(newStew)
+	_emitPlayed(_createCard("M_0007"))
+	await _waitForProcessor()
+	_expect(first.health == startingHealth + 1 and second.health == startingHealth + 1,
+		"Two Stew reveals must each add one without resolution recursion.")
+	_expect(notifications.count(first) == 3 and notifications.count(second) == 3,
+		"Every execution must report once, including rapid repeats.")
+
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(ActionType.REMOVE_CARD, null, first, RemoveCardPayload.create(0, "test")),
+		null)
+	_emitPlayed(_createCard("M_0007"))
+	await _waitForProcessor()
+	_expect(first.health == startingHealth + 1 and second.health == startingHealth + 2,
+		"Deactivated hosts must stop reacting while other hosts continue.")
+	GlobalSignalBus.cardEffectTriggered.disconnect(recordTrigger)
+
+
+func _testStewFeindIgnoresOwnRemoval() -> void:
+	var host := _createCardWithEffects(["stew_feind"])
+	host.data.id = "M_0007"
+	_emitPlayed(host)
+	await _waitForProcessor()
+	var startingHealth := host.health
+	var entry := GraveyardEntry.new()
+	entry.cardId = host.data.id
+	entry.instanceId = host.instanceId
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(ActionType.REMOVE_CARD, null, host, RemoveCardPayload.create(0, "test")),
+		entry)
+	_expect(!ActionQueue.queueHasActions(), "A host must not penalize its own removal.")
+	_expect(host.health == startingHealth, "Self-removal must not change host health.")
+
+
+func _testStewFeindWithRealRemoval() -> void:
+	var fixture := Node.new()
+	var grid: SlotGrid = preload("res://src/main/board/slot_grid/slot_grid.tscn").instantiate()
+	grid.name = "SlotGrid"
+	var board := BoardController.new()
+	board.slotGridPath = NodePath("../SlotGrid")
+	fixture.add_child(grid)
+	fixture.add_child(board)
+	add_child(fixture)
+	await get_tree().process_frame
+	var host := _createCardWithEffects(["stew_feind"])
+	var stew := _createCard("M_0007")
+	_expect(board.placeCard(host, grid.getSlotAt(Vector2i(0, 0))), "Place the effect host.")
+	_expect(board.placeCard(stew, grid.getSlotAt(Vector2i(1, 0))), "Place Stew before destruction.")
+	_emitPlayed(host)
+	_emitPlayed(stew)
+	await _waitForProcessor()
+	_expect(host.health == host.data.baseHealth + 1, "Stew play must add one health.")
+	var action = ActionType.make(ActionType.REMOVE_CARD, host, stew,
+		RemoveCardPayload.create(host.instanceId, "test"))
+	ActionQueue.enqueueAction(action)
+	var result = await ActionQueue.waitForActionToResolve(action)
+	await _waitForProcessor()
+	_expect(result is GraveyardEntry, "Real Stew removal must succeed.")
+	_expect(host.health == host.data.baseHealth, "Real destruction must subtract one health.")
+	await get_tree().process_frame
+	_expect(!is_instance_valid(stew), "Destroyed Stew must be freed safely.")
+	Graveyard.reset()
+	BoardHistory.reset()
+	fixture.queue_free()
+	await get_tree().process_frame
+
 
 func _emitPlayed(card: Card) -> void:
 	GlobalSignalBus.emitActionResolved(

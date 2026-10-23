@@ -21,6 +21,7 @@ func _ready() -> void:
 	await _testMissingReferencesFailLocked()
 	await _createFixture()
 	await _testRunSetup()
+	await _testPlayerStewEffect()
 	_testRejectedTransitionsDoNotAdvance()
 	_testMovementAfterMoveBoundary()
 	await _testCombatAndGuardedCompletion()
@@ -111,6 +112,30 @@ func _testRunSetup() -> void:
 	_expect(!InputManager.inputLocked, "Input must unlock in PLAYER_READY.")
 	_expect(_controller.playerCycleNumber == 1, "The first player cycle must be numbered 1.")
 	
+
+func _testPlayerStewEffect() -> void:
+	var player := _controller.playerCard
+	_expect(EffectProcessor.activeEffectsByCard.has(player), "Setup must activate player effects.")
+	var stewCount := 0
+	var stew: Card
+	for slot in _grid.getOccupiedSlots():
+		if slot.currentCard.data.id == "M_0007":
+			stewCount += 1
+			stew = slot.currentCard
+	_expect(stewCount > 0, "The unshuffled opening board must contain Stew.")
+	_expect(player.health == player.data.baseHealth + stewCount,
+		"Player effects must activate before opening Stews are revealed.")
+	if stew == null:
+		return
+	var healthBeforeRemoval := player.health
+	var action = ActionType.make(ActionType.REMOVE_CARD, player, stew,
+		RemoveCardPayload.create(player.instanceId, "test"))
+	_expect(ActionQueue.enqueueAction(action), "Stew removal must enqueue.")
+	var result = await ActionQueue.waitForActionToResolve(action)
+	await _waitForProcessor()
+	_expect(result is GraveyardEntry, "Stew removal must succeed.")
+	_expect(player.health == healthBeforeRemoval - 1, "Destroyed Stew must subtract one player HP.")
+
 
 func _testRejectedTransitionsDoNotAdvance() -> void:
 	var cycle: int = _controller.playerCycleNumber

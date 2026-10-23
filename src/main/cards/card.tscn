@@ -57,7 +57,17 @@ mouse_filter = 2
 script = ExtResource("2_dt0l0")
 metadata/_edit_use_anchors_ = true
 
-[node name="CardFace" type="TextureRect" parent="CardVisuals" unique_id=54753642]
+[node name="CardMotion" type="Control" parent="CardVisuals" unique_id=1458551282]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CardFace" type="TextureRect" parent="CardVisuals/CardMotion" unique_id=54753642]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -72,7 +82,7 @@ texture = ExtResource("5_jhkr3")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="CardBack" type="TextureRect" parent="CardVisuals" unique_id=803838010]
+[node name="CardBack" type="TextureRect" parent="CardVisuals/CardMotion" unique_id=803838010]
 unique_name_in_owner = true
 light_mask = 2
 visibility_layer = 2
@@ -86,9 +96,8 @@ pivot_offset = Vector2(80, 112)
 mouse_filter = 2
 texture = ExtResource("4_6dq3b")
 expand_mode = 1
-metadata/_edit_use_anchors_ = true
 
-[node name="CardShadow" type="TextureRect" parent="CardVisuals" unique_id=1102568832]
+[node name="CardShadow" type="TextureRect" parent="CardVisuals/CardMotion" unique_id=1102568832]
 unique_name_in_owner = true
 visible = false
 z_index = -1
@@ -105,7 +114,7 @@ expand_mode = 1
 script = ExtResource("3_bulfq")
 metadata/_edit_use_anchors_ = true
 
-[node name="StatsContainer" type="MarginContainer" parent="CardVisuals" unique_id=12516657]
+[node name="StatsContainer" type="MarginContainer" parent="CardVisuals/CardMotion" unique_id=12516657]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -119,12 +128,12 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="StatsHContainer" type="HBoxContainer" parent="CardVisuals/StatsContainer" unique_id=1685982695]
+[node name="StatsHContainer" type="HBoxContainer" parent="CardVisuals/CardMotion/StatsContainer" unique_id=1685982695]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="CardAttack" type="RichTextLabel" parent="CardVisuals/StatsContainer/StatsHContainer" unique_id=2005481332]
+[node name="CardAttack" type="RichTextLabel" parent="CardVisuals/CardMotion/StatsContainer/StatsHContainer" unique_id=2005481332]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -142,7 +151,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="CardHealth" type="RichTextLabel" parent="CardVisuals/StatsContainer/StatsHContainer" unique_id=1659590539]
+[node name="CardHealth" type="RichTextLabel" parent="CardVisuals/CardMotion/StatsContainer/StatsHContainer" unique_id=1659590539]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -159,7 +168,7 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="NameContainer" type="MarginContainer" parent="CardVisuals" unique_id=253425889]
+[node name="NameContainer" type="MarginContainer" parent="CardVisuals/CardMotion" unique_id=253425889]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -170,7 +179,7 @@ offset_bottom = 49.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="CardName" type="RichTextLabel" parent="CardVisuals/NameContainer" unique_id=459514312]
+[node name="CardName" type="RichTextLabel" parent="CardVisuals/CardMotion/NameContainer" unique_id=459514312]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -187,7 +196,7 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CardOutline" type="Control" parent="CardVisuals" unique_id=1679958535]
+[node name="CardOutline" type="Control" parent="CardVisuals/CardMotion" unique_id=1679958535]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15

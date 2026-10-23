@@ -19,5 +19,7 @@ static func _parseParameters(operation: String, rawParameters: Variant) -> Effec
 	match operation:
 		"gain_health":
 			return GainHealthParameters.fromDictionary(rawParameters)
+		"stew_feind":
+			return StewFeindParameters.fromDictionary(rawParameters)
 		_:
 			return null

@@ -5,6 +5,7 @@ const STAT_COLOUR_NORMAL = Color.BLACK
 const STAT_COLOUR_BUFFED = Color.DARK_GREEN
 const STAT_COLOUR_DEBUFFED = Color.DARK_RED
 
+@onready var cardMotion: Control = %CardMotion
 @onready var face: TextureRect = %CardFace
 @onready var back: TextureRect = %CardBack
 @onready var nameLable: RichTextLabel = %CardName
@@ -16,6 +17,7 @@ var card: Card
 var isHovered := false
 var isDragging := false
 var scaleTween: Tween
+var effectTween: Tween
 
 var defaultZIndex := 0
 var dragZIndex := 1000
@@ -23,6 +25,11 @@ var dragZIndex := 1000
 func init(cardReference: Card):
 	card = cardReference
 	defaultZIndex = z_index
+
+	GlobalSignalBus.cardEffectTriggered.connect(_onCardEffectTriggered)
+	visibility_changed.connect(_onEffectVisibilityChanged)
+	face.visibility_changed.connect(_onEffectVisibilityChanged)
+	back.visibility_changed.connect(_onEffectVisibilityChanged)
 
 func refresh() -> void:
 	nameLable.text = str(card.data.name)
@@ -52,7 +59,7 @@ func _loadCardImage() -> void:
 func _updateStatColours() -> void:
 	if card.data.type == "player":
 		return
-	
+
 	attackLable.modulate = _getStatColour(card.attack, card.data.baseAttack)
 	healthLable.modulate = _getStatColour(card.health, card.data.baseHealth)
 
@@ -105,14 +112,58 @@ func _toggleCardVisibility() -> void:
 func handleHovered(hovered: bool) -> void:
 	if isHovered == hovered:
 		return
-	
+
 	applyInteractionVisuals(hovered, isDragging)
 
 func handleDragging(dragging: bool) -> void:
 	if isDragging == dragging:
 		return
-	
+
 	applyInteractionVisuals(isHovered, dragging)
 
 func isFaceUp() -> bool:
 	return face.visible and !back.visible
+
+func _onCardEffectTriggered(sourceCard: Card, effectData: EffectData) -> void:
+	if sourceCard != card || effectData == null:
+		return
+
+	if !is_visible_in_tree() || !isFaceUp():
+		return
+
+	playEffectCue()
+
+func playEffectCue() -> void:
+	if effectTween != null:
+		return
+
+	cardMotion.scale = Vector2.ONE
+	cardMotion.pivot_offset = cardMotion.size * 0.5
+
+	effectTween = create_tween()
+	effectTween.set_trans(Tween.TRANS_SINE)
+	effectTween.set_ease(Tween.EASE_OUT)
+
+	effectTween.tween_property(cardMotion, "scale", Vector2(1.06, 0.9), 0.08)
+	effectTween.tween_property(cardMotion, "scale", Vector2.ONE, 0.12)
+
+	effectTween.finished.connect(_onEffectCueFinished)
+
+func _onEffectCueFinished() -> void:
+	effectTween = null
+	cardMotion.scale = Vector2.ONE
+
+func _onEffectVisibilityChanged() -> void:
+	if !is_visible_in_tree() or !isFaceUp():
+		stopEffectCue()
+
+func stopEffectCue() -> void:
+	if effectTween != null:
+		effectTween.kill()
+		effectTween = null
+
+	if is_instance_valid(cardMotion):
+		cardMotion.scale = Vector2.ONE
+
+func _exit_tree() -> void:
+	stopEffectCue()
