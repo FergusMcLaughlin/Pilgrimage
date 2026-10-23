@@ -73,6 +73,7 @@ func startRun(shuffleDeck: bool = true) -> bool:
 		return _failSetup("could not place player in center")
 	
 	await _activatePlayerCard(playerCard)
+	EffectProcessor.activateCardEffects(playerCard)
 	
 	await journeyDeck.fillEmptySlots(slotGrid)
 	await _waitForActionSystemIdle()

@@ -113,6 +113,12 @@ signal encounterOutcomeRequested(encounterId: StringName, outcome: EncounterDefi
 signal encounterCompleted(result: EncounterResult)
 
 # ==================================================
+# CARD VISUAL EFFECT SIGNALS
+# ==================================================
+
+signal cardEffectTriggered(card: Card, effectData: EffectData)
+
+# ==================================================
 # CARD INPUT EMIT WRAPPERS
 # ==================================================
 
@@ -300,3 +306,10 @@ func emitEncounterOutcomeRequested(encounterId: StringName, outcome: EncounterDe
 
 func emitEncounterCompleted(result: EncounterResult) -> void:
 	emit_signal("encounterCompleted", result)
+
+# ==================================================
+# CARD VISUAL EFFECT WRAPPERS
+# ==================================================
+
+func emitCardEffectTriggered(card: Card, effectData: EffectData) -> void:
+	emit_signal("cardEffectTriggered", card, effectData)
