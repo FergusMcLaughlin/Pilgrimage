@@ -19,9 +19,14 @@ func _onActionResolved(action: GameAction, result: Variant) -> void:
 		activateCardEffects(result)
 		_dispatchEvent(CardPlayedEvent.create(result))
 	
-	if actionType in [ActionType.REMOVE_CARD, ActionType.DELETE_CARD]:
-		if leavingCard is Card:
-			_deactivateCardEffects(leavingCard)
+	if actionType == ActionType.REVIVE_CARD and result is Card:
+		activateCardEffects(result)
+	
+	if actionType == ActionType.MODIFY_STATS and result == true:
+		_reportEffectResolved(action)
+	
+	if _didCardLeaveBoard(action, result):
+		_deactivateCardEffects(leavingCard)
 
 func activateCardEffects(card: Card) -> void:
 	if card == null || card.data == null:
@@ -83,6 +88,29 @@ func _deactivateCardEffects(card: Card) -> void:
 	
 	activeEffectsByCard.erase(card)
 	
+
+func _didCardLeaveBoard(action: GameAction, result: Variant) -> bool:
+	if !(action.target is Card):
+		return false
+	match action.type:
+		ActionType.REMOVE_CARD:
+			return result is GraveyardEntry
+		ActionType.DELETE_CARD:
+			return result == true
+		_:
+			return false
+
+func _reportEffectResolved(action: GameAction) -> void:
+	var sourceCard = action.source as Card
+	var payload = action.payload as ModifyStatsPayload
+	if sourceCard == null or payload == null:
+		return
+	if !activeEffectsByCard.has(sourceCard):
+		return
+	for effect in activeEffectsByCard[sourceCard]:
+		if effect.data.id == payload.cause:
+			effect.reportTriggered()
+			return
 
 func clearEffects() -> void:
 	for card in activeEffectsByCard.keys():

@@ -135,7 +135,8 @@ func _onCardEffectTriggered(sourceCard: Card, effectData: EffectData) -> void:
 
 func playEffectCue() -> void:
 	if effectTween != null:
-		return
+		effectTween.kill()
+		effectTween = null
 
 	cardMotion.scale = Vector2.ONE
 	cardMotion.pivot_offset = cardMotion.size * 0.5

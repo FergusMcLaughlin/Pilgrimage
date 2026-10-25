@@ -27,6 +27,7 @@ func _ready() -> void:
 	await _testCombatAndGuardedCompletion()
 	_testOnlyPlayerReceivesCycleEvents()
 	await _cleanup()
+	await _testSecondStartRunCancelsFirst()
 	
 	if _failures > 0:
 		push_error("FAIL: GameController tests (%s failures, %s checks passed)" % [_failures, _passed])
@@ -200,6 +201,53 @@ func _testOnlyPlayerReceivesCycleEvents() -> void:
 		_expect(emittedPlayer == player, "Board cards must never receive player-cycle events.")
 	
 
+func _testSecondStartRunCancelsFirst() -> void:
+	var root := Node.new()
+	var grid: SlotGrid = SLOT_GRID_SCENE.instantiate()
+	grid.name = "SlotGrid"
+	var board := BoardController.new()
+	board.name = "BoardController"
+	board.slotGridPath = NodePath("../SlotGrid")
+	var deck: JourneyDeck = JOURNEY_DECK_SCENE.instantiate()
+	deck.name = "JourneyDeck"
+	var controller := GameController.new()
+	root.add_child(grid)
+	root.add_child(board)
+	root.add_child(deck)
+	root.add_child(controller)
+	add_child(root)
+	await get_tree().process_frame
+	controller.boardController = board
+	controller.slotGrid = grid
+	controller.journeyDeck = deck
+	
+	var firstResults: Array = []
+	var startFirst = func() -> void:
+		firstResults.append(await controller.startRun(false))
+	startFirst.call()
+	var secondStarted := await controller.startRun(false)
+	await _waitForProcessor()
+	await get_tree().process_frame
+	
+	_expect(secondStarted, "The newer run must start.")
+	# The older run is awaiting its player's flip; freeing that card drops the coroutine.
+	_expect(!firstResults.has(true), "The older run must never finish setup.")
+	var playerCount := 0
+	for slot in grid.getOccupiedSlots():
+		if slot.currentCard.data.id == controller.playerCardId:
+			playerCount += 1
+	_expect(playerCount == 1, "Only one player card may be on the board.")
+	_expect(grid.getOccupiedSlots().size() == 9, "The board must be filled exactly once.")
+	_expect(controller.state == GameController.GameState.PLAYER_READY, "The newer run must reach PLAYER_READY.")
+	
+	ActionQueue.clearQueue()
+	EffectProcessor.clearEffects()
+	Graveyard.reset()
+	BoardHistory.reset()
+	root.queue_free()
+	await get_tree().process_frame
+	
+
 func _onPlayerCycleStarted(player: Card, _cycleNumber: int) -> void:
 	_startedPlayers.append(player)
 	
@@ -231,6 +279,10 @@ func _waitForProcessor(maxFrames := 240) -> void:
 	
 
 func _cleanup() -> void:
+	GlobalSignalBus.playerCycleStarted.disconnect(_onPlayerCycleStarted)
+	GlobalSignalBus.afterMoveStarted.disconnect(_onAfterMoveStarted)
+	GlobalSignalBus.playerCycleCompleted.disconnect(_onPlayerCycleCompleted)
+	GlobalSignalBus.gameStateChanged.disconnect(_onGameStateChanged)
 	ActionQueue.clearQueue()
 	EffectProcessor.clearEffects()
 	Graveyard.reset()

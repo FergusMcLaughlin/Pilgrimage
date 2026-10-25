@@ -21,6 +21,12 @@ func _ready() -> void:
 	await _runTest(_testNonPositiveAmountQueuesNothing)
 	await _runTest(_testNonRevealDoesNotActivateCard)
 	await _runTest(_testRemoveDeactivatesEffects)
+	await _runTest(_testFailedRemoveKeepsEffects)
+	await _runTest(_testFailedDeleteKeepsEffects)
+	await _runTest(_testReviveActivatesEffects)
+	await _runTest(_testCueWaitsForResolve)
+	await _runTest(_testClearedQueueGivesNoCue)
+	await _runTest(_testUnrelatedCauseGivesNoCue)
 	await _runTest(_testRemovalEventArrivesBeforeDeactivation)
 	await _runTest(_testReactivationDoesNotDuplicateEffects)
 	await _runTest(_testBrokenEffectDoesNotBlockValidEffect)
@@ -154,11 +160,93 @@ func _testRemoveDeactivatesEffects() -> void:
 	await _waitForProcessor()
 	_expect(EffectProcessor.activeEffectsByCard.has(goatman), "Reveal should activate Goatman's effect.")
 	
+	var entry := GraveyardEntry.new()
+	entry.cardId = goatman.data.id
+	entry.instanceId = goatman.instanceId
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(ActionType.REMOVE_CARD, null, goatman, RemoveCardPayload.create(0, "test")),
+		entry
+	)
+	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "Remove must deactivate the card's effects.")
+	
+
+func _testFailedRemoveKeepsEffects() -> void:
+	var goatman := _createCard("M_0002")
+	_emitPlayed(goatman)
+	await _waitForProcessor()
 	GlobalSignalBus.emitActionResolved(
 		ActionType.make(ActionType.REMOVE_CARD, null, goatman, RemoveCardPayload.create(0, "test")),
 		null
 	)
-	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "Remove must deactivate the card's effects.")
+	_expect(EffectProcessor.activeEffectsByCard.has(goatman), "A failed remove must keep the card's effects.")
+	
+
+func _testFailedDeleteKeepsEffects() -> void:
+	var goatman := _createCard("M_0002")
+	_emitPlayed(goatman)
+	await _waitForProcessor()
+	var deleteAction = ActionType.make(ActionType.DELETE_CARD, null, goatman)
+	GlobalSignalBus.emitActionResolved(deleteAction, false)
+	_expect(EffectProcessor.activeEffectsByCard.has(goatman), "A failed delete must keep the card's effects.")
+	GlobalSignalBus.emitActionResolved(deleteAction, true)
+	_expect(!EffectProcessor.activeEffectsByCard.has(goatman), "A successful delete must deactivate the card's effects.")
+	
+
+func _testReviveActivatesEffects() -> void:
+	var goatman := _createCard("M_0002")
+	GlobalSignalBus.emitActionResolved(
+		ActionType.make(ActionType.REVIVE_CARD, null, null),
+		goatman
+	)
+	await _waitForProcessor()
+	_expect(EffectProcessor.activeEffectsByCard.has(goatman), "Revive must activate the card's effects.")
+	_expect(goatman.health == goatman.data.baseHealth, "Revive must not count as a play.")
+	
+
+func _testCueWaitsForResolve() -> void:
+	var goatman := _createCard("M_0002")
+	var notifications: Array[Card] = []
+	var recordTrigger = func(source: Card, _effect: EffectData) -> void:
+		notifications.append(source)
+	GlobalSignalBus.cardEffectTriggered.connect(recordTrigger)
+	_emitPlayed(goatman)
+	_expect(notifications.is_empty(), "Queueing an effect must not cue yet.")
+	await _waitForProcessor()
+	_expect(notifications == [goatman], "A resolved effect must cue once on its host.")
+	GlobalSignalBus.cardEffectTriggered.disconnect(recordTrigger)
+	
+
+func _testClearedQueueGivesNoCue() -> void:
+	var host := _createCardWithEffects(["stew_feind"])
+	_emitPlayed(host)
+	await _waitForProcessor()
+	var notifications: Array[Card] = []
+	var recordTrigger = func(source: Card, _effect: EffectData) -> void:
+		notifications.append(source)
+	GlobalSignalBus.cardEffectTriggered.connect(recordTrigger)
+	_emitPlayed(_createCard("M_0007"))
+	_expect(ActionQueue.queueHasActions(), "Stew Feind should queue its change.")
+	ActionQueue.clearQueue()
+	await _waitForProcessor()
+	_expect(notifications.is_empty(), "A cleared change must not cue.")
+	_expect(host.health == host.data.baseHealth, "A cleared change must not apply.")
+	GlobalSignalBus.cardEffectTriggered.disconnect(recordTrigger)
+	
+
+func _testUnrelatedCauseGivesNoCue() -> void:
+	var goatman := _createCard("M_0002")
+	_emitPlayed(goatman)
+	await _waitForProcessor()
+	var notifications: Array[Card] = []
+	var recordTrigger = func(source: Card, _effect: EffectData) -> void:
+		notifications.append(source)
+	GlobalSignalBus.cardEffectTriggered.connect(recordTrigger)
+	ActionQueue.enqueueAction(ActionType.make(
+		ActionType.MODIFY_STATS, goatman, goatman, ModifyStatsPayload.create("health", 1, "test")
+	))
+	await _waitForProcessor()
+	_expect(notifications.is_empty(), "A change not caused by an effect must not cue.")
+	GlobalSignalBus.cardEffectTriggered.disconnect(recordTrigger)
 	
 
 func _testRemovalEventArrivesBeforeDeactivation() -> void:
@@ -280,9 +368,12 @@ func _testStewFeindReactsToPlayAndRemoval() -> void:
 	_expect(notifications.count(first) == 3 and notifications.count(second) == 3,
 		"Every execution must report once, including rapid repeats.")
 
+	var firstEntry := GraveyardEntry.new()
+	firstEntry.cardId = first.data.id
+	firstEntry.instanceId = first.instanceId
 	GlobalSignalBus.emitActionResolved(
 		ActionType.make(ActionType.REMOVE_CARD, null, first, RemoveCardPayload.create(0, "test")),
-		null)
+		firstEntry)
 	_emitPlayed(_createCard("M_0007"))
 	await _waitForProcessor()
 	_expect(first.health == startingHealth + 1 and second.health == startingHealth + 2,

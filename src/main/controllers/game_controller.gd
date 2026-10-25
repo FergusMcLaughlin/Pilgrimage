@@ -42,6 +42,7 @@ func _activatePlayerCard(card: Card) -> void:
 
 func startRun(shuffleDeck: bool = true) -> bool:
 	runId += 1
+	var startingRun = runId
 	pendingRefillRequest = null
 	if is_instance_valid(encounterController):
 		encounterController.cancelEncounters()
@@ -56,6 +57,7 @@ func startRun(shuffleDeck: bool = true) -> bool:
 	EffectProcessor.clearEffects()
 	Graveyard.reset()
 	BoardHistory.reset()
+	_clearBoardForRun()
 	playerCycleNumber = 0
 	
 	journeyDeck.boardController = boardController
@@ -73,12 +75,30 @@ func startRun(shuffleDeck: bool = true) -> bool:
 		return _failSetup("could not place player in center")
 	
 	await _activatePlayerCard(playerCard)
+	if !_isCurrentRun(startingRun):
+		return false
 	EffectProcessor.activateCardEffects(playerCard)
 	
 	await journeyDeck.fillEmptySlots(slotGrid)
+	if !_isCurrentRun(startingRun):
+		return false
 	await _waitForActionSystemIdle()
+	if !_isCurrentRun(startingRun):
+		return false
 	_enterPlayerReady()
 	return true
+
+func _clearBoardForRun() -> void:
+	var leftoverCards: Array[Card] = []
+	for slot in slotGrid.getOccupiedSlots():
+		leftoverCards.append(slot.currentCard)
+	boardController.clearBoard()
+	for card in leftoverCards:
+		if is_instance_valid(card):
+			card.queue_free()
+
+func _isCurrentRun(checkedRun: int) -> bool:
+	return is_inside_tree() and runId == checkedRun
 
 func _hasRequiredReferences() -> bool:
 	return boardController != null and slotGrid != null and journeyDeck != null
@@ -89,9 +109,8 @@ func _failSetup(message: String) -> bool:
 	InputManager.lockInput()
 	return false
 
-
 func _waitForActionSystemIdle() -> void:
-	while ActionQueue.queueHasActions() or ActionProcessor.isProcessingAction:
+	while is_inside_tree() and (ActionQueue.queueHasActions() or ActionProcessor.isProcessingAction):
 		await get_tree().process_frame
 
 func _enterPlayerReady() -> void:
