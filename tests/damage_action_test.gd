@@ -119,7 +119,7 @@ func _testModifyStatsRemainsIndependent() -> void:
 	var result = await _enqueueAndWait(ActionType.make(
 		ActionType.MODIFY_STATS, null, target, ModifyStatsPayload.create("health", 2, "test")
 	))
-	_expect(result == null and target.health == 4, "MODIFY_STATS healing must remain independent of DEAL_DAMAGE.")
+	_expect(result == true and target.health == 4, "MODIFY_STATS healing must remain independent of DEAL_DAMAGE.")
 	target.queue_free()
 	
 

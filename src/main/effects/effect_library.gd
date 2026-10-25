@@ -20,6 +20,8 @@ func loadEffectData(filepath: String = EFFECT_DICTIONARY_PATH) -> void:
 			continue
 	
 		var data: EffectData = EffectDataFactory.fromDictionary(rawDictionary as Dictionary)
+		if data.parameters == null and !data.operation.is_empty():
+			push_warning("EffectLibrary: effect %s has invalid parameters for operation %s." % [effectId, data.operation])
 		effectDataById[effectId] = data
 
 func getEffectData(effectId: String) -> EffectData:

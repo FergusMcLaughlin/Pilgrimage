@@ -28,8 +28,7 @@ func _resolveAction(action: GameAction) -> Variant:
 		ActionType.MOVE_CARD:
 			return _handleMoveCard(action)
 		ActionType.MODIFY_STATS:
-			_handleModifyStats(action)
-			return null
+			return _handleModifyStats(action)
 		ActionType.DEAL_DAMAGE:
 			return _handleDealDamage(action)
 		ActionType.REMOVE_CARD:
@@ -82,21 +81,22 @@ func _handleMoveCard(action: GameAction) -> bool:
 		push_warning("ActionProcessor: MOVE_CARD could not move the card.")
 	return moved
 
-func _handleModifyStats(action: GameAction) -> void:
+func _handleModifyStats(action: GameAction) -> bool:
 	var target = action.target as Card
 	var payload = action.payload as ModifyStatsPayload
 	if target == null:
 		push_warning("ActionProcessor: MODIFY_STATS target must be a Card.")
-		return
+		return false
 	if payload == null:
 		push_warning("ActionProcessor: MODIFY_STATS requires ModifyStatsPayload.")
-		return
+		return false
 	if payload.stat.is_empty():
 		push_warning("ActionProcessor: MODIFY_STATS requires a stat.")
-		return
-	
+		return false
 	if !target.modifyStat(payload.stat, payload.amount):
 		push_warning("ActionProcessor: MODIFY_STATS rejected the requested change.")
+		return false
+	return true
 
 func _handleDealDamage(action: GameAction) -> DamageResult:
 	var source = action.source as Card

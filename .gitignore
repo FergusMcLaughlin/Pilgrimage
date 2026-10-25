@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Stray audit probes and the old Codex vault
+.audit-*/
+CodexOutputs/

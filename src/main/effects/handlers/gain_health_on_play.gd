@@ -24,5 +24,4 @@ func onEvent(event: GameplayEvent) -> void:
 		ModifyStatsPayload.create("health", parameters.amount, data.id)
 	)
 
-	if context.queueAction(action):
-		reportTriggered()
+	context.queueAction(action)
