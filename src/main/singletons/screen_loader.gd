@@ -8,6 +8,7 @@ var pendingFailureMessage: String = ""
 var progress: Array = []
 var useSubThreads: bool = true
 var isLoading: bool = false
+var sceneContainer: SceneContainer
 
 func _ready() -> void:
 	set_process(false)
@@ -62,10 +63,13 @@ func _process(_delta: float) -> void:
 
 func _finishLoading() -> void:
 	loadedResource = ResourceLoader.load_threaded_get(scenePathToLoad)
-	var state = get_tree().change_scene_to_packed(loadedResource)
-	if state != OK:
-		_finishLoadingWithError("LoadScene: could not change to scene '%s' (error %s)." % [scenePathToLoad, state])
-		return
+	if sceneContainer != null:
+		sceneContainer.setCurrentScene(loadedResource.instantiate())
+	else:
+		var state = get_tree().change_scene_to_packed(loadedResource)
+		if state != OK:
+			_finishLoadingWithError("LoadScene: could not change to scene '%s' (error %s)." % [scenePathToLoad, state])
+			return
 	
 	set_process(false)
 	GlobalSignalBus.emitLoadFinished()

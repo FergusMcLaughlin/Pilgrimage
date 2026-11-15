@@ -172,7 +172,7 @@
 		"has encounter": true,
 		"encounter_id": "roadside_corpse",
 		"effects": [],
-		"image_path": "res://assets/images/asprite images/DeadMan.gif"
+		"image_path": "res://assets/images/asprite images/TestSprite.png"
 	},
 	"M_0011": {
 		"id": "M_0011",

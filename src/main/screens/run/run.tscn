@@ -1,0 +1,133 @@
+[gd_scene format=3 uid="uid://vy6tlvlohnpw"]
+
+[ext_resource type="Script" uid="uid://bjvxrtrybfi3c" path="res://src/main/screens/run/run.gd" id="1_611ih"]
+[ext_resource type="PackedScene" uid="uid://bcdeqjuhbeylp" path="res://src/main/board/board_controller/board_controller.tscn" id="1_qwjy7"]
+[ext_resource type="Script" uid="uid://k2dgk0h70d17" path="res://src/main/controllers/game_controller.gd" id="2_qtoia"]
+[ext_resource type="Script" uid="uid://107y3l7yfnj7" path="res://src/main/controllers/player_movement_controller.gd" id="3_jqr1u"]
+[ext_resource type="PackedScene" uid="uid://buorfub5jm5nk" path="res://src/main/combat/combat_resolver.tscn" id="4_k7q0c"]
+[ext_resource type="PackedScene" uid="uid://baps1v7ppwuuk" path="res://src/main/board/board_refill/board_refill_controller.tscn" id="5_d538u"]
+[ext_resource type="Script" uid="uid://cfj08rqo3vwpn" path="res://src/main/encounters/encounter_controller.gd" id="6_611ih"]
+[ext_resource type="Script" uid="uid://ocb76q7eb3uc" path="res://src/main/controllers/pause_controller.gd" id="7_cfvu2"]
+[ext_resource type="PackedScene" uid="uid://blctrx7s18xp4" path="res://src/main/board/slot_grid/slot_grid.tscn" id="8_jqr1u"]
+[ext_resource type="PackedScene" uid="uid://ct2m7bysjbmkx" path="res://src/main/decks/deck_types/journey_deck.tscn" id="9_k7q0c"]
+[ext_resource type="PackedScene" uid="uid://ce5db5lu6kqmv" path="res://src/main/ui/overlays/encounter_modal.tscn" id="10_d538u"]
+[ext_resource type="PackedScene" uid="uid://cctx4t3kao8m1" path="res://src/main/ui/overlays/pause_menu_overlay.tscn" id="11_611ih"]
+
+[node name="Run" type="Control" unique_id=150606474]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_611ih")
+postRunScenePath = "uid://cpo2741avbs5b"
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=470139170]
+layer = -10
+
+[node name="Backdrop" type="ColorRect" parent="BackgroundLayer" unique_id=1160363151]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Controlers" type="Node" parent="." unique_id=1453969864]
+
+[node name="BoardController" parent="Controlers" unique_id=1907180923 instance=ExtResource("1_qwjy7")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+slotGridPath = NodePath("../../PlaceHolder 2/SlotGrid")
+
+[node name="GameController" type="Node" parent="Controlers" unique_id=956949963 node_paths=PackedStringArray("boardController", "encounterController", "slotGrid", "journeyDeck")]
+unique_name_in_owner = true
+script = ExtResource("2_qtoia")
+boardController = NodePath("../BoardController")
+encounterController = NodePath("../EncounterController")
+slotGrid = NodePath("../../PlaceHolder 2/SlotGrid")
+journeyDeck = NodePath("../../PlaceHolder 2/JourneyDeck")
+
+[node name="PlayerMovmentController" type="Node" parent="Controlers" unique_id=211430935 node_paths=PackedStringArray("gameController", "boardController", "slotGrid")]
+script = ExtResource("3_jqr1u")
+gameController = NodePath("../GameController")
+boardController = NodePath("../BoardController")
+slotGrid = NodePath("../../PlaceHolder 2/SlotGrid")
+
+[node name="CombatResolver" parent="Controlers" unique_id=1445907075 node_paths=PackedStringArray("gameController", "boardController", "slotGrid") instance=ExtResource("4_k7q0c")]
+gameController = NodePath("../GameController")
+boardController = NodePath("../BoardController")
+slotGrid = NodePath("../../PlaceHolder 2/SlotGrid")
+
+[node name="BoardRefillController" parent="Controlers" unique_id=479683705 node_paths=PackedStringArray("journeyDeck", "slotGrid", "gameController") instance=ExtResource("5_d538u")]
+journeyDeck = NodePath("../../PlaceHolder 2/JourneyDeck")
+slotGrid = NodePath("../../PlaceHolder 2/SlotGrid")
+gameController = NodePath("../GameController")
+
+[node name="EncounterController" type="Node" parent="Controlers" unique_id=1941488374 node_paths=PackedStringArray("gameController", "modal")]
+script = ExtResource("6_611ih")
+gameController = NodePath("../GameController")
+modal = NodePath("../../EncounterLayer/EncounterModal")
+
+[node name="PauseController" type="Node" parent="Controlers" unique_id=916505969 node_paths=PackedStringArray("gameController", "pauseMenu")]
+script = ExtResource("7_cfvu2")
+gameController = NodePath("../GameController")
+pauseMenu = NodePath("../../PauseLayer/PauseMenuOverlay")
+mainMenuScenePath = "uid://cp0r6ldd0jruc"
+
+[node name="Placeholder 1" type="Node" parent="." unique_id=1019984605]
+
+[node name="Table" type="Control" parent="Placeholder 1" unique_id=2037105985]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="Placeholder 1/Table" unique_id=586526298]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.13333334)
+
+[node name="PlaceHolder 2" type="Node" parent="." unique_id=1170765673]
+
+[node name="SlotGrid" parent="PlaceHolder 2" unique_id=481412509 instance=ExtResource("8_jqr1u")]
+gridSize = Vector2i(4, 5)
+
+[node name="JourneyDeck" parent="PlaceHolder 2" unique_id=694193839 node_paths=PackedStringArray("boardController", "slotGrid") instance=ExtResource("9_k7q0c")]
+offset_left = 656.0
+offset_top = -341.0
+offset_right = 656.0
+offset_bottom = -341.0
+boardController = NodePath("../../Controlers/BoardController")
+slotGrid = NodePath("../SlotGrid")
+
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=1208360423]
+
+[node name="EncounterLayer" type="CanvasLayer" parent="." unique_id=195954497]
+layer = 5
+
+[node name="EncounterModal" parent="EncounterLayer" unique_id=1458663116 instance=ExtResource("10_d538u")]
+unique_name_in_owner = true
+metadata/_edit_group_ = true
+
+[node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=463911785]
+unique_name_in_owner = true
+layer = 8
+
+[node name="PauseLayer" type="CanvasLayer" parent="." unique_id=834290486]
+layer = 10
+
+[node name="PauseMenuOverlay" parent="PauseLayer" unique_id=395882982 instance=ExtResource("11_611ih")]
