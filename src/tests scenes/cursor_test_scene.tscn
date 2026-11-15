@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://cjp80skdsm012"]
+
+[ext_resource type="Script" path="res://src/tests scenes/cursor_test_scene.gd" id="1_cursor"]
+
+[node name="CursorTestScene" type="Control" unique_id=1252177450]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_cursor")
+
+[node name="LightBackground" type="ColorRect" parent="." unique_id=1770639591]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.91, 0.86, 0.75, 1)
+
+[node name="DarkBackground" type="ColorRect" parent="." unique_id=2073638733]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12, 0.13, 0.16, 1)
+
+[node name="StatusLabel" type="Label" parent="." unique_id=1993059206]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 624.0
+offset_bottom = 224.0
+theme_override_colors/font_color = Color(0.1, 0.08, 0.06, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="GrabArea" type="ColorRect" parent="." unique_id=1993687365]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 160.0
+offset_top = 320.0
+offset_right = 480.0
+offset_bottom = 640.0
+color = Color(0.55, 0.42, 0.3, 1)
+
+[node name="GrabLabel" type="Label" parent="GrabArea" unique_id=1568694810]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -30.0
+offset_right = 120.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 22
+text = "Grabbable
+(hover, then hold)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DarkGrabArea" type="ColorRect" parent="." unique_id=147045414]
+layout_mode = 0
+offset_left = 1120.0
+offset_top = 320.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_default_cursor_shape = 13
+color = Color(0.3, 0.33, 0.4, 1)
+
+[node name="DarkGrabLabel" type="Label" parent="DarkGrabArea" unique_id=1462613729]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -30.0
+offset_right = 120.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 22
+text = "Grabbable
+(on dark)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="." unique_id=762315803]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 360.0
+offset_right = 920.0
+offset_bottom = 520.0
+theme_override_constants/separation = 24
+
+[node name="Button" type="Button" parent="Buttons" unique_id=1861990485]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+text = "Button (pointer idles here)"
+
+[node name="DisabledButton" type="Button" parent="Buttons" unique_id=1916788511]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+disabled = true
+text = "Disabled button"
+
+[node name="LagSprite" type="Sprite2D" parent="." unique_id=564505605]
+unique_name_in_owner = true
+modulate = Color(1, 0.6, 0.6, 0.8)

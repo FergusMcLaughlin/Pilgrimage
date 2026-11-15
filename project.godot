@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Pilgrimage-2"
-run/main_scene="uid://cp0r6ldd0jruc"
+run/main_scene="uid://l1xrg4r2umwt"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -56,7 +56,7 @@ PAUSE_GAME={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://data/localisation/ui.en.translation")
+locale/translations=PackedStringArray("res://data/ui/localisation/ui.en.translation")
 
 [physics]
 

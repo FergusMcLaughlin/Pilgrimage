@@ -17,6 +17,7 @@ size_flags_vertical = 4
 script = ExtResource("1_qlubt")
 gridSize = Vector2i(3, 3)
 slotScene = ExtResource("2_pqf4g")
+cellSize = Vector2(171, 191)
 
 [node name="GridWrapper" type="Control" parent="." unique_id=1115844114]
 layout_mode = 1
@@ -38,4 +39,6 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
 columns = 3
