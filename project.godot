@@ -29,6 +29,7 @@ EffectProcessor="*uid://bwgmcsl8kuouu"
 BoardHistory="*uid://b1dyex4kan607"
 Graveyard="*uid://bcs3prtwe8076"
 ScreenLoader="*res://src/main/singletons/screen_loader.gd"
+CursorController="*uid://cyxtch66ve0u4"
 
 [display]
 

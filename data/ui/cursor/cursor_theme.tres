@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CursorSkin" format=3 uid="uid://1ac234eajmuy"]
+
+[ext_resource type="Texture2D" uid="uid://dq4kwssigmraa" path="res://assets/images/ui/cursors/hand_closed_32.png" id="1_kptwq"]
+[ext_resource type="Script" uid="uid://dk68tgklmwln8" path="res://src/main/ui/cursors/cursor_skin.gd" id="1_npg0h"]
+[ext_resource type="Texture2D" uid="uid://diaphl2rrbrf" path="res://assets/images/ui/cursors/hand_grab_64_outline_sheet.png" id="2_1mmh4"]
+[ext_resource type="Texture2D" uid="uid://ccxloh5q4g1uj" path="res://assets/images/ui/cursors/pointer_idle_64_outline_sheet.png" id="3_5gsgf"]
+
+[resource]
+script = ExtResource("1_npg0h")
+pointerSheet = ExtResource("3_5gsgf")
+pointerClickLocation = Vector2(3, 1)
+grabbableSheet = ExtResource("2_1mmh4")
+grabbableClickLocation = Vector2(4, 2)
+grabSheet = ExtResource("1_kptwq")
+grabClickLocation = Vector2(2, 1)
+metadata/_custom_type_script = "uid://dk68tgklmwln8"
